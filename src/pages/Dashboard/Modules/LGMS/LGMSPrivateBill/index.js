@@ -15,6 +15,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import BillAttachedDocsModal from "../../../../../components/BillAttachedDocsModal";
+import { SendNoticePrivateBillToTransaltion } from "../../../../../api/APIs/Services/LegislationModule.service";
 
 function LGMSPrivateBill() {
   const navigate = useNavigate();
@@ -142,6 +143,18 @@ function LGMSPrivateBill() {
     setAttachDocs(item?.billDocuments);
     openModal();
   };
+
+  const sendBilltoTranslation = async (id) => {
+    try {
+      const response = await SendNoticePrivateBillToTransaltion(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getAllLegislativeBillApi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
   return (
     <Layout
       module={true}
@@ -199,6 +212,8 @@ function LGMSPrivateBill() {
             handleViewAttachment={(item) => {
               handleViewAttach(item);
             }}
+            showSent={true}
+            handleSent={(item) => sendBilltoTranslation(item?.id)}
           />
         </div>
       </div>

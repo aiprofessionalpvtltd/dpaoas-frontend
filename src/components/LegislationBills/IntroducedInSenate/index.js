@@ -89,6 +89,8 @@ const IntroducedInSenate = ({
   iscolumnCheckbox,
   isColumncheck,
   setIsColumnCheckBox,
+  showSent,
+  handleSent,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -141,6 +143,8 @@ const IntroducedInSenate = ({
         iscolumnCheckbox={iscolumnCheckbox}
         isColumncheck={isColumncheck}
         setIsColumnCheckBox={setIsColumnCheckBox}
+        showSent={showSent}
+        handleSent={handleSent}
       />
     </div>
   );

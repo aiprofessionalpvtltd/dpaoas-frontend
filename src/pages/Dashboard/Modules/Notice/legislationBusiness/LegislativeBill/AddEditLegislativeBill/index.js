@@ -206,6 +206,8 @@ function AddEditLegislativeBill() {
       getLegislativeBillByIdApi();
     }
   }, []);
+
+  console.log("members", members);
   useEffect(() => {
     // Update form values when termsById changes
     if (billData) {

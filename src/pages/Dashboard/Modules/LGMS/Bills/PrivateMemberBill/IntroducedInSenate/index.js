@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import {
   DeleteLegislationBill,
   getAllPrivateMemberSenateBills,
+  SendLegislationBillsToTransaltion,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import {
   showErrorMessage,
@@ -119,6 +120,7 @@ const AllPrivateMemberSenateBills = () => {
       const searchParams = {
         billCategory: "Private Member Bill",
         billFrom: "From Senate",
+        introducedBillSentStatus: "inLegislation",
       };
 
       const response = await getAllPrivateMemberSenateBills(
@@ -201,6 +203,18 @@ const AllPrivateMemberSenateBills = () => {
     }
   };
 
+  const sendBilltoTranslation = async (id) => {
+    try {
+      const response = await SendLegislationBillsToTransaltion(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getPrivateMemberBills();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -229,6 +243,8 @@ const AllPrivateMemberSenateBills = () => {
           currentPage={currentPage}
           pageSize={pageSize}
           totalCount={count}
+          showSent={true}
+          handleSent={(item) => sendBilltoTranslation(item?.id)}
         />
       </div>
     </Layout>

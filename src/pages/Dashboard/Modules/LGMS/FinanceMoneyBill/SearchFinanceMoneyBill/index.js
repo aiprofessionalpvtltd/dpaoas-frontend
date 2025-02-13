@@ -8,47 +8,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { Layout } from "../../../../../../../components/Layout";
-import Header from "../../../../../../../components/Header";
-import { AuthContext } from "../../../../../../../api/AuthContext";
+import { AuthContext } from "../../../../../../api/AuthContext";
 import {
-  DeleteLegislationBill,
   getAllBillStatus,
   getAllCommitteeRecommendation,
   getAllCommitties,
+  getAllMinisters,
   getAllMinisterTenures,
   getMinisterByParliamentaryYearID,
   getMinisterParliamentaryYearsByTenure,
   getMinsistriesByTenure,
+  mainFinanceSearchApi,
   mainSearchApi,
-} from "../../../../../../../api/APIs/Services/LegislationModule.service";
+} from "../../../../../../api/APIs/Services/LegislationModule.service";
+import { getAllParliamentaryYears } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../../../utils/ToastAlert";
-import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
-import IntroducedInSenate from "../../../../../../../components/LegislationBills/IntroducedInSenate";
-import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
+} from "../../../../../../utils/ToastAlert";
+import { Layout } from "../../../../../../components/Layout";
+import Header from "../../../../../../components/Header";
+import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
+import RecievedFromNA from "../../../../../../components/LegislationBills/RecievedFromNA";
 
-const SearchLegislationGovernmentBills = () => {
+const SearchFinanceMoneyBill = () => {
   const navigate = useNavigate();
   const { ministryData, sessions } = useContext(AuthContext);
+  const [ministerTenure, setMinisterTenure] = useState([]);
+  const [ministryDataOnTenure, setMinistryDataOnTenure] = useState([]);
+  const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
+    useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageValue, setPageValue] = useState(null);
-  const [ministryDataOnTenure, setMinistryDataOnTenure] = useState([]);
   const [count, setCount] = useState(null);
   const [concerndCommitte, setConcerndCommitte] = useState(null);
   const [billFrom, setBillFrom] = useState();
   const [remarksAttachmentVal, setRemarksAttachmentVal] = useState();
   const [isColumnChecked, setIsColumnChecked] = useState([]);
-  const [ministerTenure, setMinisterTenure] = useState([]);
   const [searchdata, setSearchData] = useState([]);
   const [ministers, setMinisters] = useState([]);
   const [billdata, setBilldata] = useState([]);
   const [parliamentaryYears, setParliamentaryYears] = useState([]);
   const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
-  const [ministersOnParliamentaryYear, setMinisterOnParliamentaryYear] =
-    useState([]);
+
   const [isPresentedCalenderOpen, setIsPresentedCalenderOpen] = useState(false);
 
   const [isFromNoticeDateCalenderOpen, setIsFromNoticeDateCalenderOpen] =
@@ -58,6 +60,7 @@ const SearchLegislationGovernmentBills = () => {
     useState(false);
 
   const pageSize = 10;
+
   const handlePresentedHouseCalendarToggle = () => {
     setIsPresentedCalenderOpen(!isPresentedCalenderOpen);
   };
@@ -78,18 +81,6 @@ const SearchLegislationGovernmentBills = () => {
     }
   };
 
-  const getMNAOnParliamentaryYear = async (id) => {
-    try {
-      const response = await getMinisterByParliamentaryYearID(id);
-      if (response?.success) {
-        setMinisterOnParliamentaryYear(response?.data);
-        // setTonerModels(transformedData);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
-
   // GetTerms on the Base of Tenure
   const getMinistriesOnTenure = async (id) => {
     try {
@@ -102,73 +93,36 @@ const SearchLegislationGovernmentBills = () => {
     }
   };
 
-  useEffect(() => {
-    // getAllMinisterApi();
-    fetchTenures();
-  }, []);
-
-  // Transform Government Bill Introduced In Senate Data
-  const transformGovernmentSenateBillData = (apiData) => {
-    const docs = apiData?.map((item) => item?.billDocuments);
-    if (docs?.length > 0) {
-      setRemarksAttachmentVal(true);
-    } else {
-      setRemarksAttachmentVal(false);
+  const getMNAOnParliamentaryYear = async (id) => {
+    try {
+      const response = await getMinisterByParliamentaryYearID(id);
+      if (response?.success) {
+        setMinisterOnParliamentaryYear(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
     }
-    return apiData?.map((item, index) => ({
-      SNo: index + 1,
-      id: item.id,
-      // internalId: item?.id,
-      fileNumber: item?.fileNumber,
-      billTitle: item?.billTitle,
-      nameOfMinistersOrMovers:
-        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
-        item?.senateBillSenatorMovers
-          ?.map((mover) => mover?.member?.memberName)
-          .join(", ") ||
-        "",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
-      dateOfIntroductionReferenceToStandingCommittee: item?.introducedInHouses
-        ?.introducedInHouseDate
-        ? moment(
-            item?.introducedInHouses?.introducedInHouseDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
-
-      dateOfPresentationOfTheReport: item?.introducedInHouses
-        ?.reportPresentationDate
-        ? moment(
-            item?.introducedInHouses?.reportPresentationDate,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
-      dateOfConsiderationOfTheBillBySenate: item?.memberPassages
-        ?.dateOfConsiderationBill
-        ? moment(
-            item?.memberPassages?.dateOfConsiderationBill,
-            "YYYY-MM-DD"
-          ).format("DD-MM-YYYY")
-        : "---",
-      dateOfPassingTheBillByTheSenate: item?.dateOfPassageBySenate
-        ? moment(item?.dateOfPassageBySenate, "YYYY-MM-DD").format("DD-MM-YYYY")
-        : "---",
-      dateOnWhichTheBillTransmittedToNA: item?.dateOfTransmissionToNA
-        ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
-            "DD-MM-YYYY"
-          )
-        : "---",
-      billCategory: item?.billCategory,
-      billFrom: item?.billFrom,
-      remarks: item?.billRemarks,
-      billDocuments: item?.billDocuments,
-    }));
   };
 
+  const getAllMinisterApi = async () => {
+    try {
+      const response = await getAllMinisters(0, 5000, "Ministers");
+      if (response?.success) {
+        setMinisters(response.data?.mnas);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTenures();
+    // getAllMinisterApi();
+  }, []);
+
   // Transform Government Bill Recieved From NA Data
-  const transformGovernmentRecievedFromNABillData = (apiData) => {
+  const transformFinanceMoneyBillData = (apiData) => {
     const docs = apiData?.map((item) => item?.billDocuments);
     if (docs?.length > 0) {
       setRemarksAttachmentVal(true);
@@ -357,61 +311,12 @@ const SearchLegislationGovernmentBills = () => {
     GetAllCommittiesRecommendation();
   }, []);
 
-  // const transFormsearchData = (apiData) => {
-  //   return (
-  //     apiData?.map((item) => ({
-  //       id: item.id,
-  //       parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure,
-  //       session: item?.sessions?.sessionName,
-  //       billType: item.billType,
-  //       billCategory: item.billCategory,
-  //       billFrom: item.billFrom,
-  //       concerndCommittes:
-  //         item?.introducedInHouses?.manageCommittees?.committeeName,
-  //       billStatus: item?.billStatuses?.billStatusName,
-  //       Status: item.billStatus,
-  //     })) || []
-  //   );
-  // };
-
-  //   const transFormsearchData = (apiData) => {
-  //     return (
-  //       apiData?.map((item) => ({
-  //         id: item.id,
-  //         billTitle: item?.billTitle,
-  //         // dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
-  //         //   ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
-  //         //   : "---",
-  //         dateOfPresentationReport: item?.introducedInHouses
-  //           ?.reportPresentationDate
-  //           ? moment(
-  //               item?.introducedInHouses?.reportPresentationDate,
-  //               "YYYY-MM-DD"
-  //             ).format("DD-MM-YYYY")
-  //           : "---",
-  //         dateOfTransmission: item?.dateOfTransmissionToNA
-  //           ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
-  //               "DD-MM-YYYY"
-  //             )
-  //           : "---",
-
-  //         // movers: item?.senateBillMnaMovers
-  //         //   ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
-  //         //   : "---",
-  //         billCategory: item?.billCategory,
-  //         fileNumber: item?.fileNumber,
-  //         billFrom: item?.billFrom,
-  //         remarks: item?.billRemarks,
-  //       })) || []
-  //     );
-  //   };
-
   const handleSearch = useCallback(
     async (values, page) => {
       const data = {
-        introducedBillSentStatus: "inLegislation",
+        financeMoneyBillSentStatus: "inLegislation",
         billCategory: "Government Bill",
-        billFrom: values?.billFrom || "From Senate",
+        billFrom: "From NA",
         fkMinisterTenureId: values?.fkMinisterTenureId?.value,
         fkMnaParliamentaryYearId: values?.parliamentaryYear,
         fkMinisterId: values?.selectedSenator?.value,
@@ -436,15 +341,12 @@ const SearchLegislationGovernmentBills = () => {
       };
       setPageValue(page);
       try {
-        const response = await mainSearchApi(page, pageSize, data);
+        const response = await mainFinanceSearchApi(page, pageSize, data);
+        console.log("response of FIniance", response);
         if (response?.success) {
           let transformedData;
-          if (data?.billFrom === "From Senate") {
-            transformedData = await transformGovernmentSenateBillData(
-              response?.data?.senateBills
-            );
-          } else if (data?.billFrom === "From NA") {
-            transformedData = await transformGovernmentRecievedFromNABillData(
+          if (data?.billFrom === "From NA") {
+            transformedData = await transformFinanceMoneyBillData(
               response?.data?.senateBills
             );
           }
@@ -465,41 +367,30 @@ const SearchLegislationGovernmentBills = () => {
     setSearchData([]);
     setParliamentaryYears([]);
     setMinistryDataOnTenure([]);
-    // setMinistryDataOnTenure([]);
+    setMinisterOnParliamentaryYear([]);
     setIsColumnChecked([]);
     setRemarksAttachmentVal(false);
   };
 
-  // const handleEditSenateBill = (id) => {
-  //   navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
-  // };
-  // const handleEditNABill = (id) => {
-  //   navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
-  // };
-
-  // Edit Bill Introduced in Senate
-  const handleEditSenateBill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/senate-bills", {
-      state: { id, item },
-    });
-  };
-
   // Edit Bill Recieved From NA
   const handleEditNABill = (id, item) => {
-    navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
+    navigate(
+      "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
+      { state: { id, item } }
+    );
   };
   // Handle Delete Bills
-  const handleDeleteLegislationBill = async (id) => {
-    try {
-      const resposne = await DeleteLegislationBill(id);
-      if (resposne?.success) {
-        showSuccessMessage(resposne?.message);
-        handleSearch(formik?.values, pageValue);
-      }
-    } catch (error) {
-      showErrorMessage(error?.message);
-    }
-  };
+  //   const handleDeleteLegislationBill = async (id) => {
+  //     try {
+  //       const resposne = await DeleteLegislationBill(id);
+  //       if (resposne?.success) {
+  //         showSuccessMessage(resposne?.message);
+  //         handleSearch(formik?.values, pageValue);
+  //       }
+  //     } catch (error) {
+  //       showErrorMessage(error?.message);
+  //     }
+  //   };
   return (
     <Layout
       module={true}
@@ -535,7 +426,7 @@ const SearchLegislationGovernmentBills = () => {
                       {/* <option value="" disabled hidden>
                         Select
                       </option> */}
-                      <option value="From Senate">Introdced In Senate</option>
+                      {/* <option value="From Senate">Introdced In Senate</option> */}
                       <option value="From NA">Received From NA</option>
                     </select>
                   </div>
@@ -554,13 +445,9 @@ const SearchLegislationGovernmentBills = () => {
                       <option value="" disabled hidden>
                         Select Bill Type
                       </option>
-                      <option value="Amendment Bill">Amendment Bill</option>
-                      <option value="Constitutional Amendment Bill">
-                        Constitutional Amendment Bill
-                      </option>
-                      {/* <option value="Finance Bill">Finance Bill</option> */}
-                      {/* <option value="Money Bill">Money Bill</option> */}
-                      <option value="New Bill">New Bill</option>
+
+                      <option value="Finance Bill">Finance Bill</option>
+                      <option value="Money Bill">Money Bill</option>
                     </select>
                   </div>
 
@@ -1090,51 +977,25 @@ const SearchLegislationGovernmentBills = () => {
 
             <div class="container-fluid">
               <div className="mt-4">
-                {billFrom && billFrom === "From Senate" ? (
-                  <IntroducedInSenate
-                    addBtnText={"Government Bill (Introduced In Senate)"}
-                    handleAdd={""}
-                    tableTitle={"Government Bills Data (Introduced In Senate)"}
-                    data={searchdata}
-                    remarksAttachmentVal={remarksAttachmentVal}
-                    handleEdit={(item) => {
-                      item?.billFrom === "From Senate"
-                        ? handleEditSenateBill(item?.id, item)
-                        : handleEditNABill(item?.id, item);
-                    }}
-                    handlePageChange={handlePageChange}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    totalCount={count}
-                    hideTableTopButton={true}
-                    iscolumnCheckbox={isColumnChecked}
-                    isColumncheck={true}
-                    setIsColumnCheckBox={setIsColumnChecked}
-                  />
-                ) : billFrom === "From NA" ? (
-                  <RecievedFromNA
-                    addBtnText={"Government Bill (Recieved From NA)"}
-                    handleAdd={""}
-                    tableTitle={"Government Bills Data (Received From NA)"}
-                    data={searchdata}
-                    remarksAttachmentVal={remarksAttachmentVal}
-                    handleEdit={(item) => {
-                      item?.billFrom === "From Senate"
-                        ? handleEditSenateBill(item?.id, item)
-                        : handleEditNABill(item?.id, item);
-                    }}
-                    handlePageChange={handlePageChange}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    totalCount={count}
-                    hideTableTopButton={true}
-                    iscolumnCheckbox={isColumnChecked}
-                    isColumncheck={true}
-                    setIsColumnCheckBox={setIsColumnChecked}
-                  />
-                ) : (
-                  "No Data"
-                )}
+                <RecievedFromNA
+                  addBtnText={"Government Bill (Recieved From NA)"}
+                  handleAdd={""}
+                  tableTitle={"Government Bills Data (Finance/Money Bill)"}
+                  data={searchdata}
+                  remarksAttachmentVal={remarksAttachmentVal}
+                  handleEdit={(item) => {
+                    item?.billFrom === "From NA" &&
+                      handleEditNABill(item?.id, item);
+                  }}
+                  handlePageChange={handlePageChange}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  totalCount={count}
+                  hideTableTopButton={true}
+                  iscolumnCheckbox={isColumnChecked}
+                  isColumncheck={true}
+                  setIsColumnCheckBox={setIsColumnChecked}
+                />
               </div>
             </div>
           </div>
@@ -1144,4 +1005,4 @@ const SearchLegislationGovernmentBills = () => {
   );
 };
 
-export default SearchLegislationGovernmentBills;
+export default SearchFinanceMoneyBill;

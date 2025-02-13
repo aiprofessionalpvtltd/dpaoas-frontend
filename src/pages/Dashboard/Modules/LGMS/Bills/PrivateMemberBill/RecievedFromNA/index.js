@@ -6,13 +6,17 @@ import {
   getAllGovernmentNABills,
   getAllGovernmentSenateBills,
   getAllPrivateMemberNABills,
+  SendLegislationBillsToTransaltion,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import RecievedFromNA from "../../../../../../../components/LegislationBills/RecievedFromNA";
 import { Layout } from "../../../../../../../components/Layout";
-import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 
 const AllPrivateMemberBillFromNA = () => {
   const navigate = useNavigate();
@@ -121,6 +125,7 @@ const AllPrivateMemberBillFromNA = () => {
       const searchParams = {
         billCategory: "Private Member Bill",
         billFrom: "From NA",
+        introducedBillSentStatus: "inLegislation",
       };
 
       const response = await getAllPrivateMemberNABills(
@@ -183,6 +188,18 @@ const AllPrivateMemberBillFromNA = () => {
     });
   };
 
+  const sendBilltoTranslation = async (id) => {
+    try {
+      const response = await SendLegislationBillsToTransaltion(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getGovernmentNABillApi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -211,6 +228,8 @@ const AllPrivateMemberBillFromNA = () => {
           currentPage={currentPage}
           pageSize={pageSize}
           totalCount={count}
+          showSent={true}
+          handleSent={(item) => sendBilltoTranslation(item?.id)}
         />
       </div>
     </Layout>

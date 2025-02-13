@@ -33,7 +33,6 @@ import { getSingleMinisteryByMinisterID } from "../../../../../../../api/APIs/Se
 import {
   getAllTenures,
   getMemberByParliamentaryYearID,
-  getParliamentaryYearsByTenureID,
   getParliamentaryYearsByTermID,
   getTermByTenureID,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
@@ -47,20 +46,16 @@ const EditTestingNABills = () => {
   const NA_Bill_ID = location?.state && location?.state?.id;
   const BillCategory = location?.state && location?.state?.item?.billCategory;
   const BillFrom = location?.state && location?.state?.item?.billFrom;
-  const { ministryData, members, sessions, parliamentaryYear } =
-    useContext(AuthContext);
-  const [MNAparliamentaryYearData, setMNAParliamentaryYearData] = useState([]);
+  const SendYearNumber = location?.state && location?.state?.Year;
+  const { sessions } = useContext(AuthContext);
   const [commiteeRecommendations, setCommitteeRecommendations] = useState([]);
   const [billStatusData, setBillStatusesData] = useState([]);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   const [ministerID, setMinisterID] = useState(null);
-  const [MNATenures, setMNATenures] = useState([]);
   const [ministryDataOnTenure, setMinistryDataOnTenure] = useState([]);
-  // const [ministerID, setMinisterID] = useState(null);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
   const [committieeData, setCommittieData] = useState([]);
-  const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [membersOnParliamentaryYear, setMembersOnParliamentaryYear] = useState(
     []
   );
@@ -314,11 +309,6 @@ const EditTestingNABills = () => {
       console.log(values);
     },
   });
-
-  console.log(
-    "Formik from Edit Testing NA",
-    formik.values.fkMnaParliamentaryYearId
-  );
 
   // Handle Passed By NA Date
   const handleCalendarToggle = () => {
@@ -599,7 +589,6 @@ const EditTestingNABills = () => {
       showErrorMessage(error.response.data.message);
     }
   };
-  console.log("singleSenateBillData", singleSenateBillData);
   useEffect(() => {
     if (singleSenateBillData) {
       let fileNum = "";
@@ -644,15 +633,12 @@ const EditTestingNABills = () => {
         singleSenateBillData?.fkTermId &&
         singleSenateBillData?.fkMinisterTenureId
       ) {
-        console.log("Condition for Senators matched");
         fetchParliamentaryYears(singleSenateBillData?.fkTermId);
-        console.log("Member Parliamentary Years", memberParliamentaryYear);
         fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
       } else if (
         singleSenateBillData?.fkMinisterTenureId &&
         singleSenateBillData?.billFor === "Ministers"
       ) {
-        console.log("Condition for Ministers matched");
         fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
       } else {
         console.log("Conditions did not match");
@@ -672,7 +658,6 @@ const EditTestingNABills = () => {
       //   fetchParliamentaryYears(singleSenateBillData?.fkMinisterTenureId);
       // }
       if (singleSenateBillData?.billFor === "Ministers") {
-        console.log("Min", singleSenateBillData?.billFor);
         getMNAOnParliamentaryYear(
           singleSenateBillData?.fkMnaParliamentaryYearId
         );
@@ -776,20 +761,6 @@ const EditTestingNABills = () => {
           noticeDate: singleSenateBillData?.noticeDate
             ? moment(singleSenateBillData?.noticeDate, "YYYY-MM-DD").toDate()
             : null,
-
-          //   dateofReciptofNotice:
-          // singleSenateBillData?.dateofReciptofNotice
-          //   ? moment(
-          //       singleSenateBillData?.dateofReciptofNotice,
-          //       "YYYY-MM-DD"
-          //     ).toDate()
-          //   : "",
-          // dateOfPassageByNA: singleSenateBillData?.dateOfPassageByNA
-          //   ? moment(
-          //       singleSenateBillData?.dateOfPassageByNA,
-          //       "YYYY-MM-DD"
-          //     ).toDate()
-          //   : "",
           billTitle: singleSenateBillData?.billTitle || "",
           billText: singleSenateBillData?.billText || "",
           billRemarks: singleSenateBillData?.billRemarks || "",
@@ -967,16 +938,13 @@ const EditTestingNABills = () => {
   }, [singleSenateBillData]);
 
   const logFormDataTypes = (formData) => {
-    console.log("Logging FormData types and values:");
     for (const [key, value] of formData.entries()) {
       console.log(`Key: ${key}, Value: ${value}, Type: ${typeof value}`);
     }
   };
 
-  // console.log("PAAAA FIle", singleSenateBillData?.billDocuments);
   const UpdateNationalAssemblyBill = async (values) => {
     const formData = new FormData();
-    console.log("values Update", values);
     if (
       BillCategory === "Government Bill" &&
       location?.state?.forPerson === "Ministers"
@@ -1015,16 +983,16 @@ const EditTestingNABills = () => {
     formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("fkBillStatus", values?.fkBillStatus?.value);
-    const currentYear = new Date().getFullYear();
+    // const currentYear = new Date().getFullYear();
     if (BillCategory === "Private Member Bill") {
       formData.append(
         "fileNumber",
-        `24/(${values?.fileNumber})/${currentYear}-Legis`
+        `24/(${values?.fileNumber})/${SendYearNumber}-Legis`
       );
     } else {
       formData.append(
         "fileNumber",
-        `09/(${values?.fileNumber})/${currentYear}-Legis`
+        `09/(${values?.fileNumber})/${SendYearNumber}-Legis`
       );
     }
     // formData.append("fileNumber",   `09(${values?.fileNumber})/2024`);
@@ -1289,7 +1257,6 @@ const EditTestingNABills = () => {
 
     try {
       const response = await UpdateNABill(NA_Bill_ID, formData);
-      console.log("response", response);
       if (response?.success) {
         showSuccessMessage(response?.message);
 

@@ -351,6 +351,7 @@ import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQ
 import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.js";
 import TestingNoticePrivateMemberBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSEditNoticeOfficeSenateBill/EditPrivateNoticeBill.js";
 import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
+import SearchFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/SearchFinanceMoneyBill/index.js";
 import QMSBallotResolutionListTemplate from "../pages/Dashboard/Modules/QMS/Resolution/ResolutionList/BallotResolutionTemplate/index.js";
 import PreviewHourStatementList from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewHourStatementList/index.js";
 import PreviewSinglepageOneQuestion from "../pages/Dashboard/Modules/QMS/Reports/QuestionList/PreviewSinglepageOneQuestion/index.js";
@@ -785,27 +786,66 @@ export const ProtectedRoutes = [
 
   { path: "/tms/motion", element: <TMSMotion /> },
   { path: "/tms/resolution", element: <TMSResolution /> },
-  { path: "/tms/resolution/resolution-translation", element: <ResolutionTranslation /> },
+  {
+    path: "/tms/resolution/resolution-translation",
+    element: <ResolutionTranslation />,
+  },
   { path: "/tms/assigned-resolution", element: <TMSAssignedResolution /> },
 
-  { path: "/tms/legislation/government-bill-translation/introduce-in-senate", element: <TMSGovIntroduceInSenate /> },
-  { path: "/tms/legislation/government-bill-translation/recived-from-na", element: <TMSGOVRecivedFromNA /> },
-  { path: "/tms/legislation/government-bill-translation/introduce-in-senate/edit", element: <GovTranslationIntroduceInSenate /> },
-  { path: "/tms/legislation/government-bill-translation/recived-from-na/edit", element: <GovTranslationRecivedFromNA /> },
+  {
+    path: "/tms/legislation/government-bill-translation/introduce-in-senate",
+    element: <TMSGovIntroduceInSenate />,
+  },
+  {
+    path: "/tms/legislation/government-bill-translation/recived-from-na",
+    element: <TMSGOVRecivedFromNA />,
+  },
+  {
+    path: "/tms/legislation/government-bill-translation/introduce-in-senate/edit",
+    element: <GovTranslationIntroduceInSenate />,
+  },
+  {
+    path: "/tms/legislation/government-bill-translation/recived-from-na/edit",
+    element: <GovTranslationRecivedFromNA />,
+  },
 
-  { path: "/tms/legislation/private-bill-translation/introduce-in-senate", element: <TMSPrivateMemberBill /> },
-  { path: "/tms/legislation/private-bill-translation/recived-from-na", element: <TMSPMBRecivedFromNA /> },
-  { path: "/tms/legislation/private-bill-translation/introduce-in-senate/edit", element: <PMBTranslationIntroduceInSenate /> },
-  { path: "/tms/legislation/private-bill-translation/recived-from-na/edit", element: <PMBTranslationRecivedFromNA /> },
+  {
+    path: "/tms/legislation/private-bill-translation/introduce-in-senate",
+    element: <TMSPrivateMemberBill />,
+  },
+  {
+    path: "/tms/legislation/private-bill-translation/recived-from-na",
+    element: <TMSPMBRecivedFromNA />,
+  },
+  {
+    path: "/tms/legislation/private-bill-translation/introduce-in-senate/edit",
+    element: <PMBTranslationIntroduceInSenate />,
+  },
+  {
+    path: "/tms/legislation/private-bill-translation/recived-from-na/edit",
+    element: <PMBTranslationRecivedFromNA />,
+  },
 
   { path: "/tms/finance-bill", element: <TMSRecivedFinanceBill /> },
-  { path: "/tms/finance-bill/finance-bill-translation", element: <TranslationFinanceBill /> },
-  { path: "/tms/finance-bill/assigined-list", element: <TMSAssignedFinanceBill /> },
+  {
+    path: "/tms/finance-bill/finance-bill-translation",
+    element: <TranslationFinanceBill />,
+  },
+  {
+    path: "/tms/finance-bill/assigined-list",
+    element: <TMSAssignedFinanceBill />,
+  },
 
   { path: "/tms/legislativa-bill", element: <TMSRecivedlegislativaBill /> },
-  { path: "/tms/legislativa-bill/legislativa-bill-translation", element: <TranslationLegislative /> },
-  { path: "/tms/legislativa-bill/assigined-list", element: <TMSAssignedlegislativaBill /> },
-   
+  {
+    path: "/tms/legislativa-bill/legislativa-bill-translation",
+    element: <TranslationLegislative />,
+  },
+  {
+    path: "/tms/legislativa-bill/assigined-list",
+    element: <TMSAssignedlegislativaBill />,
+  },
+
   { path: "/sms/send-sms", element: <SMSDashboard /> },
   { path: "/sms/send-sms/instant", element: <SMSInstantSMS /> },
   { path: "/sms/send-sms/advanced", element: <SMSAdvancedSMS /> },
@@ -1009,6 +1049,10 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
     element: <EditFinanceMoneyBill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/search",
+    element: <SearchFinanceMoneyBill />,
   },
   {
     path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",
