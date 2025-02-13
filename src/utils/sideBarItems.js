@@ -26,6 +26,7 @@ import {
   faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getUserData } from "../api/Auth";
+import { link } from "jodit/esm/plugins/link/link";
 
 // LMS Sidebar
 export const LMSsidebarItems = [
@@ -672,7 +673,7 @@ export const SMSsidebarItems = [
 ];
 
 // TMS Sidebar
-export const TMSsidebarItems = [
+export const TMSsidebarItemsDirector = [
   {
     itemName: "Dashboard",
     link: "/tms/dashboard",
@@ -682,32 +683,136 @@ export const TMSsidebarItems = [
     itemName: "Question",
     link: "/tms/question",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Questions",
+        link: "/tms/question",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Questions",
+        link: "/tms/assigned-question",
+        icon: faClipboardList,
+      },
+    ],
   },
+
   {
     itemName: "Motion",
     link: "/tms/motion",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Motion",
+        link: "/tms/motion",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Motion",
+        link: "/tms/assigned-motion",
+        icon: faClipboardList,
+      },
+    ],
   },
+  // {
+  //   itemName: "Motion",
+  //   link: "/tms/motion",
+  //   icon: faHome,
+  // },
   {
     itemName: "Resolution",
     link: "/tms/resolution",
+    icon: faHome,
+    subItems: [
+      {
+        itemName: "Received Resolution",
+        link: "/tms/resolution",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Resolution",
+        link: "/tms/assigned-resolution",
+        icon: faClipboardList,
+      },
+    ],
+  },
+  {
+    itemName: "Legislation",
+    link: "/tms/legislation",
+    icon: faHome,
+    subItems: [
+      {
+        itemName: "Government Bill",
+        link: "/tms/legislation/government-bill-translation/introduce-in-senate",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Private Bill",
+        link: "/tms/legislation/private-bill-translation/introduce-in-senate",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Recived Finance/Money Bill",
+        link: "/tms/finance-bill",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Recived Legislative Bill",
+        link: "/tms/legislativa-bill",
+        icon: faClipboardList,
+      }
+    ],
+  },
+];
+
+export const TMSsidebarItems = [
+  {
+    itemName: "Dashboard",
+    link: "/tms/dashboard",
+    icon: faHome,
+  },
+  {
+    itemName: "Question",
+    icon: faHome,
+    link: "/tms/assigned-question",
+  },
+  {
+    itemName: "Motion",
+    link: "/tms/assigned-motion",
+    icon: faHome,
+  },
+  {
+    itemName: "Resolution",
+    link: "/tms/assigned-resolution",
     icon: faHome,
   },
   {
     itemName: "Legislation",
     link: "/tms/legislation",
     icon: faHome,
+    subItems: [
+      {
+        itemName: "Government Bill",
+        link: "/tms/legislation/government-bill-translation/introduce-in-senate",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Private Bill",
+        link: "/tms/legislation/private-bill-translation/introduce-in-senate",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Finance/Money Bill",
+        link: "/tms/finance-bill/assigined-list",
+        icon: faClipboardList,
+      },
+      {
+        itemName: "Assigned Legislative Bill",
+        link: "/tms/legislativa-bill/assigined-list",
+        icon: faClipboardList,
+      },
+    ],
   },
-  {
-    itemName: "Research Branch",
-    link: "/tms/house-business",
-    icon: faHome,
-  },
-  // {
-  //   itemName: "Members",
-  //   link: "/tms/members",
-  //   icon: faHome,
-  // },
 ];
 
 //CMS SideBar

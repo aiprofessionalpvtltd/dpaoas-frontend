@@ -69,6 +69,8 @@ function QMSSerchResolution() {
       colourResNo: "",
       noticeOfficeDiaryNo: "",
       memberPosition: "",
+      colourResNo:"",
+      passedResolution: false
     },
 
     onSubmit: (values) => {
@@ -129,8 +131,11 @@ function QMSSerchResolution() {
       noticeOfficeDiaryDateTo: values.toNoticeDate,
       resolutionMovers: values?.memberName?.value,
       memberPosition: values?.memberPosition,
+      passedResolution:values?.passedResolution,
+      colourResNo:values?.colourResNo,
       resolutionSentStatus: "inResolution",
     };
+
     try {
       const response = await searchResolution(
         searchParams,
@@ -575,6 +580,48 @@ function QMSSerchResolution() {
                           )}
                       </div>
                     </div>
+                    <div class="col-3">
+                    <div class="mb-3">
+                      <div class="form-check" style={{ marginTop: "39px" }}>
+                        <input
+                          class={`form-check-input ${
+                            formik.touched.passedResolution && formik.errors.passedResolution
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked={formik.values.passedResolution}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              "passedResolution",
+                              !formik.values.passedResolution
+                            )
+                          }
+                        />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Passed Resolution
+                        </label>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div className="row">
+                  <div class="col-3">
+                    <div class="mb-3">
+                      <label class="form-label">Color No</label>
+                      <input
+                        type="text"
+                        value={formik.values.colourResNo}
+                        className={`form-control`}
+                        id="colourResNo"
+                        // readOnly={true}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                    </div>
+                  </div>
                   </div>
 
                   <div className="row">

@@ -11,30 +11,30 @@ const DraggableMultiSelect = ({ options, value, onChange, ...props }) => {
   };
 
   const onDragEnd = (result) => {
-    // Dropped outside the list
     if (!result.destination) {
       return;
     }
-
     const items = reorder(
       value,
       result.source.index,
       result.destination.index
     );
-
     onChange(items);
   };
 
-  // Custom components for react-select
   const MultiValue = props => {
-    return null; // Hide default multi-value display
+    return null;
   };
 
-  // Custom styles to accommodate the draggable list
   const customStyles = {
     control: (base) => ({
       ...base,
       marginBottom: '10px',
+    }),
+    menu: (base) => ({
+      ...base,
+      maxHeight: '200px',
+      overflowY: 'auto'
     })
   };
 
@@ -57,7 +57,12 @@ const DraggableMultiSelect = ({ options, value, onChange, ...props }) => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="p-2 border rounded-md"
+                className="border rounded"
+                style={{
+                  height: '200px',
+                  overflowY: 'auto',
+                  padding: '8px'
+                }}
               >
                 {value.map((item, index) => (
                   <Draggable 
@@ -70,9 +75,11 @@ const DraggableMultiSelect = ({ options, value, onChange, ...props }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`p-2 mb-2 rounded-md flex items-center justify-between ${
-                          snapshot.isDragging ? 'bg-blue-100' : 'bg-gray-50'
-                        }`}
+                        className="p-2 mb-2 rounded d-flex align-items-center justify-content-between"
+                        style={{
+                          backgroundColor: snapshot.isDragging ? '#e9ecef' : '#f8f9fa',
+                          ...provided.draggableProps.style
+                        }}
                       >
                         <span>{item.label}</span>
                         <button
@@ -80,8 +87,8 @@ const DraggableMultiSelect = ({ options, value, onChange, ...props }) => {
                             const newValue = value.filter(v => v.value !== item.value);
                             onChange(newValue);
                           }}
-                          style={{marginLeft:"6px", border:"none"}}
-                          
+                          className="btn btn-link p-0 ms-2"
+                          style={{ border: 'none', color: '#6c757d' }}
                           type="button"
                         >
                           ×

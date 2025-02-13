@@ -103,8 +103,8 @@ const PreviewSuplementryList = () => {
             </h1>
             <div style={{ textAlign: "center" }}>
               <p style={{ marginTop: "33px" }}>
-                ({data?.questionList?.questionCategory} QUESTIONS LIST NO.{" "}
-                {data?.questionList?.startListNo} FOR {data?.questionList?.session?.sessionName}TH SESSION)
+                ({data?.questionListData?.questionCategory} QUESTIONS LIST NO.{" "}
+                {data?.questionListData?.startListNo} FOR {data?.questionListData?.session?.sessionName}TH SESSION)
               </p>
             </div>
             {data.divisionQuestionCount?.map((division, index) => (

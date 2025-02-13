@@ -48,11 +48,16 @@ export const DeleteQuestion = async (id, Data) => {
   }
 };
 
-export const getAllQuestion = async (page, pageSize, questionSentStatus) => {
+export const getAllQuestion = async (
+  page,
+  pageSize,
+  questionSentStatus,
+  designationName
+) => {
   try {
     // const token = getAuthToken();
     const response = await axiosClient.get(
-      `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}`,
+      `/questions/all?currentPage=${page}&pageSize=${pageSize}&questionSentStatus=${questionSentStatus}&designationName=${designationName}`,
       {
         // headers: {
         //   Authorization: `Bearer ${token}`,
@@ -840,6 +845,21 @@ export const compareQuestion = async (searchParams, currentPage, pageSize) => {
       {
         params: filteredSearchParams,
       }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+//
+// hour Statement Question List Count
+export const getQuestionListCountsHourStatement = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.get(
+      `questionList/getQuestionListCounts/${id}`
     );
     return response?.data;
   } catch (error) {

@@ -85,6 +85,7 @@ function CustomTable({
   setIsColumnCheckBox,
   isColumncheck,
   caseEditable,
+  showcompletTex
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const filteredKeys = keys?.filter((key) => {
@@ -474,7 +475,7 @@ function CustomTable({
                               {item[key]}
                             </span>
                           ) : typeof item[key] === "string" &&
-                            item[key].split(" ").length > 5 ? (
+                           (!showcompletTex && item[key].split(" ").length > 5) ? (
                             <OverlayTrigger
                               placement="top"
                               overlay={
@@ -487,9 +488,7 @@ function CustomTable({
                                 {item[key]}
                               </span>
                             </OverlayTrigger>
-                          ) : (
-                            <span>{item[key]}</span>
-                          )}
+                          ) : <p style={{ textAlign: "justify" }}>{item[key]}</p> }
                         </td>
                       ))}
                       {isRemarksAttachhments && (
@@ -923,7 +922,7 @@ function CustomTable({
                               {item[key]}
                             </span>
                           ) : typeof item[key] === "string" &&
-                            item[key].split(" ").length > 5 ? (
+                            (!showcompletTex && item[key].split(" ").length > 5) ? (
                             <OverlayTrigger
                               placement="top"
                               overlay={
@@ -936,8 +935,8 @@ function CustomTable({
                                 {item[key]}
                               </span>
                             </OverlayTrigger>
-                          ) : (
-                            <span>{item[key]}</span>
+                          ) :(
+                            <p style={{ textAlign: "justify" }}>{item[key]}</p>
                           )}
                         </td>
                       ))}
