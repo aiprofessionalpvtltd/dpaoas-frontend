@@ -259,9 +259,9 @@ const EditFinanceMoneyBill = () => {
     GetAllCommittiesApi();
     getAllBillStatusData();
     GetAllCommittiesRecommendationApi();
-    if (ministerID) {
-      getMinisteryByMinisterIdApi();
-    }
+    // if (ministerID) {
+    //   getMinisteryByMinisterIdApi();
+    // }
   }, [ministerID]);
   const formik = useFormik({
     initialValues: {
@@ -516,19 +516,19 @@ const EditFinanceMoneyBill = () => {
     }
   };
 
-  // Get All Miisters
-  const getMinisteryByMinisterIdApi = async () => {
-    try {
-      const response = await getSingleMinisteryByMinisterID(
-        ministerID && ministerID
-      );
-      if (response?.success) {
-        setMinistryDataOnMinister(response?.data?.ministries?.ministries);
-      }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
-    }
-  };
+  // // Get All Miisters
+  // const getMinisteryByMinisterIdApi = async () => {
+  //   try {
+  //     const response = await getSingleMinisteryByMinisterID(
+  //       ministerID && ministerID
+  //     );
+  //     if (response?.success) {
+  //       setMinistryDataOnMinister(response?.data?.ministries?.ministries);
+  //     }
+  //   } catch (error) {
+  //     showErrorMessage(error?.response?.data?.message);
+  //   }
+  // };
 
   // GetTerms on the Base of Tenure
   const getMinistriesOnTenure = async (id) => {
@@ -638,12 +638,15 @@ const EditFinanceMoneyBill = () => {
       }
       if (singleSenateBillData?.billFor) {
         fetchTenures(singleSenateBillData?.billFor);
-        if (
-          singleSenateBillData?.fkMinisterTenureId &&
-          singleSenateBillData?.billFor === "Senators"
-        ) {
+        if (singleSenateBillData?.fkMinisterTenureId) {
           getMinistriesOnTenure(singleSenateBillData?.fkMinisterTenureId);
         }
+        // if (
+        //   singleSenateBillData?.fkMinisterTenureId &&
+        //   singleSenateBillData?.billFor === "Senators"
+        // ) {
+        //   getMinistriesOnTenure(singleSenateBillData?.fkMinisterTenureId);
+        // }
       }
       if (
         singleSenateBillData?.fkTenureId &&
@@ -1282,7 +1285,7 @@ const EditFinanceMoneyBill = () => {
       );
     }
 
-    if (values?.senateBillMinistryMovers?.length > 0) {
+    if (values?.senateBillMinistryMovers) {
       formData.append(
         `senateBillMinistryMovers[${0}][fkMinistryId]`,
         values?.senateBillMinistryMovers?.value
@@ -1711,8 +1714,8 @@ const EditFinanceMoneyBill = () => {
                             </label>
                             <Select
                               options={
-                                ministryDataOnMinister &&
-                                ministryDataOnMinister?.map((item) => ({
+                                ministryDataOnTenure &&
+                                ministryDataOnTenure?.map((item) => ({
                                   value: item.id,
                                   label: item?.ministryName,
                                 }))
@@ -1742,44 +1745,45 @@ const EditFinanceMoneyBill = () => {
                           </div>
                         </>
                       ) : (
-                        <div className="col">
-                          <div className="mb-3">
-                            <label class="form-label">Select Senator</label>
-                            <Select
-                              options={
-                                Array.isArray(membersOnParliamentaryYear) &&
-                                membersOnParliamentaryYear.length > 0
-                                  ? membersOnParliamentaryYear.map((item) => ({
-                                      value: item.id,
-                                      label: item?.memberName,
-                                    }))
-                                  : []
-                              }
-                              id="senateBillSenatorMovers"
-                              name="senateBillSenatorMovers"
-                              onChange={(selectedOptions) =>
-                                formik.setFieldValue(
-                                  "senateBillSenatorMovers",
-                                  selectedOptions
-                                )
-                              }
-                              value={formik.values.senateBillSenatorMovers}
-                              isMulti={true}
-                              className={` ${
-                                formik.touched.senateBillSenatorMovers &&
-                                formik.errors.senateBillSenatorMovers
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                            />
-                            {formik.touched.senateBillSenatorMovers &&
-                              formik.errors.senateBillSenatorMovers && (
-                                <div class="invalid-feedback">
-                                  {formik.errors.senateBillSenatorMovers}
-                                </div>
-                              )}
-                          </div>
-                        </div>
+                        ""
+                        // <div className="col">
+                        //   <div className="mb-3">
+                        //     <label class="form-label">Select Senator</label>
+                        //     <Select
+                        //       options={
+                        //         Array.isArray(membersOnParliamentaryYear) &&
+                        //         membersOnParliamentaryYear.length > 0
+                        //           ? membersOnParliamentaryYear.map((item) => ({
+                        //               value: item.id,
+                        //               label: item?.memberName,
+                        //             }))
+                        //           : []
+                        //       }
+                        //       id="senateBillSenatorMovers"
+                        //       name="senateBillSenatorMovers"
+                        //       onChange={(selectedOptions) =>
+                        //         formik.setFieldValue(
+                        //           "senateBillSenatorMovers",
+                        //           selectedOptions
+                        //         )
+                        //       }
+                        //       value={formik.values.senateBillSenatorMovers}
+                        //       isMulti={true}
+                        //       className={` ${
+                        //         formik.touched.senateBillSenatorMovers &&
+                        //         formik.errors.senateBillSenatorMovers
+                        //           ? "is-invalid"
+                        //           : ""
+                        //       }`}
+                        //     />
+                        //     {formik.touched.senateBillSenatorMovers &&
+                        //       formik.errors.senateBillSenatorMovers && (
+                        //         <div class="invalid-feedback">
+                        //           {formik.errors.senateBillSenatorMovers}
+                        //         </div>
+                        //       )}
+                        //   </div>
+                        // </div>
                       )}
 
                       <div className="row">

@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }) => {
 
   const AllMembersData = async () => {
     const currentPage = 1;
-    const pageSize = 100;
+    const pageSize = 5000;
     try {
       const response = await getallMembers(currentPage, pageSize);
       if (response?.success) {

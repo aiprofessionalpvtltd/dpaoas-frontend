@@ -4,11 +4,18 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 
 import moment from "moment";
-import { getAllGovernmentSenateBills, listFinanceMoneyBil } from "../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  getAllGovernmentSenateBills,
+  listFinanceMoneyBil,
+  SendLegislationFinanceBillsToTransaltion,
+} from "../../../../../api/APIs/Services/LegislationModule.service";
 import { Layout } from "../../../../../components/Layout";
 import Header from "../../../../../components/Header";
 import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
-import { showErrorMessage } from "../../../../../utils/ToastAlert";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../utils/ToastAlert";
 
 const AllFinanceMoneyBill = () => {
   const navigate = useNavigate();
@@ -44,10 +51,10 @@ const AllFinanceMoneyBill = () => {
       //       .map((mover) => mover?.mna?.mnaName)
       //       .join(", ")
       //   : "---",
-      dateOnWhichBillWasPassedByNA: item?.PassedByNADate
+      DateOfLayingInNA: item?.PassedByNADate
         ? moment(item?.PassedByNADate, "YYYY-MM-DD").format("DD-MM-YYYY")
         : "---",
-      dateOfReceiptOfMessageFromNA: item?.DateOfReceiptOfMessageFromNA
+      DateOfLayingInSenate: item?.DateOfReceiptOfMessageFromNA
         ? moment(item?.DateOfReceiptOfMessageFromNA, "YYYY-MM-DD").format(
             "DD-MM-YYYY"
           )
@@ -103,10 +110,11 @@ const AllFinanceMoneyBill = () => {
   };
 
   // Handle API Call (Get All Government Bills Senate)
-  const getGovernmentSenateBillApi = useCallback(async () => {
+  const getGovernmentFinanceMoneyBillAPI = useCallback(async () => {
     const searchParams = {
       billCategory: "Government Bill",
       billFrom: "From NA",
+      financeMoneyBillSentStatus: "inLegislation",
     };
 
     try {
@@ -126,12 +134,11 @@ const AllFinanceMoneyBill = () => {
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
     }
-
   }, [selectedbillFrom, currentPage, pageSize]);
 
   useEffect(() => {
-    getGovernmentSenateBillApi();
-  }, [getGovernmentSenateBillApi]);
+    getGovernmentFinanceMoneyBillAPI();
+  }, [getGovernmentFinanceMoneyBillAPI]);
 
   // // Create Government Bill
   // const handleGovernmentSenateBill = () => {
@@ -140,7 +147,7 @@ const AllFinanceMoneyBill = () => {
   //   });
   // };
   // Create Government Bill
- 
+
   const handleAddFinanceMoneyBill = () => {
     navigate("/lgms/dashboard/bills/legislation-bills/finance-money-bill/add", {
       state: {
@@ -151,11 +158,24 @@ const AllFinanceMoneyBill = () => {
     });
   };
 
-  
-
   // Edit Bill Recieved From NA
-  const handleEditNABill = (id,item) => {
-    navigate("/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit", { state: { id, item, forPerson: "Ministers" } });
+  const handleEditNABill = (id, item) => {
+    navigate(
+      "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
+      { state: { id, item, forPerson: "Ministers" } }
+    );
+  };
+
+  const sendBilltoTranslation = async (id) => {
+    try {
+      const response = await SendLegislationFinanceBillsToTransaltion(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getGovernmentFinanceMoneyBillAPI();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
   };
 
   return (
@@ -193,6 +213,8 @@ const AllFinanceMoneyBill = () => {
               handleEditNABill(item.id, item);
             }}
             // handleDelete={() => {}}
+            showSent={true}
+            handleSent={(item) => sendBilltoTranslation(item?.id)}
           />
         </div>
       </div>

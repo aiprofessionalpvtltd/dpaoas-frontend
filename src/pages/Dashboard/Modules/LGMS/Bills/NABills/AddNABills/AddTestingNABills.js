@@ -289,8 +289,6 @@ function AddEditTestingNABills() {
     setIsDateofReciptCalendarOpen(false);
   };
 
-  console.log("location?.state", location?.state);
-
   const CreateNABill = async (values) => {
     const formData = new FormData();
     formData.append("fkSessionId", values?.session);
@@ -330,16 +328,18 @@ function AddEditTestingNABills() {
       );
       formData.append("fkParliamentaryYearId", values?.parliamentaryYear);
     }
-    const currentYear = new Date().getFullYear();
+    const billYear = isCheckBoxChecked
+      ? values?.oldYear
+      : new Date().getFullYear();
     if (location?.state && location.state.category === "Private Member Bill") {
       formData.append(
         "fileNumber",
-        `24/(${values?.fileNumber})/${currentYear}-Legis`
+        `24/(${values?.fileNumber})/${billYear}-Legis`
       );
     } else {
       formData.append(
         "fileNumber",
-        `09/(${values?.fileNumber})/${currentYear}-Legis`
+        `09/(${values?.fileNumber})/${billYear}-Legis`
       );
     }
     // formData.append("PassedByNADate", values?.passedByNADate);
@@ -448,8 +448,6 @@ function AddEditTestingNABills() {
       console.log("error", error);
     }
   };
-
-  console.log("ministerTenure from", ministerTenure);
 
   return (
     <Layout
@@ -589,55 +587,6 @@ function AddEditTestingNABills() {
                         )}
                       </div>
 
-                      {/* <div className="col">
-                        {showMinster === "Ministers" ? (
-                          <label className="form-label">Minister Tenure</label>
-                        ) : (
-                          <label className="form-label">Member Tenure</label>
-                        )}
-
-                        <Select
-                          options={
-                            Array.isArray(tenures) && tenures?.length > 0
-                              ? tenures.map((item) => ({
-                                  value: item?.id,
-                                  label: `${item?.tenureName} (${item?.tenureType})`,
-                                  tenureType: item?.tenureType,
-                                }))
-                              : []
-                          }
-                          onChange={(selectedOption) => {
-                            formik.setFieldValue(
-                              "memberTenure",
-                              selectedOption
-                            );
-                            if (showMinster === "Ministers") {
-                              getParliamentaryYearsonTheBaseOfTenure(
-                                selectedOption?.value
-                              );
-                              getMinistriesOnTenure(selectedOption?.value);
-                            } else {
-                              handleTenuresTerms(selectedOption?.value);
-                            }
-                            formik.setFieldValue("fkTermId", "");
-                            formik.setFieldValue("parliamentaryYear", "");
-                            formik.setFieldValue("selectedSenator", "");
-                            // formik.setFieldValue("selectedMNA", null);
-                            // formik.setFieldValue("selectedMinistry", null);
-                          }}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.memberTenure}
-                          id="memberTenure"
-                          name="memberTenure"
-                          isClearable={true}
-                        />
-                        {formik.touched.memberTenure &&
-                          formik.errors.memberTenure && (
-                            <div className="invalid-feedback">
-                              {formik.errors.memberTenure}
-                            </div>
-                          )}
-                      </div> */}
                       {/* Members Terms  */}
                       {showMinster !== "Ministers" && (
                         <div className="col">
@@ -676,59 +625,6 @@ function AddEditTestingNABills() {
                         </div>
                       )}
                       <div class="col">
-                        {/* <div class="mb-3">
-                          {showMinster === "Ministers" ? (
-                            <label className="form-label">
-                              Parliamentary Year
-                            </label>
-                          ) : (
-                            <label className="form-label">
-                              Parliamentary Year
-                            </label>
-                          )}
-                          <select
-                            id="parliamentaryYear"
-                            name="parliamentaryYear"
-                            className={`form-select  ${
-                              formik.touched.parliamentaryYear &&
-                              formik.errors.parliamentaryYear
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onBlur={formik.handleBlur}
-                            // onChange={formik.handleChange}
-                            onChange={(e) => {
-                              const selectedId = e.target.value;
-                              formik.handleChange(e);
-                              setMembersOnParliamentaryYear([]);
-                              if (showMinster === "Ministers") {
-                                getMNAOnParliamentaryYear(e.target.value);
-                              } else {
-                                getMembersOnParliamentaryYear(e.target.value);
-                              }
-
-                              formik.setFieldValue("selectedSenator", "");
-                            }}
-                            value={formik.values.parliamentaryYear}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {parliamentaryYearData &&
-                              parliamentaryYearData?.length > 0 &&
-                              parliamentaryYearData.map((item) => (
-                                <option value={item.id}>
-                                  {item.parliamentaryTenure}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.parliamentaryYear &&
-                            formik.errors.parliamentaryYear && (
-                              <div className="invalid-feedback">
-                                {formik.errors.parliamentaryYear}
-                              </div>
-                            )}
-                        </div> */}
                         <div className="mb-3">
                           {showMinster === "Ministers" ? (
                             <>
@@ -910,15 +806,6 @@ function AddEditTestingNABills() {
                           <div className="mb-3">
                             <label class="form-label">Member</label>
                             <Select
-                              // options={
-                              //   Array.isArray(membersOnParliamentaryYear) &&
-                              //   membersOnParliamentaryYear.length > 0
-                              //     ? membersOnParliamentaryYear.map((item) => ({
-                              //         value: item.id,
-                              //         label: item?.memberName,
-                              //       }))
-                              //     : []
-                              // }
                               options={
                                 Array.isArray(membersOnParliamentaryYear) &&
                                 membersOnParliamentaryYear.length > 0
@@ -958,60 +845,6 @@ function AddEditTestingNABills() {
                           </div>
                         </div>
                       )}
-                      {/* <div class="col">
-                        <div class="mb-3">
-                          <label class="form-label">Session</label>
-                          <select
-                            id="session"
-                            name="session"
-                            className={`form-control  ${
-                              formik.touched.session && formik.errors.session
-                                ? "is-invalid"
-                                : ""
-                            }`}
-                            onChange={formik.handleChange}
-                            value={formik.values.session}
-                          >
-                            <option value="" disabled hidden>
-                              Select
-                            </option>
-                            {sessions &&
-                              sessions.map((item) => (
-                                <option value={item.id}>
-                                  {item.sessionName}
-                                </option>
-                              ))}
-                          </select>
-                          {formik.touched.session && formik.errors.session && (
-                            <div class="invalid-feedback">
-                              {formik.errors.session}
-                            </div>
-                          )}
-                        </div>
-                      </div> */}
-                      {/* <div class="col">
-                      <div class="mb-3">
-                        <label class="form-label">Bill Category </label>
-                        <select
-                          id="billCategory"
-                          name="billCategory"
-                          className={`form-select ${
-                            formik.touched.billCategory && formik.errors.billCategory ? "is-invalid" : ""
-                          }`}
-                          onChange={formik.handleChange}
-                          value={formik.values.billCategory}
-                        >
-                          <option value="" disabled hidden>
-                            Select Bill Category
-                          </option>
-                          <option value="Government Bill">Government Bill</option>
-                          <option value="Private Member Bill">Private Member Bill</option>
-                        </select>
-                        {formik.touched.billCategory && formik.errors.billCategory && (
-                          <div class="invalid-feedback">{formik.errors.billCategory}</div>
-                        )}
-                      </div>
-                    </div> */}
                     </div>
                     <div class="row">
                       <div class="col">
@@ -1084,45 +917,6 @@ function AddEditTestingNABills() {
                       </div>
 
                       <div className="col">
-                        {/* <div className="mb-3" style={{ position: "relative" }}>
-                        <label className="form-label">Passed By NA Date</label>
-                        <span
-                          style={{
-                            position: "absolute",
-                            right: "15px",
-                            top: "36px",
-                            zIndex: 1,
-                            fontSize: "20px",
-                            zIndex: "1",
-                            color: "#666",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleCalendarToggle}
-                        >
-                          <FontAwesomeIcon icon={faCalendarAlt} />
-                        </span>
-
-                        <DatePicker
-                          selected={formik.values.passedByNADate}
-                          onChange={handleDateSelect}
-                          onBlur={formik.handleBlur}
-                          className={`form-control ${
-                            formik.touched.passedByNADate && formik.errors.passedByNADate ? "is-invalid" : ""
-                          }`}
-                          open={isCalendarOpen}
-                          onClickOutside={() => setIsCalendarOpen(false)}
-                          onInputClick={handleCalendarToggle}
-                          // onClick={handleCalendarToggle}
-                          maxDate={new Date()}
-                          dateFormat="dd-MM-yyyy"
-                        />
-
-                        {formik.touched.passedByNADate && formik.errors.passedByNADate && (
-                          <div className="invalid-feedback" style={{ display: "block" }}>
-                            {formik.errors.passedByNADate}
-                          </div>
-                        )}
-                      </div> */}
                         <div className="mb-3" style={{ position: "relative" }}>
                           <label className="form-label">
                             Passed By NA Date
@@ -1227,55 +1021,53 @@ function AddEditTestingNABills() {
                       </div>
                     </div>
                     <div className="row">
-                      {/* <div className="col-2">
-                        <div className="mb-3">
-                          <label className="form-label">
-                            Add Old FIle Number
-                          </label>
-
+                      <div className="col-3">
+                        <div class="form-check" style={{ marginTop: "39px" }}>
                           <input
+                            class={`form-check-input`}
                             type="checkbox"
-                            id="checkbox"
-                            name="checkbox"
-                            className="form-check-input"
+                            id="oldfilenumber"
                             checked={isCheckBoxChecked}
-                            onChange={(e) =>
-                              setIsCheckBoxChecked(e.target.checked)
-                            }
+                            onChange={(e) => {
+                              setIsCheckBoxChecked(e.target.checked);
+                            }}
                           />
-                          {formik.touched.oldYear && formik.errors.oldYear && (
-                            <div
-                              className="invalid-feedback"
-                              style={{ display: "block" }}
-                            >
-                              {formik.errors.oldYear}
-                            </div>
-                          )}
+                          <label class="form-check-label" for="oldfileNumber">
+                            Add Old File Number
+                          </label>
                         </div>
-                      </div> */}
+                      </div>
 
-                      {/* <div className="col-3">
-                        <div className="mb-3">
-                          <label className="form-label">old Year</label>
+                      {isCheckBoxChecked && (
+                        <div className="col-3">
+                          <div className="mb-3">
+                            <label className="form-label">Old Year</label>
 
-                          <input
-                            type="text"
-                            id="oldYear"
-                            name="oldYear"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.oldYear}
-                          />
-                          {formik.touched.oldYear && formik.errors.oldYear && (
-                            <div
-                              className="invalid-feedback"
-                              style={{ display: "block" }}
-                            >
-                              {formik.errors.oldYear}
-                            </div>
-                          )}
+                            <input
+                              type="text"
+                              id="oldYear"
+                              className={`form-control ${
+                                formik.touched.oldYear && formik.errors.oldYear
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              name="oldYear"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.oldYear}
+                            />
+                            {formik.touched.oldYear &&
+                              formik.errors.oldYear && (
+                                <div
+                                  className="invalid-feedback"
+                                  style={{ display: "block" }}
+                                >
+                                  {formik.errors.oldYear}
+                                </div>
+                              )}
+                          </div>
                         </div>
-                      </div> */}
+                      )}
                       <div className="col-3">
                         <div className="mb-3">
                           <label className="form-label">File Number</label>

@@ -31,6 +31,7 @@ function LGMSMembers() {
   const [tenuresTerms, setTenuresTerms] = useState([]);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
   const [members, setMembers] = useState([]);
+  const [oldMembers, setOldMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -70,6 +71,30 @@ function LGMSMembers() {
     }));
   };
 
+  const OldMembertransformData = (apiData) => {
+    return apiData.map((item) => ({
+      id: item?.id,
+      memberName: `${item?.memberName}`,
+      politicalParty: `${item?.politicalParties?.partyName}`,
+      electionType: item?.electionType,
+      // memberTenure: item?.tenures?.tenureName
+      //   ? item?.tenures?.tenureName
+      //   : "---",
+      // memberTerm: item?.terms?.termName ? item?.terms?.termName : "---",
+      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
+      //   ? item?.parliamentaryYears?.parliamentaryTenure
+      //   : "---",
+      // memberProvince: item?.memberProvince ? item?.memberProvince : "---",
+      // phoneNo: item?.phoneNo ? item?.phoneNo : "---",
+      // gender: item?.gender,
+      // fromDate: item.fromDate
+      //   ? moment(item.fromDate).format("YYYY/MM/DD")
+      //   : "---",
+      // toDate: item.toDate ? moment(item.toDate).format("YYYY/MM/DD") : "---",
+      // memberStatus: item?.memberStatus,
+    }));
+  };
+
   const formik = useFormik({
     initialValues: {
       memberTenure: "",
@@ -89,12 +114,17 @@ function LGMSMembers() {
         await getMemberByParliamentaryYearID(parliamentaryYearId);
       console.log("response ", response);
       if (response?.success) {
-        const transformedData = transformData(response?.data);
-        setMembers(transformedData);
-        // setCount(response?.data?.count);
+        const transformedData = OldMembertransformData(response?.data);
+        console.log("apiData", transformedData);
+
+        setOldMembers(transformedData);
+        setCount(response?.data?.length); // Update count for pagination
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
+      showErrorMessage(
+        error?.response?.data?.message || "Error fetching members"
+      );
     }
   };
 
@@ -112,9 +142,9 @@ function LGMSMembers() {
     try {
       const response = await getallMembers(currentPage, pageSize);
       if (response?.success) {
-        setCount(response?.data?.count);
         const transformedData = transformData(response.data?.members);
         setMembers(transformedData);
+        setCount(response?.data?.count);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
@@ -184,8 +214,11 @@ function LGMSMembers() {
     formik.resetForm();
     setTenuresTerms([]);
     setParliamentaryYearData([]);
+    setOldMembers([]);
     handleMembers();
   };
+
+  console.log("old Mem", oldMembers);
 
   return (
     <Layout
@@ -358,28 +391,53 @@ function LGMSMembers() {
               </form>
               <div className="row">
                 <div class="col-12">
-                  <CustomTable
-                    data={members}
-                    tableTitle="Member List"
-                    addBtnText="Add Member"
-                    handleAdd={() =>
-                      navigate("/lgms/dashboard/manage/members/addedit")
-                    }
-                    handleEdit={(item) =>
-                      navigate("/lgms/dashboard/manage/members/addedit", {
-                        state: item,
-                      })
-                    }
-                    handleDelete={(item) => handleDelete(item.id)}
-                    headertitlebgColor={"#666"}
-                    headertitletextColor={"#FFF"}
-                    handlePageChange={handlePageChange}
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    totalCount={count}
-                    showSent={true}
-                    handleSent={(item) => openModal(item?.id)}
-                  />
+                  {oldMembers?.length > 0 ? (
+                    <CustomTable
+                      data={oldMembers?.length > 0 ? oldMembers : members}
+                      tableTitle="Old Members List"
+                      addBtnText="Add Member"
+                      handleAdd={() =>
+                        navigate("/lgms/dashboard/manage/members/addedit")
+                      }
+                      handleEdit={(item) =>
+                        navigate("/lgms/dashboard/manage/members/addedit", {
+                          state: item,
+                        })
+                      }
+                      handleDelete={(item) => handleDelete(item.id)}
+                      headertitlebgColor={"#666"}
+                      headertitletextColor={"#FFF"}
+                      handlePageChange={handlePageChange}
+                      currentPage={currentPage}
+                      pageSize={pageSize}
+                      totalCount={count}
+                      showSent={true}
+                      handleSent={(item) => openModal(item?.id)}
+                    />
+                  ) : (
+                    <CustomTable
+                      data={members}
+                      tableTitle="Current Member List"
+                      addBtnText="Add Member"
+                      handleAdd={() =>
+                        navigate("/lgms/dashboard/manage/members/addedit")
+                      }
+                      handleEdit={(item) =>
+                        navigate("/lgms/dashboard/manage/members/addedit", {
+                          state: item,
+                        })
+                      }
+                      handleDelete={(item) => handleDelete(item.id)}
+                      headertitlebgColor={"#666"}
+                      headertitletextColor={"#FFF"}
+                      handlePageChange={handlePageChange}
+                      currentPage={currentPage}
+                      pageSize={pageSize}
+                      totalCount={count}
+                      showSent={true}
+                      handleSent={(item) => openModal(item?.id)}
+                    />
+                  )}
                 </div>
               </div>
             </div>

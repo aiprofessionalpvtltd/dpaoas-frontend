@@ -1073,11 +1073,11 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/bills/legislation-bills/finance-money-bill",
         icon: faBookOpen,
       },
-      // {
-      //   itemName: "Search Ordinance",
-      //   link: "/lgms/dashboard/ordinances/search-ordinance",
-      //   icon: faBookOpen,
-      // },
+      {
+        itemName: "Search Finance Money Bills",
+        link: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/search",
+        icon: faBookOpen,
+      },
     ],
   },
 

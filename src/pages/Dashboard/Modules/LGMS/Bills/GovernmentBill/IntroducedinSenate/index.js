@@ -6,8 +6,14 @@ import IntroducedInSenate from "../../../../../../../components/LegislationBills
 import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import { Layout } from "../../../../../../../components/Layout";
 import Header from "../../../../../../../components/Header";
-import { getAllGovernmentSenateBills } from "../../../../../../../api/APIs/Services/LegislationModule.service";
-import { showErrorMessage } from "../../../../../../../utils/ToastAlert";
+import {
+  getAllGovernmentSenateBills,
+  SendLegislationBillsToTransaltion,
+} from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  showErrorMessage,
+  showSuccessMessage,
+} from "../../../../../../../utils/ToastAlert";
 
 const AllGovernmentSenateBills = () => {
   const navigate = useNavigate();
@@ -116,6 +122,7 @@ const AllGovernmentSenateBills = () => {
       const searchParams = {
         billCategory: "Government Bill",
         billFrom: "From Senate",
+        introducedBillSentStatus: "inLegislation",
       };
 
       const response = await getAllGovernmentSenateBills(
@@ -179,6 +186,18 @@ const AllGovernmentSenateBills = () => {
     navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: { id, item } });
   };
 
+  const sendBilltoTranslation = async (id) => {
+    try {
+      const response = await SendLegislationBillsToTransaltion(id);
+      if (response?.success) {
+        showSuccessMessage(response.message);
+        getGovernmentSenateBillApi();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <Layout
       module={true}
@@ -208,6 +227,8 @@ const AllGovernmentSenateBills = () => {
           currentPage={currentPage}
           pageSize={pageSize}
           totalCount={count}
+          showSent={true}
+          handleSent={(item) => sendBilltoTranslation(item?.id)}
         />
       </div>
     </Layout>

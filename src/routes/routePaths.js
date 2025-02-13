@@ -342,6 +342,7 @@ import QMSCompareQuestion from "../pages/Dashboard/Modules/QMS/Question/CompareQ
 import ListOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/index.js";
 import TestingNoticePrivateMemberBill from "../pages/Dashboard/Modules/LGMS/LGMSPrivateBill/LGMSEditNoticeOfficeSenateBill/EditPrivateNoticeBill.js";
 import EditFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/EditFinanceMoneyBill/index.js";
+import SearchFinanceMoneyBill from "../pages/Dashboard/Modules/LGMS/FinanceMoneyBill/SearchFinanceMoneyBill/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -945,6 +946,10 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/edit",
     element: <EditFinanceMoneyBill />,
+  },
+  {
+    path: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/search",
+    element: <SearchFinanceMoneyBill />,
   },
   {
     path: "/lgms/dashboard/bills/legislation-bills/private-member-bills/recieved-from-na",

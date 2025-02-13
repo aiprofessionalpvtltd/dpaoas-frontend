@@ -33,7 +33,6 @@ import * as Yup from "yup";
 import {
   getAllTenures,
   getMemberByParliamentaryYearID,
-  getParliamentaryYearsByTenureID,
   getParliamentaryYearsByTermID,
   getTermByTenureID,
 } from "../../../../../../../api/APIs/Services/ManageQMS.service";
@@ -63,7 +62,7 @@ const TestingEditSenateBills = () => {
 
   const BillFrom = location?.state && location?.state?.item?.billFrom;
 
-  const { members, sessions, parliamentaryYear } = useContext(AuthContext);
+  const { sessions } = useContext(AuthContext);
   const [billStatusData, setBillStatusesData] = useState([]);
   const [MNAData, setMNAData] = useState([]);
   const [singleSenateBillData, setSingleSenateBillData] = useState([]);
@@ -71,7 +70,6 @@ const TestingEditSenateBills = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isIntroducedCalendarOpen, setIntroducedCalendarOpen] = useState(false);
   const [ministerID, setMinisterID] = useState(null);
-  const [editTimeMinisterID, setEditTimeMinister] = useState(null);
   const [ministryDataOnMinister, setMinistryDataOnMinister] = useState([]);
   // const [isDateofReciptCalendarOpen, setIsDateofReciptCalendarOpen] =
   //   useState(false);
@@ -3329,7 +3327,13 @@ const TestingEditSenateBills = () => {
                         <option value="" disabled hidden>
                           Select
                         </option>
-                        <option value="test">
+                        <option
+                          value={
+                            BillCategory === "Private Member Bill"
+                              ? "Notice Under Rule 94"
+                              : "Notice Under Rule 96"
+                          }
+                        >
                           {BillCategory === "Private Member Bill"
                             ? "Notice Under Rule 94"
                             : "Notice Under Rule 96"}

@@ -23,6 +23,31 @@ export const mainSearchApi = async (currentPage, pageSize, searchParams) => {
   }
 };
 
+export const mainFinanceSearchApi = async (
+  currentPage,
+  pageSize,
+  searchParams
+) => {
+  try {
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, value]) => value !== "")
+    );
+    const response = await axiosClient.get(
+      `finance-money-bill/search?currentPage=${currentPage}&pageSize=${pageSize}`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // Get All Bills Status
 
 export const getAllBillStatus = async (currentPage, pageSize) => {
@@ -472,6 +497,26 @@ export const getAllPrivateMemberNABills = async (
   }
 };
 
+//Send Question
+export const SendLegislationBillsToTransaltion = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/senate-bill/sendForTranslation/${id}`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 // Getting All Committee Recommendation Lists Data
 export const getAllCommitteeRecommendation = async (currentPage, pageSize) => {
   try {
@@ -881,6 +926,26 @@ export const createNewFinanceMoneyBill = async (data) => {
   }
 };
 
+//Send Question
+export const SendLegislationFinanceBillsToTransaltion = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/finance-money-bill/sendForTranslation/${id}`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getFinanceMoneyBillByID = async (id) => {
   try {
     //   const token = getAuthToken();
@@ -911,6 +976,28 @@ export const UpdateFinanceMoneyBill = async (id, data) => {
       }
     );
 
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Notice Private Member Bills sending to transaltion
+
+//Send Question
+export const SendNoticePrivateBillToTransaltion = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/legislativeBills/sendToTranslation/${id}`,
+      data,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // }
+      }
+    );
     return response?.data;
   } catch (error) {
     console.error("Error fetching API endpoint:", error);
