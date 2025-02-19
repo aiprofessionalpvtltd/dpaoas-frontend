@@ -261,7 +261,9 @@ const SearchLegislationGovernmentBills = () => {
       formik?.values?.committeeRecomendation ||
       formik?.values?.remarks ||
       formik?.values?.billFrom ||
-      formik?.values?.billStatus
+      formik?.values?.billStatus ||
+      formik?.values?.fkMinisterTenureId ||
+      formik?.values?.parliamentaryYear
     ) {
       handleSearch(formik?.values, page);
     }

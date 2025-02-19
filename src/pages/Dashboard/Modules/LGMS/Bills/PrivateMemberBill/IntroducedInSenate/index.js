@@ -229,6 +229,7 @@ const AllPrivateMemberSenateBills = () => {
       />
       <div class="container-fluid">
         <IntroducedInSenate
+          block={true}
           addBtnText={"Create New Private Member Bill (Introduced In Senate)"}
           handleAdd={handlePrivateMemberSenateBill}
           tableTitle={"Private Member Bill Data (Introduced In Senate)"}
@@ -245,6 +246,7 @@ const AllPrivateMemberSenateBills = () => {
           totalCount={count}
           showSent={true}
           handleSent={(item) => sendBilltoTranslation(item?.id)}
+          ActionHide={false}
         />
       </div>
     </Layout>

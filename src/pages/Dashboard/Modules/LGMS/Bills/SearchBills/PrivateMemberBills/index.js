@@ -147,7 +147,6 @@ const SearchLegislationPrivateMemberBill = () => {
   const handleTenuresTerms = async (id) => {
     try {
       const response = await getTermByTenureID(id);
-      console.log("response of Terms", response);
       if (response?.success) {
         setTenuresTerms(response?.data);
       }
@@ -265,9 +264,6 @@ const SearchLegislationPrivateMemberBill = () => {
             "DD-MM-YYYY"
           )
         : "---",
-      // dateOfReceiptOfNotice: item?.noticeDate
-      //   ? moment(item?.noticeDate, "YYYY-MM-DD").format("DD-MM-YYYY")
-      //   : "---",
 
       dateOfReferencetoStandingCommittee: item?.introducedInHouses
         ?.referedOnDate
@@ -319,6 +315,7 @@ const SearchLegislationPrivateMemberBill = () => {
     setCurrentPage(page);
     if (
       formik?.values?.selectedMinistry ||
+      formik?.values?.selectedMNA ||
       formik?.values?.selectedSenator ||
       formik?.values?.parliamentaryYear ||
       formik?.values?.fromSession ||
@@ -332,7 +329,10 @@ const SearchLegislationPrivateMemberBill = () => {
       formik?.values?.committeeRecomendation ||
       formik?.values?.remarks ||
       formik?.values?.billFrom ||
-      formik?.values?.billStatus
+      formik?.values?.billStatus ||
+      formik?.values?.fkMemberTenure ||
+      formik?.values?.fkMinisterTenureId ||
+      formik?.values?.fkMnaParliamentaryYearId
     ) {
       handleSearch(formik?.values, page);
     }
@@ -384,17 +384,6 @@ const SearchLegislationPrivateMemberBill = () => {
     }
   };
 
-  // const handleParliamentaryYears = async () => {
-  //   try {
-  //     const response = await getAllParliamentaryYears(0, 500);
-  //     if (response?.success) {
-  //       setMemberParliamentaryYear(response?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error?.response?.data?.message);
-  //   }
-  // };
-
   const getBillstatus = async () => {
     try {
       const response = await getAllBillStatus(0, 500);
@@ -435,71 +424,29 @@ const SearchLegislationPrivateMemberBill = () => {
     GetAllCommittiesRecommendation();
   }, []);
 
-  // const transFormsearchData = (apiData) => {
-  //   return (
-  //     apiData?.map((item) => ({
-  //       id: item.id,
-  //       parliamentaryYear: item?.memberParliamentaryYear?.parliamentaryTenure,
-  //       session: item?.sessions?.sessionName,
-  //       billType: item.billType,
-  //       billCategory: item.billCategory,
-  //       billFrom: item.billFrom,
-  //       concerndCommittes:
-  //         item?.introducedInHouses?.manageCommittees?.committeeName,
-  //       billStatus: item?.billStatuses?.billStatusName,
-  //       Status: item.billStatus,
-  //     })) || []
-  //   );
-  // };
-
-  //   const transFormsearchData = (apiData) => {
-  //     return (
-  //       apiData?.map((item) => ({
-  //         id: item.id,
-  //         billTitle: item?.billTitle,
-  //         // dateOfIntroductionInSenate: item?.introducedInHouses?.introducedInHouseDate
-  //         //   ? moment(item?.introducedInHouses?.introducedInHouseDate).format("DD-MM-YYYY")
-  //         //   : "---",
-  //         dateOfPresentationReport: item?.introducedInHouses
-  //           ?.reportPresentationDate
-  //           ? moment(
-  //               item?.introducedInHouses?.reportPresentationDate,
-  //               "YYYY-MM-DD"
-  //             ).format("DD-MM-YYYY")
-  //           : "---",
-  //         dateOfTransmission: item?.dateOfTransmissionToNA
-  //           ? moment(item?.dateOfTransmissionToNA, "YYYY-MM-DD").format(
-  //               "DD-MM-YYYY"
-  //             )
-  //           : "---",
-
-  //         // movers: item?.senateBillMnaMovers
-  //         //   ? item?.senateBillMnaMovers.map((mover) => mover?.mna?.mnaName).join(", ")
-  //         //   : "---",
-  //         billCategory: item?.billCategory,
-  //         fileNumber: item?.fileNumber,
-  //         billFrom: item?.billFrom,
-  //         remarks: item?.billRemarks,
-  //       })) || []
-  //     );
-  //   };
-
   const handleSearch = useCallback(
     async (values, page) => {
       const data = {
         introducedBillSentStatus: "inLegislation",
+        fkTenureId: values?.fkMemberTenure?.value,
+        fkMinisterTenureId: values?.fkMinisterTenureId?.value,
         billCategory: "Private Member Bill",
         billFrom: values?.billFrom || "From Senate",
         fkSenatorId: values?.selectedSenator?.value,
+        fkTermId: values?.fkTermId?.value,
         fkParliamentaryYearId: values?.parliamentaryYear,
+        fkMnaParliamentaryYearId: values?.fkMnaParliamentaryYearId,
         fkMinistryId: values?.selectedMinistry?.value,
         keyword: values?.keywords,
+        fkMnaId: values?.selectedMNA?.value,
         fkSessionIdFrom: values?.fromSession,
         fkSessionIdto: values?.toSessionId,
         fkBillStatus: values?.statusId,
         billType: values?.billType,
         billRemarks: values?.keywords,
         fkManageCommitteeId: values?.concerndCommitties?.value,
+        selectedMNA: values?.selectedMNA?.value,
+        selectedMinistry: values?.selectedMinistry?.value,
         committeeRecomendation: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
         noticeDateFrom:
@@ -543,14 +490,12 @@ const SearchLegislationPrivateMemberBill = () => {
     setSearchData([]);
     setIsColumnChecked([]);
     setRemarksAttachmentVal(false);
+    setMinisterParliamentaryYear([]);
+    setMinistryDataOnTenure([]);
+    setTenuresTerms([]);
+    setMemberParliamentaryYear([]);
+    setMembersOnParliamentaryYear([]);
   };
-
-  // const handleEditSenateBill = (id) => {
-  //   navigate("/lgms/dashboard/bills/edit/senate-bills", { state: id });
-  // };
-  // const handleEditNABill = (id) => {
-  //   navigate("/lgms/dashboard/bills/edit/NA-bills/", { state: id });
-  // };
 
   // Edit Bill Introduced in Senate
   const handleEditSenateBill = (id, item) => {
