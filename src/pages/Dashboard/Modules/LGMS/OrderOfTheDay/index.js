@@ -12,13 +12,23 @@ import {
 import {
   deleteOrderOfTheDay,
   listOrderOfTheDay,
+  OrderOfTheDayByID,
 } from "../../../../../api/APIs/Services/Legislation.service";
+import PDFOrderOfDayModel from "../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
 
 function ListOrderOfDay() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
   const [orderOfTheDayData, setOrderOfTheDayData] = useState([]);
+  const [singleOrderofDay, setSingleOrderofDay] = useState(null);
+  const {
+    id,
+    sittingId,
+    sittingTime,
+    sittingDate,
+    content = [],
+  } = singleOrderofDay || {};
   const pageSize = 10; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -26,17 +36,24 @@ function ListOrderOfDay() {
     setCurrentPage(page);
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const transformOrderOfTheDayData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
       sessionName: item?.session?.sessionName,
-      sittingLabel: item.sittingLabel,
-      description: item?.content
-        .replace(/(<([^>]+)>)/gi, "")
-        .replace(/&nbsp;/gi, " ")
-        .replace(/\s+/g, " "),
+      sittingDate: item?.sittingDate,
+      sittingTime: item?.sittingTime,
     }));
   };
+
   const hendleOrderOfTheDayList = async () => {
     try {
       const response = await listOrderOfTheDay(currentPage, pageSize);
@@ -47,6 +64,18 @@ function ListOrderOfDay() {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleView = async (id) => {
+    try {
+      const response = await OrderOfTheDayByID(id);
+      if (response?.success) {
+        setSingleOrderofDay(response?.data);
+        openModal();
+      }
+    } catch (error) {
+      showErrorMessage(error.response.data.message);
     }
   };
 
@@ -77,9 +106,24 @@ function ListOrderOfDay() {
         title1={"list Order Of The Day"}
       />
 
+      {showModal && showModal && (
+        <PDFOrderOfDayModel
+          showModal={showModal}
+          selectedTabData={content}
+          closeModal={closeModal}
+          session={id}
+          formatedData={sittingDate}
+          startTime={sittingTime}
+          sittingId={sittingId}
+          isView={true}
+          // isMondayCheckBoxChecked={isMondayCheckBoxChecked}
+        />
+      )}
+
       <div class="row">
         <div class="col-12">
           <CustomTable
+            block={false}
             data={orderOfTheDayData}
             tableTitle="Order Of The Day List"
             addBtnText="Add New Order Of The Day"
@@ -93,12 +137,20 @@ function ListOrderOfDay() {
             }
             headertitlebgColor={"#666"}
             singleDataCard={true}
+            hideEditIcon={false}
+            showEditIcon={true}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
             hideDeleteIcon={true}
             totalCount={count}
+            // showSent={true}
+            // handleSent={() => {}}
+            showView={true}
+            handleView={(item) => {
+              handleView(item?.id);
+            }}
             // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

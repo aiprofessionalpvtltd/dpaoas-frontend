@@ -74,8 +74,8 @@ function LGMSMembers() {
   const OldMembertransformData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      memberName: `${item?.memberName}`,
-      politicalParty: `${item?.politicalParties?.partyName}`,
+      // memberName: `${item?.memberName}`,
+      // politicalParty: `${item?.politicalParties?.partyName}`,
       electionType: item?.electionType,
       // memberTenure: item?.tenures?.tenureName
       //   ? item?.tenures?.tenureName
@@ -87,10 +87,8 @@ function LGMSMembers() {
       // memberProvince: item?.memberProvince ? item?.memberProvince : "---",
       // phoneNo: item?.phoneNo ? item?.phoneNo : "---",
       // gender: item?.gender,
-      // fromDate: item.fromDate
-      //   ? moment(item.fromDate).format("YYYY/MM/DD")
-      //   : "---",
-      // toDate: item.toDate ? moment(item.toDate).format("YYYY/MM/DD") : "---",
+      // fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
+      // toDate: moment(item.toDate).format("YYYY/MM/DD"),
       // memberStatus: item?.memberStatus,
     }));
   };
@@ -118,13 +116,10 @@ function LGMSMembers() {
         console.log("apiData", transformedData);
 
         setOldMembers(transformedData);
-        setCount(response?.data?.length); // Update count for pagination
+        // setCount(response?.data?.count);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
-      showErrorMessage(
-        error?.response?.data?.message || "Error fetching members"
-      );
     }
   };
 
@@ -393,8 +388,8 @@ function LGMSMembers() {
                 <div class="col-12">
                   {oldMembers?.length > 0 ? (
                     <CustomTable
-                      data={oldMembers?.length > 0 ? oldMembers : members}
-                      tableTitle="Old Members List"
+                      data={oldMembers}
+                      tableTitle="Member List"
                       addBtnText="Add Member"
                       handleAdd={() =>
                         navigate("/lgms/dashboard/manage/members/addedit")
@@ -417,7 +412,7 @@ function LGMSMembers() {
                   ) : (
                     <CustomTable
                       data={members}
-                      tableTitle="Current Member List"
+                      tableTitle="Member List"
                       addBtnText="Add Member"
                       handleAdd={() =>
                         navigate("/lgms/dashboard/manage/members/addedit")

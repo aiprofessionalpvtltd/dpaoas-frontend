@@ -366,6 +366,7 @@ import TMSAssignedFinanceBill from "../pages/Dashboard/Modules/TMS/Legislation/f
 import TMSRecivedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/index.js";
 import TranslationLegislative from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/TranslationlegislativaBill.js";
 import TMSAssignedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/AssiginlegislativaBill/index.js";
+import PreviewOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/PreviewOrderOfData/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1062,6 +1063,10 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/dashboard/order-of-the-day/list",
     element: <ListOrderOfDay />,
+  },
+  {
+    path: "/lgms/dashboard/order-of-the-day/preview",
+    element: <PreviewOrderOfDay />,
   },
   {
     path: "/lgms/dashboard/order-of-the-day/addedit",
