@@ -1,31 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import Tesseract from "tesseract.js";
 import { showErrorMessage } from "../../utils/ToastAlert";
+import { imagesUrl } from "../../api/APIs";
 
-export const ExtractText = ({ isOpen, toggleModal }) => {
+export const ExtractText = ({ isOpen, toggleModal, selectedImage }) => {
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Handle image selection
+
+  useEffect(() => {
+    if (selectedImage) {
+      const absoluteImageUrl = `${imagesUrl}${selectedImage}`;
+      setImage(absoluteImageUrl);
+  
+      // Create a new image element to check if it loads successfully
+      const img = new Image();
+      img.src = absoluteImageUrl;
+      
+      img.onload = () => {
+        console.log("Image successfully loaded!");
+        handleTextRecognition(absoluteImageUrl);
+      };
+  
+      img.onerror = () => {
+        console.error("Error loading image:", absoluteImageUrl);
+        showErrorMessage("Image failed to load. Please check the URL.");
+      };
+    }
+  }, [selectedImage]);
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
+      handleTextRecognition(imageUrl);
     }
   };
 
-  // Perform OCR
-  const handleTextRecognition = () => {
-    if (!image) {
+  const handleTextRecognition = (imageSrc) => {
+    if (!imageSrc) {
       showErrorMessage("Please upload an image first.");
       return;
     }
 
     setLoading(true);
-    Tesseract.recognize(image, "eng", {
+    Tesseract.recognize(imageSrc, "eng", {
       logger: (info) => {
         if (info.status === "recognizing text") {
           setProgress(Math.floor(info.progress * 100));
@@ -43,6 +66,7 @@ export const ExtractText = ({ isOpen, toggleModal }) => {
         setProgress(0);
       });
   };
+
   return (
     <Modal show={isOpen} onHide={toggleModal} centered size="lg">
       <Modal.Header
@@ -57,7 +81,8 @@ export const ExtractText = ({ isOpen, toggleModal }) => {
       </Modal.Header>
       <Modal.Body>
         <div>
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+
           {image && (
             <div
               style={{
@@ -72,6 +97,7 @@ export const ExtractText = ({ isOpen, toggleModal }) => {
               <img
                 src={image}
                 alt="Uploaded"
+                onError={() => showErrorMessage("Image failed to load")}
                 style={{
                   maxHeight: "100%",
                   maxWidth: "100%",
@@ -82,14 +108,14 @@ export const ExtractText = ({ isOpen, toggleModal }) => {
           )}
 
           <button
-            onClick={handleTextRecognition}
-            class="btn btn-primary"
+            onClick={() => handleTextRecognition(image)}
+            className="btn btn-primary"
             style={{
               marginTop: "10px",
               cursor: "pointer",
               float: "right",
             }}
-            disabled={loading}
+            disabled={loading || !image}
           >
             {loading ? `Processing (${progress}%)...` : "Extract Text"}
           </button>
@@ -99,9 +125,9 @@ export const ExtractText = ({ isOpen, toggleModal }) => {
             <div style={{ marginTop: "10px", textAlign: "left" }}>
               <h2>Extracted Text:</h2>
               <textarea
-                readOnly
                 value={text}
                 style={{ width: "100%", height: "200px" }}
+                onChange={(e) => setText(e.target.value)}
               />
             </div>
           )}

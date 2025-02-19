@@ -338,7 +338,7 @@ function QMSQuestionDetail() {
         title1={"Question Detail"}
       />
       <ToastContainer />
-        <ExtractText isOpen={isExtractText} toggleModal={() => setIsExtractText(!isExtractText)}/>
+        <ExtractText isOpen={isExtractText} toggleModal={() => setIsExtractText(!isExtractText)} selectedImage ={location?.state?.question?.questionImage[0]?.path}/>
       <div class="container-fluid">
         <div class="card mt-4">
           <div
