@@ -19,6 +19,9 @@ import PrivateMemberSenateBillIntroducedInSenate from "../../../../../../compone
 import PDFOrderOfDayModel from "../../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
 import PrivateMemberBillRecievedFromNA from "../../../../../../components/CustomComponents/OrderofDay/PrivateMemberBillRecievedFromNA/Index";
 import GovernmentBillIntroducedInSenate from "../../../../../../components/CustomComponents/OrderofDay/GovBillSenateOrderofDay";
+import GovernmentBillRecievedFromNAOrderOfDay from "../../../../../../components/CustomComponents/OrderofDay/GovBillRecievedFromNA";
+import GovernmentFinanceMoneyBill from "../../../../../../components/CustomComponents/OrderofDay/FinanceMoneyBillOrderofDay";
+import LGMSMotionUnderRule218OrderofDay from "../../../../../../components/CustomComponents/OrderofDay/MotionUnderRule218";
 
 const LGMSCreateOrderOftheDay = () => {
   const location = useLocation();
@@ -40,6 +43,9 @@ const LGMSCreateOrderOftheDay = () => {
   const [introducedPrivateData, setIntroducedPrivateData] = useState([]);
   const [privateRecievedFromNA, setPrivateRecievedFromNA] = useState([]);
   const [govIntroducedInSenate, setGovIntroducedInSenate] = useState([]);
+  const [goveRecievedFromNA, setGovRecievedFromNA] = useState([]);
+  const [govFinanceMoneyBill, setGovFinanceMoneyBill] = useState([]);
+  const [motionUnderRule218, setMotionUnderRule218] = useState([]);
 
   const [formatedData, setFormatedData] = useState("");
   const pageSize = 100;
@@ -157,6 +163,25 @@ const LGMSCreateOrderOftheDay = () => {
           setGovIntroducedInSenate(GovIntroducedData[0].data);
           setIsDataLoaded(true);
         }
+        const GoveReceivedFromNA = data?.content?.filter(
+          (item) =>
+            item.category === "GOVERNMENT BILLS RECEIVED FROM NATIONAL ASSEMBLY"
+        );
+
+        // Ensure we're setting valid data
+        if (GoveReceivedFromNA?.[0]?.data) {
+          setGovRecievedFromNA(GoveReceivedFromNA[0].data);
+          setIsDataLoaded(true);
+        }
+        const goveFinanceMoneyBill = data?.content?.filter(
+          (item) => item.category === "GOVERNMENT FINANCE/MONEY BILLS"
+        );
+
+        // Ensure we're setting valid data
+        if (goveFinanceMoneyBill?.[0]?.data) {
+          setGovFinanceMoneyBill(goveFinanceMoneyBill[0].data);
+          setIsDataLoaded(true);
+        }
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message || "Error fetching data");
@@ -230,6 +255,18 @@ const LGMSCreateOrderOftheDay = () => {
         category: "GOVERNMENT BILLS INTRODUCED IN SENATE",
         data: govIntroducedInSenate,
       },
+      {
+        category: "GOVERNMENT BILLS RECEIVED FROM NATIONAL ASSEMBLY",
+        data: goveRecievedFromNA,
+      },
+      {
+        category: "GOVERNMENT FINANCE/MONEY BILLS",
+        data: govFinanceMoneyBill,
+      },
+      {
+        category: "MOTIONS UNDER RULE 218",
+        data: motionUnderRule218,
+      },
     ];
 
     let selectedData = categories
@@ -255,6 +292,9 @@ const LGMSCreateOrderOftheDay = () => {
     isMondayCheckBoxChecked,
     privateRecievedFromNA,
     govIntroducedInSenate,
+    goveRecievedFromNA,
+    govFinanceMoneyBill,
+    motionUnderRule218,
   ]);
 
   return (
@@ -446,7 +486,7 @@ const LGMSCreateOrderOftheDay = () => {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "250px" }}
+                          style={{ width: "240px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-1"
@@ -473,7 +513,7 @@ const LGMSCreateOrderOftheDay = () => {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "250px" }}
+                          style={{ width: "240px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -500,7 +540,7 @@ const LGMSCreateOrderOftheDay = () => {
                               ? "nav-link active"
                               : "nav-link"
                           }
-                          style={{ width: "250px" }}
+                          style={{ width: "240px" }}
                           data-bs-toggle="tab"
                           role="tab"
                           aria-controls="ex1-tabs-2"
@@ -511,6 +551,62 @@ const LGMSCreateOrderOftheDay = () => {
                           }
                         >
                           Gov Introduced in Senate
+                        </button>
+                      </li>
+
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Government Received From NA");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Government Received From NA"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "240px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Government Received From NA"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Gov Received From NA
+                        </button>
+                      </li>
+
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Gov Finance/Money Bill");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Gov Finance/Money Bill"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "240px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Gov Finance/Money Bill"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Gov Finance/Money Bill
                         </button>
                       </li>
                     </ul>
@@ -530,28 +626,88 @@ const LGMSCreateOrderOftheDay = () => {
                       Preview
                     </button>
                   </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <ul
+                      className="nav nav-tabs mb-3 mt-3"
+                      id="ex1"
+                      role="tablist"
+                    >
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Motion Under Rule 218");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Motion Under Rule 218"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "240px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-1"
+                          aria-selected={
+                            selectedTab === "Motion Under Rule 218"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Motion Under Rule 218
+                        </button>
+                      </li>
+                      {/* <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Private Received From NA");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Private Received From NA"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "240px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Private Received From NA"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Private Received From NA
+                        </button>
+                      </li> */}
+                    </ul>
+                  </div>
+
+                  {/* <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      openModal();
+                    }}
+                    disabled={
+                      !formik.values.sittingId ||
+                      !formik.values.startTime ||
+                      formik.values.isMonday === undefined
+                    }
+                  >
+                    Preview
+                  </button> */}
 
                   {/* Tab Content Section */}
                   <div className="tab-content" id="ex1-content">
                     <div className="row">
                       <div className="row mt-2 d-flex justify-content-end float-end"></div>
-
-                      <div
-                        style={{
-                          display: "flex",
-                        }}
-                      >
-                        {selectedTab === "FR" && (
-                          <>
-                            <div className="row">
-                              <div className="col-12">
-                                <section>"FR Data"</section>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </div>
-
                       <div className="col-12">
                         {selectedTab === "Private Introduced In Senate" ? (
                           <div>
@@ -598,6 +754,45 @@ const LGMSCreateOrderOftheDay = () => {
                                   setGovIntroducedInSenate
                                 }
                                 Edit={true}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Government Received From NA" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <GovernmentBillRecievedFromNAOrderOfDay
+                                goveRecievedFromNA={goveRecievedFromNA}
+                                setGovRecievedFromNA={setGovRecievedFromNA}
+                                Edit={true}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Gov Finance/Money Bill" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <GovernmentFinanceMoneyBill
+                                govFinanceMoneyBill={govFinanceMoneyBill}
+                                setGovFinanceMoneyBill={setGovFinanceMoneyBill}
+                                Edit={true}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Motion Under Rule 218" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <LGMSMotionUnderRule218OrderofDay
+                                motionUnderRule218={motionUnderRule218}
+                                setMotionUnderRule218={setMotionUnderRule218}
+                                Edit={location?.state?.id ? true : false}
                               />
                             )}
                           </div>
