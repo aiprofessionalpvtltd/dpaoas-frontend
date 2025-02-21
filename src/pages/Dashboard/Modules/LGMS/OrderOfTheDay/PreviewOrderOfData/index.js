@@ -10,6 +10,8 @@ const PreviewOrderOfDayPDF = ({
   const pdfRef = useRef();
   let bullet = 2;
 
+  console.log("selectedTabData", selectedTabData);
+
   const formattedDate = moment(formatedData, "YYYY/MM/DD").format(
     "Do MMMM, YYYY"
   );

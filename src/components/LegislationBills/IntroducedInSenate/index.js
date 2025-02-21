@@ -40,7 +40,8 @@ const IntroducedInSenate = ({
     setAttachDocs(item?.billDocuments);
     openModal();
   };
-
+  console.log("isCheckedisCheckedisChecked", isChecked);
+  console.log("isChecd", isCheckbox);
   return (
     <div>
       {showModal && showModal && (
