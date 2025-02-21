@@ -6,25 +6,18 @@ import { useFormik } from "formik";
 import { AuthContext } from "../../../../../../api/AuthContext";
 import TimePicker from "react-time-picker";
 import moment from "moment";
-import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
-import CKEditorComp from "../../../../../../components/CustomComponents/Editor/CKEditorComp";
-import {
-  createOrderOfTheDay,
-  OrderOfTheDayByID,
-  updateOrderOfTheDay,
-} from "../../../../../../api/APIs/Services/Legislation.service";
+import { OrderOfTheDayByID } from "../../../../../../api/APIs/Services/Legislation.service";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import AllPrivateMemberSenateBills from "../../Bills/PrivateMemberBill/IntroducedInSenate";
+import { useLocation } from "react-router-dom";
 import PrivateMemberSenateBillIntroducedInSenate from "../../../../../../components/CustomComponents/OrderofDay/PrivateMemberSenateBillOrderofDay";
-import PreviewOrderOfDay from "../PreviewOrderOfData";
-import { Button } from "@mui/material";
+
 import PDFOrderOfDayModel from "../../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
+import PrivateMemberBillRecievedFromNA from "../../../../../../components/CustomComponents/OrderofDay/PrivateMemberBillRecievedFromNA/Index";
 
 const LGMSCreateOrderOftheDay = () => {
   const location = useLocation();
@@ -36,15 +29,18 @@ const LGMSCreateOrderOftheDay = () => {
   const [selectedTab, setSelectedTab] = useState(
     "Private Introduced In Senate"
   );
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isBillDataLoaded, setIsBillDataLoded] = useState({
+    PrivateRecievedFromNA: false,
+  });
 
   const [count, setCount] = useState(null);
   const [selectedTabData, setSelectedTabData] = useState([]);
   const [introducedPrivateData, setIntroducedPrivateData] = useState([]);
+  const [privateRecievedFromNA, setPrivateRecievedFromNA] = useState([]);
+
   const [formatedData, setFormatedData] = useState("");
-  console.log("formatedData", formatedData);
-  console.log("introducedPrivateData", introducedPrivateData);
   const pageSize = 100;
-  console.log("selectedTabData", selectedTabData);
 
   const [showModal, setShowModal] = useState(false);
   const openModal = () => {
@@ -104,29 +100,51 @@ const LGMSCreateOrderOftheDay = () => {
     [currentPage, pageSize, setCount]
   );
 
-  //Signal ID Data
-  const hendleListOrderOfTheDayBYID = async () => {
+  const getSingleOrderofDayByID = async (id) => {
     try {
-      const response = await OrderOfTheDayByID(location?.state?.id);
+      const response = await OrderOfTheDayByID(id);
+
       if (response?.success) {
-        SearchSessionSittingApi({
-          sessionId: response?.data?.fkSessionId,
-        });
-        formik.setValues({
-          sessionId: response?.data?.fkSessionId || "",
-          sittingId: response?.data?.sittingId || null,
-          sittingLabel: response?.data?.sittingLabel || "",
-        });
-        setDescriptionData(response?.data?.content);
+        const data = response?.data;
+        if (data?.fkSessionId) {
+          formik.setFieldValue("sessionId", data?.fkSessionId);
+          SearchSessionSittingApi({ sessionId: data?.fkSessionId });
+        }
+        if (data?.sittingId) {
+          formik.setFieldValue("sittingId", data?.sittingId);
+        }
+        if (data?.sittingDate) {
+          formik.setFieldValue("sittingLabel", data?.sittingDate);
+          setFormatedData(data?.sittingDate);
+        }
+        if (data?.sittingTime) {
+          formik.setFieldValue("startTime", data?.sittingTime);
+        }
+
+        if (data?.isMonday) {
+          setIsMondayCheckBoxChecked(data?.isMonday);
+        }
+
+        const introducedData = data?.content?.filter(
+          (item) => item.category === "BILLS TO BE INTRODUCED"
+        );
+        // Ensure we're setting valid data
+        if (introducedData?.[0]?.data) {
+          setIntroducedPrivateData(introducedData[0].data);
+          setIsDataLoaded(true);
+        }
       }
     } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error.response?.data?.message || "Error fetching data");
     }
   };
 
   useEffect(() => {
     if (location?.state?.id) {
-      hendleListOrderOfTheDayBYID();
+      getSingleOrderofDayByID(location?.state?.id);
+    } else {
+      setIntroducedPrivateData([]);
+      setIsDataLoaded(true);
     }
   }, [location?.state?.id]);
 
@@ -134,7 +152,11 @@ const LGMSCreateOrderOftheDay = () => {
     if (isMondayCheckBoxChecked) {
       setSelectedTabData([
         { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
-        // { category: "Legislative Bills", data: legislativeBills },
+        {
+          category:
+            "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
+          data: privateRecievedFromNA,
+        },
         // { category: "Questions", data: Questions }
       ]);
     } else {
@@ -144,11 +166,16 @@ const LGMSCreateOrderOftheDay = () => {
           data: [{ id: 1, billTitle: "All Questions will be asked" }],
         },
         { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
-        // { category: "Legislative Bills", data: legislativeBills },
+        {
+          category:
+            "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
+          data: privateRecievedFromNA,
+        },
         // { category: "Questions", data: Questions }
       ]);
     }
-  }, [introducedPrivateData, isMondayCheckBoxChecked]);
+  }, [introducedPrivateData, isMondayCheckBoxChecked, privateRecievedFromNA]);
+
   return (
     <Layout
       module={true}
@@ -174,6 +201,8 @@ const LGMSCreateOrderOftheDay = () => {
           sittingId={formik?.values.sittingId}
           isMondayCheckBoxChecked={isMondayCheckBoxChecked}
           isView={false}
+          isEdit={location?.state?.id ? true : false}
+          OrderOfTheDayID={location?.state?.id ? location?.state?.id : null}
         />
       )}
       <div className="container-fluid">
@@ -203,6 +232,8 @@ const LGMSCreateOrderOftheDay = () => {
                         SearchSessionSittingApi({
                           sessionId: e.target.value,
                         });
+                        formik.setFieldValue("sittingId", "");
+                        formik.setFieldValue("sittingLabel", "");
                       }}
                       id="sessionId"
                       onBlur={formik.handleBlur}
@@ -418,12 +449,17 @@ const LGMSCreateOrderOftheDay = () => {
                           <div>
                             <div className="row mb-5">
                               <div className="col-12">
-                                <PrivateMemberSenateBillIntroducedInSenate
-                                  introducedPrivateData={introducedPrivateData}
-                                  setIntroducedPrivateData={
-                                    setIntroducedPrivateData
-                                  }
-                                />
+                                {isDataLoaded && (
+                                  <PrivateMemberSenateBillIntroducedInSenate
+                                    introducedPrivateData={
+                                      introducedPrivateData
+                                    }
+                                    setIntroducedPrivateData={
+                                      setIntroducedPrivateData
+                                    }
+                                    Edit={true}
+                                  />
+                                )}
                               </div>
                             </div>
                           </div>
@@ -432,7 +468,13 @@ const LGMSCreateOrderOftheDay = () => {
                       <div className="col-12">
                         {selectedTab === "Private Received From NA" ? (
                           <div className="mt-3">
-                            "Private Received From NA Data"
+                            <PrivateMemberBillRecievedFromNA
+                              privateRecievedFromNA={privateRecievedFromNA}
+                              setPrivateRecievedFromNA={
+                                setPrivateRecievedFromNA
+                              }
+                              Edit={isBillDataLoaded?.PrivateRecievedFromNA}
+                            />
                           </div>
                         ) : null}
                       </div>

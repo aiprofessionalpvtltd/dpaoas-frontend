@@ -22,28 +22,42 @@ const PreviewOrderOfDayPDF = ({
         ref={contentRef}
         style={{ padding: "20px", backgroundColor: "#fff" }}
       >
-        <h1 style={{ textAlign: "center", fontSize: "28px" }}>
-          HOUSE OF THE FEDERATION
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "28px",
+            fontFamily: "verdana",
+          }}
+        >
+          <strong> HOUSE OF THE FEDERATION </strong>
         </h1>
         <h2
           style={{
             textAlign: "center",
             fontSize: "24px",
             marginBottom: "10px",
+            fontFamily: "verdana",
           }}
         >
-          SENATE SECRETARIAT
+          <strong> SENATE SECRETARIAT</strong>
         </h2>
-        <h2 style={{ textAlign: "center", fontSize: "24px", marginTop: "0" }}>
-          ORDERS OF THE DAY
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "24px",
+            marginTop: "0",
+            fontFamily: "verdana",
+          }}
+        >
+          <strong> ORDERS OF THE DAY </strong>
         </h2>
 
-        <p style={{ fontSize: "20px" }}>
+        <p style={{ fontSize: "20px", fontFamily: "verdana" }}>
           for the meeting of the Senate to be held at {`${startTime}`} on{" "}
           {`${formattedDay}`}, the {`${formattedDate}`}.
         </p>
 
-        <p style={{ fontSize: "20px" }}>
+        <p style={{ fontSize: "20px", fontFamily: "verdana" }}>
           <strong style={{ marginRight: "25px" }}>1.</strong>
           Recitation from the Holy Quran
         </p>
@@ -56,6 +70,7 @@ const PreviewOrderOfDayPDF = ({
                   textAlign: "center",
                   fontSize: "24px",
                   marginTop: "0",
+                  fontFamily: "verdana",
                 }}
               >
                 <strong>
@@ -63,10 +78,22 @@ const PreviewOrderOfDayPDF = ({
                 </strong>
               </h2>
               {item?.data?.map((data, idx) => (
-                <p key={idx} style={{ fontSize: "20px", lineHeight: "30px" }}>
-                  <strong style={{ marginRight: "25px" }}>{bullet++}.</strong>
+                <p
+                  key={idx}
+                  style={{
+                    fontSize: "20px",
+                    lineHeight: "30px",
+                    fontFamily: "verdana",
+                    textAlign: "justify",
+                  }}
+                >
+                  <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
                   {data?.nameOfMinistersOrMovers ? (
-                    <strong>{`${data?.nameOfMinistersOrMovers},`}</strong>
+                    <strong>{`SENATOR ${
+                      data?.nameOfMinistersOrMovers
+                        ? data?.nameOfMinistersOrMovers
+                        : data?.nameOfSenator
+                    },`}</strong>
                   ) : (
                     ""
                   )}{" "}

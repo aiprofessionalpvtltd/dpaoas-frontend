@@ -112,7 +112,6 @@ const SearchLegislationPrivateMemberBill = () => {
     try {
       const response = await getMinisterByParliamentaryYearID(id);
       if (response?.success) {
-        console.log("Memberon Response", response);
         setMinisterOnParliamentaryYear(response?.data);
         // setTonerModels(transformedData);
       }
@@ -445,9 +444,9 @@ const SearchLegislationPrivateMemberBill = () => {
         billType: values?.billType,
         billRemarks: values?.keywords,
         fkManageCommitteeId: values?.concerndCommitties?.value,
-        selectedMNA: values?.selectedMNA?.value,
+        // selectedMNA: values?.selectedMNA?.value,
         selectedMinistry: values?.selectedMinistry?.value,
-        committeeRecomendation: values?.committeeRecomendation?.value,
+        fkManageCommitteeRecomendationId: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
         noticeDateFrom:
           values?.FromNoticeDate &&
@@ -522,9 +521,7 @@ const SearchLegislationPrivateMemberBill = () => {
   };
 
   // Handle Preieve
-  const hendlepreview = async () => {
-    console.log("prieveiw", isColumnChecked);
-  };
+  const hendlepreview = async () => {};
   return (
     <Layout
       module={true}
@@ -982,24 +979,25 @@ const SearchLegislationPrivateMemberBill = () => {
                           : []
                       }
                       onChange={(selectedOption) => {
-                        formik.setFieldValue("selectedMNA", selectedOption);
+                        formik.setFieldValue("selectedSenator", selectedOption);
                         formik.setFieldValue("selectedMinistry", null);
                         // setMinisterID(selectedOption?.value);
                       }}
                       onBlur={formik.handleBlur}
-                      value={formik.values.selectedMNA}
-                      name="selectedMNA"
+                      value={formik.values.selectedSenator}
+                      name="selectedSenator"
                       className={`${
-                        formik.touched.selectedMNA && formik.errors.selectedMNA
+                        formik.touched.selectedSenator &&
+                        formik.errors.selectedSenator
                           ? "is-invalid"
                           : ""
                       }`}
                     />
 
-                    {formik.touched.selectedMNA &&
-                      formik.errors.selectedMNA && (
+                    {formik.touched.selectedSenator &&
+                      formik.errors.selectedSenator && (
                         <div class="invalid-feedback">
-                          {formik.errors.selectedMNA}
+                          {formik.errors.selectedSenator}
                         </div>
                       )}
                   </div>

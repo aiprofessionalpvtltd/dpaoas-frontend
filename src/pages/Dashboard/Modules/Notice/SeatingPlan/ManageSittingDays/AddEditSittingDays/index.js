@@ -679,7 +679,7 @@ function NMSAddEditSittingDaysForm() {
                           formik.setFieldValue("sittingDate", date)
                         }
                         onBlur={formik.handleBlur}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         className={`form-control ${
                           formik.touched.sittingDate &&
                           formik.errors.sittingDate

@@ -19,6 +19,9 @@ const RecievedFromNA = ({
   setIsColumnCheckBox,
   showSent,
   handleSent,
+  isCheckbox,
+  isChecked,
+  setIsChecked,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [attachDocs, setAttachDocs] = useState([]);
@@ -34,8 +37,6 @@ const RecievedFromNA = ({
     setAttachDocs(item?.billDocuments);
     openModal();
   };
-
-  console.log("isColumncheckBox", iscolumnCheckbox);
 
   return (
     <>
@@ -76,6 +77,9 @@ const RecievedFromNA = ({
           setIsColumnCheckBox={setIsColumnCheckBox}
           showSent={showSent}
           handleSent={handleSent}
+          isCheckbox={isCheckbox}
+          isChecked={isChecked}
+          setIsChecked={setIsChecked}
         />
       </div>
     </>

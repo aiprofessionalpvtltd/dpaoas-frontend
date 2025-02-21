@@ -26,7 +26,6 @@ const IntroducedInSenate = ({
   hideEditIcon,
   ActionHide,
 }) => {
-  console.log("isChecked", isChecked);
   const [showModal, setShowModal] = useState(false);
 
   const [attachDocs, setAttachDocs] = useState([]);
@@ -41,8 +40,6 @@ const IntroducedInSenate = ({
     setAttachDocs(item?.billDocuments);
     openModal();
   };
-
-  console.log("isColumncheckBox", iscolumnCheckbox);
 
   return (
     <div>

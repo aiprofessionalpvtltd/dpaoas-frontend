@@ -424,7 +424,7 @@ const SearchLegislationGovernmentBills = () => {
         fkBillStatus: values?.statusId,
         billType: values?.billType,
         fkManageCommitteeId: values?.concerndCommitties?.value,
-        committeeRecomendation: values?.committeeRecomendation?.value,
+        fkManageCommitteeRecomendationId: values?.committeeRecomendation?.value,
         // fileNumber: values.fileNumber,
         noticeDateFrom:
           values?.FromNoticeDate &&
