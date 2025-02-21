@@ -132,17 +132,18 @@ function ListOrderOfDay() {
             }
             handleEdit={(item) =>
               navigate("/lgms/dashboard/order-of-the-day/addedit", {
-                state: item,
+                state: { id: item?.id },
               })
             }
             headertitlebgColor={"#666"}
             singleDataCard={true}
             hideEditIcon={false}
-            showEditIcon={true}
+            showEditIcon={false}
             headertitletextColor={"#FFF"}
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             pageSize={pageSize}
+            ActionHide={false}
             hideDeleteIcon={true}
             totalCount={count}
             // showSent={true}
@@ -151,6 +152,7 @@ function ListOrderOfDay() {
             handleView={(item) => {
               handleView(item?.id);
             }}
+
             // handleDelete={(item) => handleDelete(item.id)}
           />
         </div>

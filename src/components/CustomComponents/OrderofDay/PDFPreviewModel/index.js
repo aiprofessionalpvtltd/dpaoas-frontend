@@ -2,7 +2,10 @@ import html2pdf from "html2pdf.js";
 import { Modal } from "react-bootstrap";
 import React, { useRef } from "react";
 import PreviewOrderOfDay from "../../../../pages/Dashboard/Modules/LGMS/OrderOfTheDay/PreviewOrderOfData";
-import { createOrderOfTheDay } from "../../../../api/APIs/Services/Legislation.service";
+import {
+  createOrderOfTheDay,
+  updateOrderOfTheDay,
+} from "../../../../api/APIs/Services/Legislation.service";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -19,6 +22,8 @@ function PDFOrderOfDayModel({
   isMondayCheckBoxChecked,
   sittingId,
   isView,
+  isEdit,
+  OrderOfTheDayID,
 }) {
   const navigate = useNavigate();
   const contentRef = useRef(null); // Reference to capture PDF content
@@ -55,6 +60,30 @@ function PDFOrderOfDayModel({
     };
     try {
       const response = await createOrderOfTheDay(Data);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        localStorage.removeItem("billData");
+        setTimeout(() => {
+          navigate("/lgms/dashboard/order-of-the-day/list");
+        }, 1000);
+      }
+    } catch (error) {
+      showErrorMessage(error?.response?.data?.message);
+    }
+  };
+
+  // Create Order of the Day
+  const handleUpdateOrderOfDay = async () => {
+    const Data = {
+      fkSessionId: session,
+      sittingId: sittingId,
+      sittingDate: formatedData,
+      sittingTime: startTime,
+      isMonday: isMondayCheckBoxChecked,
+      content: selectedTabData,
+    };
+    try {
+      const response = await updateOrderOfTheDay(OrderOfTheDayID, Data);
       if (response?.success) {
         showSuccessMessage(response?.message);
         localStorage.removeItem("billData");
@@ -126,12 +155,21 @@ function PDFOrderOfDayModel({
                 >
                   Close
                 </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={hendleCreateOrderOfTheDay}
-                >
-                  Publish
-                </button>
+                {isEdit === true ? (
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleUpdateOrderOfDay}
+                  >
+                    Update
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary"
+                    onClick={hendleCreateOrderOfTheDay}
+                  >
+                    Publish
+                  </button>
+                )}
               </div>
             )}
           </Modal.Footer>
