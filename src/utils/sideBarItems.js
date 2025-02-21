@@ -1246,6 +1246,29 @@ export const LegislationSideBarItems = [
   },
 
   {
+    itemName: "Motion",
+    link: "/lgms/motion",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Motion Calling Attention Notice",
+        link: "/lgms/motion/calling-attention-notice",
+        icon: faBookOpen,
+      },
+      {
+        itemName: "Motion Under Rule 218",
+        link: "/lgms/motion/motion-under-rule",
+        icon: faBookOpen,
+      },
+    ],
+  },
+  {
+    itemName: "Resolution",
+    link: "/lgms/resolution",
+    icon: faBookOpen,
+  },
+
+  {
     itemName: "Order of The Day",
     link: "/lgms/dashboard/order-of-the-day/list",
     icon: faBookOpen,
@@ -1262,6 +1285,8 @@ export const LegislationSideBarItems = [
       },
     ],
   },
+
+
 
   {
     itemName: "Manage",

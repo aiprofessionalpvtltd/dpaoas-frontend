@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import { Layout } from "../../../../../../components/Layout";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { MMSSideBarItems } from "../../../../../../utils/sideBarItems";
-import { allBallotMotionList, ChangeMotionStatus, getallMotionStatus } from "../../../../../../api/APIs/Services/Motion.service";
+import { allBallotMotionList, ChangeMotionStatus, getallMotionStatus, sendMotionToLegislation } from "../../../../../../api/APIs/Services/Motion.service";
 
 function AllBallotMotionList() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -78,6 +78,18 @@ function AllBallotMotionList() {
     }
   };
 
+  const handleSentLGMS = async (item) => {
+    try {
+      const response = await sendMotionToLegislation(item.id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllBallotMotionListAPi();
+      }
+    } catch (error) {
+      showSuccessMessage(error?.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     getMotionStatus();
   }, []);
@@ -108,11 +120,13 @@ function AllBallotMotionList() {
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                hideEditIcon={true}
-                ActionHide={true}
+                hideDeleteIcon={true}
+                showEditIcon={true}
                 isChecked={isChecked}
                 setIsChecked={setIsChecked}
                 isCheckbox={true}
+                showSent={true}
+                handleSent={(item) => handleSentLGMS(item)}
               />
             </div>
           </div>

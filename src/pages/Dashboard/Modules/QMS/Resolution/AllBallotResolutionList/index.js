@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   allBallotResolution,
   changeResolutionStatus,
+  sendResolutionToLegislation,
 } from "../../../../../../api/APIs/Services/Resolution.service";
 import moment from "moment";
 import {
@@ -69,6 +70,18 @@ function AllBallotResolutionList() {
       showErrorMessage(error?.response?.data?.message);
     }
   };
+
+  const handleSentLGMS = async (item) => {
+    try {
+      const response = await sendResolutionToLegislation(item.id);
+      if (response?.success) {
+        showSuccessMessage(response?.message);
+        getAllBallotResolutionListAPi();
+      }
+    } catch (error) {
+      showSuccessMessage(error?.response?.data?.message);
+    }
+  }
   useEffect(() => {
     getAllBallotResolutionListAPi();
   }, []);
@@ -95,11 +108,13 @@ function AllBallotResolutionList() {
                 handlePageChange={handlePageChange}
                 currentPage={currentPage}
                 pageSize={pageSize}
-                hideEditIcon={true}
-                ActionHide={true}
                 isChecked={isChecked}
                 setIsChecked={setIsChecked}
                 isCheckbox={true}
+                hideDeleteIcon={true}
+                showEditIcon={true}
+                showSent={true}
+                handleSent={(item) => handleSentLGMS(item)}
               />
             </div>
           </div>

@@ -492,3 +492,18 @@ export const searchMiscelleneousList = async (data) => {
     throw error;
   }
 };
+
+export const sendMotionToLegislation = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(`/motion/sendForLegislation/${id}`, {
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // }
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
