@@ -641,3 +641,16 @@ export const updateBallotResolutionTemplate = async (id, data) => {
     throw error;
   }
 };
+
+export const sendResolutionToLegislation = async (id) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/resolution/sendForLegislation/${id}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
