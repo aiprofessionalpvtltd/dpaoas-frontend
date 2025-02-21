@@ -367,6 +367,9 @@ import TMSRecivedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislatio
 import TranslationLegislative from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/TranslationlegislativaBill.js";
 import TMSAssignedlegislativaBill from "../pages/Dashboard/Modules/TMS/Legislation/legislativaBill/AssiginlegislativaBill/index.js";
 import PreviewOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/PreviewOrderOfData/index.js";
+import LGMSMotionCallingAttentionNotice from "../pages/Dashboard/Modules/LGMS/LGMSMotion/MotionCallingAttentionNotice.js";
+import LGMSMotionUnderRule218 from "../pages/Dashboard/Modules/LGMS/LGMSMotion/MotionUnderRule218.js";
+import LGMSResolution from "../pages/Dashboard/Modules/LGMS/LGMSResolution/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1261,6 +1264,19 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/legislation/legislative-bill/addedit",
     element: <LGMSAddEditLegislativeBill />,
+  },
+
+  {
+    path: "/lgms/motion/calling-attention-notice",
+    element: <LGMSMotionCallingAttentionNotice />,
+  },
+  {
+    path: "/lgms/motion/motion-under-rule",
+    element: <LGMSMotionUnderRule218 />,
+  },
+  {
+    path: "/lgms/resolution",
+    element: <LGMSResolution />,
   },
 
   // End of LGMS Routes
