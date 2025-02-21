@@ -123,7 +123,12 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
             );
 
             if (found) {
+              console.log("ayaaaaa", found);
+
               setIsChecked((prevChecked) => [...prevChecked, item.id]); // Push ID if found
+            } else {
+              console.log("ni ayaaaaa");
+              setIsChecked([]);
             }
             return item;
           });
@@ -157,6 +162,8 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
   };
 
   useEffect(() => {
+    console.log("isChecked,isChecked,isChecked", isChecked);
+
     if (isChecked.length > 0) {
       const checkedData = searchdata.filter((item) =>
         isChecked.includes(item?.id)
@@ -173,6 +180,8 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
         },
       ]);
       setIntroducedPrivateData(updatedData);
+    } else {
+      setIntroducedPrivateData([]);
     }
   }, [isChecked, searchdata]);
 

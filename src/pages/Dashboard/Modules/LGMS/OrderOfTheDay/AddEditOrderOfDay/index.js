@@ -18,6 +18,7 @@ import PrivateMemberSenateBillIntroducedInSenate from "../../../../../../compone
 
 import PDFOrderOfDayModel from "../../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
 import PrivateMemberBillRecievedFromNA from "../../../../../../components/CustomComponents/OrderofDay/PrivateMemberBillRecievedFromNA/Index";
+import GovernmentBillIntroducedInSenate from "../../../../../../components/CustomComponents/OrderofDay/GovBillSenateOrderofDay";
 
 const LGMSCreateOrderOftheDay = () => {
   const location = useLocation();
@@ -38,6 +39,7 @@ const LGMSCreateOrderOftheDay = () => {
   const [selectedTabData, setSelectedTabData] = useState([]);
   const [introducedPrivateData, setIntroducedPrivateData] = useState([]);
   const [privateRecievedFromNA, setPrivateRecievedFromNA] = useState([]);
+  const [govIntroducedInSenate, setGovIntroducedInSenate] = useState([]);
 
   const [formatedData, setFormatedData] = useState("");
   const pageSize = 100;
@@ -128,9 +130,31 @@ const LGMSCreateOrderOftheDay = () => {
         const introducedData = data?.content?.filter(
           (item) => item.category === "BILLS TO BE INTRODUCED"
         );
+
         // Ensure we're setting valid data
         if (introducedData?.[0]?.data) {
           setIntroducedPrivateData(introducedData[0].data);
+          setIsDataLoaded(true);
+        }
+
+        const PrivateRecievedData = data?.content?.filter(
+          (item) =>
+            item.category ===
+            "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY"
+        );
+
+        // Ensure we're setting valid data
+        if (PrivateRecievedData?.[0]?.data) {
+          setPrivateRecievedFromNA(PrivateRecievedData[0].data);
+          setIsDataLoaded(true);
+        }
+        const GovIntroducedData = data?.content?.filter(
+          (item) => item.category === "GOVERNMENT BILLS INTRODUCED IN SEANTE"
+        );
+
+        // Ensure we're setting valid data
+        if (GovIntroducedData?.[0]?.data) {
+          setGovIntroducedInSenate(GovIntroducedData[0].data);
           setIsDataLoaded(true);
         }
       }
@@ -148,33 +172,90 @@ const LGMSCreateOrderOftheDay = () => {
     }
   }, [location?.state?.id]);
 
+  // useEffect(() => {
+  //   if (isMondayCheckBoxChecked) {
+  //     setSelectedTabData([
+  //       { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
+  //       {
+  //         category:
+  //           "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
+  //         data: privateRecievedFromNA,
+  //       },
+
+  //       {
+  //         category: "GOVERNMENT BILLS INTRODUCED IN SEANTE",
+  //         data: govIntroducedInSenate,
+  //       },
+  //       // { category: "Questions", data: Questions }
+  //     ]);
+  //   } else {
+  //     setSelectedTabData([
+  //       {
+  //         category: "QUESTIONS",
+  //         data: [{ id: 1, billTitle: "All Questions will be asked" }],
+  //       },
+  //       { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
+  //       {
+  //         category:
+  //           "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
+  //         data: privateRecievedFromNA,
+  //       },
+  //       {
+  //         category: "GOVERNMENT BILLS INTRODUCED IN SEANTE",
+  //         data: govIntroducedInSenate,
+  //       },
+  //     ]);
+  //   }
+  // }, [
+  //   introducedPrivateData,
+  //   isMondayCheckBoxChecked,
+  //   privateRecievedFromNA,
+  //   govIntroducedInSenate,
+  // ]);
   useEffect(() => {
-    if (isMondayCheckBoxChecked) {
-      setSelectedTabData([
-        { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
-        {
-          category:
-            "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
-          data: privateRecievedFromNA,
-        },
-        // { category: "Questions", data: Questions }
-      ]);
-    } else {
-      setSelectedTabData([
+    const getCategoryName = (baseName, data) => {
+      if (data.length === 0) return null; // Skip this category if length is 0
+      if (data.length === 2) return baseName.replace(/s$/, ""); // Convert plural to singular if length is 2
+      return baseName; // Keep original name otherwise
+    };
+
+    const categories = [
+      { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
+      {
+        category:
+          "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
+        data: privateRecievedFromNA,
+      },
+      {
+        category: "GOVERNMENT BILLS INTRODUCED IN SENATE",
+        data: govIntroducedInSenate,
+      },
+    ];
+
+    let selectedData = categories
+      .map(({ category, data }) => {
+        const modifiedCategory = getCategoryName(category, data);
+        return modifiedCategory ? { category: modifiedCategory, data } : null;
+      })
+      .filter(Boolean); // Remove null values (categories with 0 length)
+
+    if (!isMondayCheckBoxChecked) {
+      selectedData = [
         {
           category: "QUESTIONS",
           data: [{ id: 1, billTitle: "All Questions will be asked" }],
         },
-        { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
-        {
-          category:
-            "Legislative BUSINESS BILLS AS PASSED BY THE NATIONAL ASSEMBLY",
-          data: privateRecievedFromNA,
-        },
-        // { category: "Questions", data: Questions }
-      ]);
+        ...selectedData,
+      ];
     }
-  }, [introducedPrivateData, isMondayCheckBoxChecked, privateRecievedFromNA]);
+
+    setSelectedTabData(selectedData);
+  }, [
+    introducedPrivateData,
+    isMondayCheckBoxChecked,
+    privateRecievedFromNA,
+    govIntroducedInSenate,
+  ]);
 
   return (
     <Layout
@@ -405,6 +486,33 @@ const LGMSCreateOrderOftheDay = () => {
                           Private Received From NA
                         </button>
                       </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Government Introduced in Senate");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Government Introduced in Senate"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "250px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Government Introduced in Senate"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Gov Introduced in Senate
+                        </button>
+                      </li>
                     </ul>
 
                     <button
@@ -468,13 +576,30 @@ const LGMSCreateOrderOftheDay = () => {
                       <div className="col-12">
                         {selectedTab === "Private Received From NA" ? (
                           <div className="mt-3">
-                            <PrivateMemberBillRecievedFromNA
-                              privateRecievedFromNA={privateRecievedFromNA}
-                              setPrivateRecievedFromNA={
-                                setPrivateRecievedFromNA
-                              }
-                              Edit={isBillDataLoaded?.PrivateRecievedFromNA}
-                            />
+                            {isDataLoaded && (
+                              <PrivateMemberBillRecievedFromNA
+                                privateRecievedFromNA={privateRecievedFromNA}
+                                setPrivateRecievedFromNA={
+                                  setPrivateRecievedFromNA
+                                }
+                                Edit={true}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Government Introduced in Senate" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <GovernmentBillIntroducedInSenate
+                                govIntroducedInSenate={govIntroducedInSenate}
+                                setGovIntroducedInSenate={
+                                  setGovIntroducedInSenate
+                                }
+                                Edit={true}
+                              />
+                            )}
                           </div>
                         ) : null}
                       </div>
