@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { getAllMotion } from "../../../../api/APIs/Services/Motion.service";
 import { Layout } from "../../../Layout";
 import CustomTable from "../../CustomTable";
 import { LegislationSideBarItems } from "../../../../utils/sideBarItems";
 
-function LGMSMotionUnderRule218OrderofDay({
-  motionUnderRule218,
-  setMotionUnderRule218,
+function LGMSCallingAttentionNoticeOrderOfDay({
+  callingAttentionNotice,
+  setCallingAttentionNotice,
   Edit,
 }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -15,6 +15,7 @@ function LGMSMotionUnderRule218OrderofDay({
   const [motionData, setMotionData] = useState([]);
   const [isChecked, setIsChecked] = useState([]);
   const pageSize = 10; // Set your desired page size
+
   const handlePageChange = (page) => {
     // Update currentPage when a page link is clicked
     setCurrentPage(page);
@@ -31,9 +32,7 @@ function LGMSMotionUnderRule218OrderofDay({
       return {
         id: res?.id,
         internalId: res?.id,
-        nameOfMinistersOrMovers: res?.motionMovers?.map(
-          (item) => item?.members?.memberName
-        ),
+        nameOfMinistersOrMovers: res?.motionMovers[0]?.members?.memberName,
         SessionName: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",
@@ -58,13 +57,12 @@ function LGMSMotionUnderRule218OrderofDay({
       );
       if (response?.success) {
         const filterData = response?.data?.rows.filter(
-          (item) => item?.motionType === "Motion Under Rule 218"
+          (item) => item?.motionType === "Call Attention Notice"
         );
         const transformedData = transformMotionData(filterData);
-        handleCheckedData(motionUnderRule218, transformedData);
-
-        setMotionData(transformedData);
+        handleCheckedData(callingAttentionNotice, transformedData);
         setCount(filterData?.length);
+        setMotionData(transformedData);
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +74,7 @@ function LGMSMotionUnderRule218OrderofDay({
 
   useEffect(() => {
     if (isChecked?.length > 0) {
-      localStorage.setItem("MotionUnderRule218", JSON.stringify(isChecked)); // ✅ Save as a JSON string
+      localStorage.setItem("callingAttentionNotice", JSON.stringify(isChecked)); // ✅ Store as JSON string
 
       const checkedData = motionData?.filter((item) =>
         isChecked.includes(item?.id)
@@ -87,17 +85,17 @@ function LGMSMotionUnderRule218OrderofDay({
         billTitle: `to move that the House may discuss ${item?.englishText}`,
       }));
 
-      setMotionUnderRule218(updatedData);
+      setCallingAttentionNotice(updatedData);
     } else {
-      setMotionUnderRule218([]);
+      setCallingAttentionNotice([]);
     }
   }, [isChecked, motionData]);
 
-  const handleCheckedData = async (motionUnderRule218, motionData) => {
+  const handleCheckedData = async (callingAttentionNotice, motionData) => {
     if (Edit === true) {
-      if (motionUnderRule218 && motionUnderRule218.length > 0) {
-        const updatedData = motionData?.map((item) => {
-          const found = motionUnderRule218.find(
+      if (callingAttentionNotice && callingAttentionNotice.length > 0) {
+        const updatedData = motionData.map((item) => {
+          const found = callingAttentionNotice.find(
             (element) => element.id === item.id
           );
 
@@ -106,17 +104,19 @@ function LGMSMotionUnderRule218OrderofDay({
           }
           return item;
         });
+
         setMotionData(updatedData);
       } else {
         setMotionData(motionData);
       }
     } else {
-      const data = localStorage.getItem("MotionUnderRule218");
+      const data = localStorage.getItem("callingAttentionNotice");
+
       if (data) {
         try {
           const parsedData = JSON.parse(data); // ✅ Parse back into an array
           if (Array.isArray(parsedData)) {
-            setIsChecked(parsedData); // ✅ Set only if it's an array
+            setIsChecked(parsedData); // ✅ Ensure it's an array before setting
           }
         } catch (error) {
           console.error("Error parsing localStorage data:", error);
@@ -138,7 +138,7 @@ function LGMSMotionUnderRule218OrderofDay({
         hideBtn={true}
         hidebtn1={true}
         block={true}
-        tableTitle="Motion Under Rule 218"
+        tableTitle="Call Attention Notice"
         headertitlebgColor={"#666"}
         singleDataCard={true}
         headertitletextColor={"#FFF"}
@@ -157,4 +157,4 @@ function LGMSMotionUnderRule218OrderofDay({
   );
 }
 
-export default LGMSMotionUnderRule218OrderofDay;
+export default LGMSCallingAttentionNoticeOrderOfDay;

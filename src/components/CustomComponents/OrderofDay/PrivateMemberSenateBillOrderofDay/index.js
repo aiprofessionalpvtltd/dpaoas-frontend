@@ -117,26 +117,27 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
         }
 
         if (introducedPrivateData && introducedPrivateData?.length > 0) {
+          let checkedIds = []; // ✅ Store found IDs first
+
           const updatedData = transformedData.map((item) => {
             const found = introducedPrivateData.find(
               (element) => element.id === item.id
             );
 
             if (found) {
-              console.log("ayaaaaa", found);
-
-              setIsChecked((prevChecked) => [...prevChecked, item.id]); // Push ID if found
+              checkedIds.push(item.id); // ✅ Collect IDs instead of setting state in loop
             } else {
-              console.log("ni ayaaaaa");
-              setIsChecked([]);
             }
             return item;
           });
 
+          setIsChecked(checkedIds); // ✅ Update state only once
           setSearchData(updatedData);
         } else {
           setSearchData(transformedData);
+          setIsChecked([]); // ✅ Reset only when no data is found
         }
+
         setBillFrom(data?.billFrom);
         setCount(response?.data?.count);
         showSuccessMessage(response?.message);
@@ -162,8 +163,6 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
   };
 
   useEffect(() => {
-    console.log("isChecked,isChecked,isChecked", isChecked);
-
     if (isChecked.length > 0) {
       const checkedData = searchdata.filter((item) =>
         isChecked.includes(item?.id)
@@ -203,7 +202,7 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
         handleSearch(null, data);
       }
     }
-  }, [Edit]);
+  }, []);
 
   return (
     <>

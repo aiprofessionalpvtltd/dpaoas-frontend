@@ -63,9 +63,16 @@ function PDFOrderOfDayModel({
       if (response?.success) {
         showSuccessMessage(response?.message);
         localStorage.removeItem("billData");
+        localStorage.removeItem("PrivateBillFromNA");
+        localStorage.removeItem("govBillSenateData");
+        localStorage.removeItem("govbillRecievedFromNA");
+        localStorage.removeItem("govfinancemoneybill");
+        localStorage.removeItem("resolution");
+        localStorage.removeItem("MotionUnderRule218");
+        localStorage.removeItem("callingAttentionNotice");
         setTimeout(() => {
           navigate("/lgms/dashboard/order-of-the-day/list");
-        }, 1000);
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -87,9 +94,16 @@ function PDFOrderOfDayModel({
       if (response?.success) {
         showSuccessMessage(response?.message);
         localStorage.removeItem("billData");
+        localStorage.removeItem("PrivateBillFromNA");
+        localStorage.removeItem("govBillSenateData");
+        localStorage.removeItem("govbillRecievedFromNA");
+        localStorage.removeItem("govfinancemoneybill");
+        localStorage.removeItem("resolution");
+        localStorage.removeItem("MotionUnderRule218");
+        localStorage.removeItem("callingAttentionNotice");
         setTimeout(() => {
           navigate("/lgms/dashboard/order-of-the-day/list");
-        }, 1000);
+        }, 3000);
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);

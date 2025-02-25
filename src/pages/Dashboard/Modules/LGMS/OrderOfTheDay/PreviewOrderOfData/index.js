@@ -66,44 +66,75 @@ const PreviewOrderOfDayPDF = ({
 
         {selectedTabData?.length > 0 &&
           selectedTabData.map((item, index) => (
-            <div key={index}>
-              <h2
-                style={{
-                  textAlign: "center",
-                  fontSize: "24px",
-                  marginTop: "0",
-                  fontFamily: "verdana",
-                }}
-              >
-                <strong>
-                  <u>{item?.category}</u>
-                </strong>
-              </h2>
-              {item?.data?.map((data, idx) => (
-                <p
-                  key={idx}
+            <React.Fragment key={index}>
+              <div>
+                <h2
                   style={{
-                    fontSize: "20px",
-                    lineHeight: "30px",
+                    textAlign: "center",
+                    fontSize: "24px",
+                    marginTop: "7px",
+                    marginBottom: "10px",
                     fontFamily: "verdana",
-                    textAlign: "justify",
                   }}
                 >
-                  <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
-                  {data?.nameOfMinistersOrMovers ? (
-                    <strong>{`SENATOR ${
-                      data?.nameOfMinistersOrMovers
-                        ? data?.nameOfMinistersOrMovers
-                        : data?.nameOfSenator
-                    },`}</strong>
-                  ) : (
-                    ""
-                  )}{" "}
-                  {data?.billTitle}.
-                </p>
-              ))}
-            </div>
+                  <strong>
+                    <u>{item?.category}</u>
+                  </strong>
+                </h2>
+                {item?.data?.map((data, idx) => (
+                  <p
+                    key={idx}
+                    style={{
+                      fontSize: "20px",
+                      lineHeight: "27px",
+                      fontFamily: "verdana",
+                      textAlign: "justify",
+                    }}
+                  >
+                    <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
+                    {data?.nameOfMinistersOrMovers ? (
+                      <strong>{`SENATOR ${
+                        data?.nameOfMinistersOrMovers
+                          ? data?.nameOfMinistersOrMovers
+                          : data?.nameOfSenator
+                      },`}</strong>
+                    ) : (
+                      ""
+                    )}{" "}
+                    {data?.billTitle}.
+                  </p>
+                ))}
+              </div>
+            </React.Fragment>
           ))}
+        <br />
+        <div className="row mt-3">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <strong
+              style={{
+                textAlign: "center",
+                fontSize: "20px",
+                lineHeight: "24px",
+                fontFamily: "verdana",
+              }}
+            >
+              Syed Hasnain Haider <br />
+              <span>Secretary</span>
+            </strong>
+          </div>
+        </div>
+        <div>
+          <strong
+            style={{
+              fontSize: "20px",
+              lineHeight: "24px",
+              fontFamily: "verdana",
+            }}
+          >
+            Islamabad, the <br />
+            <span>{formattedDate}</span>
+          </strong>
+        </div>
       </div>
     </div>
   );

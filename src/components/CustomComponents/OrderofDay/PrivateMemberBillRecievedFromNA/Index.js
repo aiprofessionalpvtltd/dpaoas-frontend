@@ -121,21 +121,26 @@ const PrivateMemberBillRecievedFromNA = ({
           );
         }
         if (privateRecievedFromNA && privateRecievedFromNA?.length > 0) {
+          let checkedIds = []; // ✅ Collect IDs first
+
           const updatedData = transformedData.map((item) => {
             const found = privateRecievedFromNA.find(
               (element) => element.id === item.id
             );
 
             if (found) {
-              setIsChecked((prevChecked) => [...prevChecked, item.id]); // Push ID if found
+              checkedIds.push(item.id); // ✅ Collect IDs instead of setting state in loop
             }
             return item;
           });
 
+          setIsChecked(checkedIds); // ✅ Update state once after the loop
           setSearchData(updatedData);
         } else {
           setSearchData(transformedData);
+          setIsChecked([]); // ✅ Reset only when no data is found
         }
+
         setBillFrom(data?.billFrom);
         setCount(response?.data?.count);
         showSuccessMessage(response?.message);

@@ -22,6 +22,8 @@ import GovernmentBillIntroducedInSenate from "../../../../../../components/Custo
 import GovernmentBillRecievedFromNAOrderOfDay from "../../../../../../components/CustomComponents/OrderofDay/GovBillRecievedFromNA";
 import GovernmentFinanceMoneyBill from "../../../../../../components/CustomComponents/OrderofDay/FinanceMoneyBillOrderofDay";
 import LGMSMotionUnderRule218OrderofDay from "../../../../../../components/CustomComponents/OrderofDay/MotionUnderRule218";
+import LGMSCallingAttentionNoticeOrderOfDay from "../../../../../../components/CustomComponents/OrderofDay/CallingAttentionNotice";
+import LGMSResolutionOrderOfDay from "../../../../../../components/CustomComponents/OrderofDay/Resolutions";
 
 const LGMSCreateOrderOftheDay = () => {
   const location = useLocation();
@@ -46,6 +48,8 @@ const LGMSCreateOrderOftheDay = () => {
   const [goveRecievedFromNA, setGovRecievedFromNA] = useState([]);
   const [govFinanceMoneyBill, setGovFinanceMoneyBill] = useState([]);
   const [motionUnderRule218, setMotionUnderRule218] = useState([]);
+  const [callingAttentionNotice, setCallingAttentionNotice] = useState([]);
+  const [resolutionOrderOfDay, setResolutionOrderOfDay] = useState([]);
 
   const [formatedData, setFormatedData] = useState("");
   const pageSize = 100;
@@ -182,6 +186,34 @@ const LGMSCreateOrderOftheDay = () => {
           setGovFinanceMoneyBill(goveFinanceMoneyBill[0].data);
           setIsDataLoaded(true);
         }
+        const motionRule218 = data?.content?.filter(
+          (item) => item.category === "MOTIONS UNDER RULE 218"
+        );
+        console.log("motionRule218motionRule218..", motionRule218);
+
+        // Ensure we're setting valid data
+        if (motionRule218?.length > 0) {
+          setMotionUnderRule218(motionRule218[0]?.data);
+          setIsDataLoaded(true);
+        }
+        const motionCallingAttentionNotice = data?.content?.filter(
+          (item) => item.category === "Calling Attention Notice"
+        );
+
+        // Ensure we're setting valid data
+        if (motionCallingAttentionNotice[0]?.data) {
+          setCallingAttentionNotice(motionCallingAttentionNotice[0].data);
+          setIsDataLoaded(true);
+        }
+        const resolutions = data?.content?.filter(
+          (item) => item.category === "Resolutions"
+        );
+
+        // Ensure we're setting valid data
+        if (resolutions[0]?.data) {
+          setResolutionOrderOfDay(resolutions[0].data);
+          setIsDataLoaded(true);
+        }
       }
     } catch (error) {
       showErrorMessage(error.response?.data?.message || "Error fetching data");
@@ -192,7 +224,7 @@ const LGMSCreateOrderOftheDay = () => {
     if (location?.state?.id) {
       getSingleOrderofDayByID(location?.state?.id);
     } else {
-      setIntroducedPrivateData([]);
+      // setIntroducedPrivateData([]);
       setIsDataLoaded(true);
     }
   }, [location?.state?.id]);
@@ -211,7 +243,26 @@ const LGMSCreateOrderOftheDay = () => {
   //         category: "GOVERNMENT BILLS INTRODUCED IN SEANTE",
   //         data: govIntroducedInSenate,
   //       },
-  //       // { category: "Questions", data: Questions }
+  //       {
+  //         category: "GOVERNMENT BILLS RECEIVED FROM NATIONAL ASSEMBLY",
+  //         data: goveRecievedFromNA,
+  //       },
+  //       {
+  //         category: "GOVERNMENT FINANCE/MONEY BILLS",
+  //         data: govFinanceMoneyBill,
+  //       },
+  //       {
+  //         category: "MOTIONS UNDER RULE 218",
+  //         data: motionUnderRule218,
+  //       },
+  //       {
+  //         category: "Calling Attention Notice",
+  //         data: callingAttentionNotice,
+  //       },
+  //       {
+  //         category: "Resolutions",
+  //         data: resolutionOrderOfDay,
+  //       },
   //     ]);
   //   } else {
   //     setSelectedTabData([
@@ -229,6 +280,26 @@ const LGMSCreateOrderOftheDay = () => {
   //         category: "GOVERNMENT BILLS INTRODUCED IN SEANTE",
   //         data: govIntroducedInSenate,
   //       },
+  //       {
+  //         category: "GOVERNMENT BILLS RECEIVED FROM NATIONAL ASSEMBLY",
+  //         data: goveRecievedFromNA,
+  //       },
+  //       {
+  //         category: "GOVERNMENT FINANCE/MONEY BILLS",
+  //         data: govFinanceMoneyBill,
+  //       },
+  //       {
+  //         category: "MOTIONS UNDER RULE 218",
+  //         data: motionUnderRule218,
+  //       },
+  //       {
+  //         category: "Calling Attention Notice",
+  //         data: callingAttentionNotice,
+  //       },
+  //       {
+  //         category: "Resolutions",
+  //         data: resolutionOrderOfDay,
+  //       },
   //     ]);
   //   }
   // }, [
@@ -236,15 +307,14 @@ const LGMSCreateOrderOftheDay = () => {
   //   isMondayCheckBoxChecked,
   //   privateRecievedFromNA,
   //   govIntroducedInSenate,
+  //   goveRecievedFromNA,
+  //   govFinanceMoneyBill,
+  //   motionUnderRule218,
+  //   callingAttentionNotice,
+  //   resolutionOrderOfDay,
   // ]);
   useEffect(() => {
-    const getCategoryName = (baseName, data) => {
-      if (data.length === 0) return null; // Skip this category if length is 0
-      if (data.length === 2) return baseName.replace(/s$/, ""); // Convert plural to singular if length is 2
-      return baseName; // Keep original name otherwise
-    };
-
-    const categories = [
+    const tabData = [
       { category: "BILLS TO BE INTRODUCED", data: introducedPrivateData },
       {
         category:
@@ -267,26 +337,30 @@ const LGMSCreateOrderOftheDay = () => {
         category: "MOTIONS UNDER RULE 218",
         data: motionUnderRule218,
       },
+      {
+        category: "Calling Attention Notice",
+        data: callingAttentionNotice,
+      },
+      {
+        category: "Resolutions",
+        data: resolutionOrderOfDay,
+      },
     ];
 
-    let selectedData = categories
-      .map(({ category, data }) => {
-        const modifiedCategory = getCategoryName(category, data);
-        return modifiedCategory ? { category: modifiedCategory, data } : null;
-      })
-      .filter(Boolean); // Remove null values (categories with 0 length)
+    // Filter out categories with empty data arrays
+    const filteredTabData = tabData.filter(
+      (item) => item.data && item.data.length > 0
+    );
 
+    // Add "QUESTIONS" category only if `isMondayCheckBoxChecked` is false
     if (!isMondayCheckBoxChecked) {
-      selectedData = [
-        {
-          category: "QUESTIONS",
-          data: [{ id: 1, billTitle: "All Questions will be asked" }],
-        },
-        ...selectedData,
-      ];
+      filteredTabData.unshift({
+        category: "QUESTIONS",
+        data: [{ id: 1, billTitle: "All Questions will be asked" }],
+      });
     }
 
-    setSelectedTabData(selectedData);
+    setSelectedTabData(filteredTabData);
   }, [
     introducedPrivateData,
     isMondayCheckBoxChecked,
@@ -295,6 +369,8 @@ const LGMSCreateOrderOftheDay = () => {
     goveRecievedFromNA,
     govFinanceMoneyBill,
     motionUnderRule218,
+    callingAttentionNotice,
+    resolutionOrderOfDay,
   ]);
 
   return (
@@ -659,17 +735,17 @@ const LGMSCreateOrderOftheDay = () => {
                           Motion Under Rule 218
                         </button>
                       </li>
-                      {/* <li
+                      <li
                         className="nav-item"
                         role="presentation"
                         onClick={() => {
-                          setSelectedTab("Private Received From NA");
+                          setSelectedTab("Calling Attention Notice");
                         }}
                       >
                         <button
                           type="button"
                           className={
-                            selectedTab === "Private Received From NA"
+                            selectedTab === "Calling Attention Notice"
                               ? "nav-link active"
                               : "nav-link"
                           }
@@ -678,14 +754,41 @@ const LGMSCreateOrderOftheDay = () => {
                           role="tab"
                           aria-controls="ex1-tabs-2"
                           aria-selected={
-                            selectedTab === "Private Received From NA"
+                            selectedTab === "Calling Attention Notice"
                               ? "true"
                               : "false"
                           }
                         >
-                          Private Received From NA
+                          Calling Attention Notice
                         </button>
-                      </li> */}
+                      </li>
+                      <li
+                        className="nav-item"
+                        role="presentation"
+                        onClick={() => {
+                          setSelectedTab("Resolution Order of Day");
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className={
+                            selectedTab === "Resolution Order of Day"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                          style={{ width: "240px" }}
+                          data-bs-toggle="tab"
+                          role="tab"
+                          aria-controls="ex1-tabs-2"
+                          aria-selected={
+                            selectedTab === "Resolution Order of Day"
+                              ? "true"
+                              : "false"
+                          }
+                        >
+                          Resolutions
+                        </button>
+                      </li>
                     </ul>
                   </div>
 
@@ -721,7 +824,7 @@ const LGMSCreateOrderOftheDay = () => {
                                     setIntroducedPrivateData={
                                       setIntroducedPrivateData
                                     }
-                                    Edit={true}
+                                    Edit={location?.state?.id ? true : false}
                                   />
                                 )}
                               </div>
@@ -738,7 +841,7 @@ const LGMSCreateOrderOftheDay = () => {
                                 setPrivateRecievedFromNA={
                                   setPrivateRecievedFromNA
                                 }
-                                Edit={true}
+                                Edit={location?.state?.id ? true : false}
                               />
                             )}
                           </div>
@@ -753,7 +856,7 @@ const LGMSCreateOrderOftheDay = () => {
                                 setGovIntroducedInSenate={
                                   setGovIntroducedInSenate
                                 }
-                                Edit={true}
+                                Edit={location?.state?.id ? true : false}
                               />
                             )}
                           </div>
@@ -766,7 +869,7 @@ const LGMSCreateOrderOftheDay = () => {
                               <GovernmentBillRecievedFromNAOrderOfDay
                                 goveRecievedFromNA={goveRecievedFromNA}
                                 setGovRecievedFromNA={setGovRecievedFromNA}
-                                Edit={true}
+                                Edit={location?.state?.id ? true : false}
                               />
                             )}
                           </div>
@@ -779,7 +882,7 @@ const LGMSCreateOrderOftheDay = () => {
                               <GovernmentFinanceMoneyBill
                                 govFinanceMoneyBill={govFinanceMoneyBill}
                                 setGovFinanceMoneyBill={setGovFinanceMoneyBill}
-                                Edit={true}
+                                Edit={location?.state?.id ? true : false}
                               />
                             )}
                           </div>
@@ -792,6 +895,36 @@ const LGMSCreateOrderOftheDay = () => {
                               <LGMSMotionUnderRule218OrderofDay
                                 motionUnderRule218={motionUnderRule218}
                                 setMotionUnderRule218={setMotionUnderRule218}
+                                Edit={location?.state?.id ? true : false}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Calling Attention Notice" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <LGMSCallingAttentionNoticeOrderOfDay
+                                callingAttentionNotice={callingAttentionNotice}
+                                setCallingAttentionNotice={
+                                  setCallingAttentionNotice
+                                }
+                                Edit={location?.state?.id ? true : false}
+                              />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="col-12">
+                        {selectedTab === "Resolution Order of Day" ? (
+                          <div className="mt-3">
+                            {isDataLoaded && (
+                              <LGMSResolutionOrderOfDay
+                                resolutionOrderOfDay={resolutionOrderOfDay}
+                                setResolutionOrderOfDay={
+                                  setResolutionOrderOfDay
+                                }
                                 Edit={location?.state?.id ? true : false}
                               />
                             )}
