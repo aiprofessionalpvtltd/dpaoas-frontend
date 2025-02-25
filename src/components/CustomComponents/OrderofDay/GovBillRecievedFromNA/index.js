@@ -11,10 +11,11 @@ import {
   showSuccessMessage,
 } from "../../../../utils/ToastAlert";
 import IntroducedInSenate from "../../../LegislationBills/IntroducedInSenate";
+import RecievedFromNA from "../../../LegislationBills/RecievedFromNA";
 
-const PrivateMemberSenateBillIntroducedInSenate = ({
-  introducedPrivateData,
-  setIntroducedPrivateData,
+const GovernmentBillRecievedFromNAOrderOfDay = ({
+  goveRecievedFromNA,
+  setGovRecievedFromNA,
   Edit,
 }) => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
     billCategory: "",
     statusId: "",
     billType: "",
-    billFrom: "From Senate",
+    billFrom: "From NA",
     keywords: "",
   });
 
@@ -45,8 +46,8 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Transform Government Bill Introduced In Senate Data
-  const transformGovernmentSenateBillData = (apiData) => {
+  // Transform Government Bill Data
+  const transformPrivateNABillData = (apiData) => {
     const docs = apiData?.map((item) => item?.billDocuments);
     if (docs?.length > 0) {
       setRemarksAttachmentVal(true);
@@ -58,18 +59,22 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       id: item.id,
       internalId: item?.id,
       fileNumber: item?.fileNumber,
-      billTitle: item?.billTitle,
-      nameOfMinistersOrMovers:
-        item?.senateBillMnaMovers?.[0]?.mna?.mnaName ||
-        item?.senateBillSenatorMovers
-          ?.map((mover) => mover?.member?.memberName)
-          .join(", ") ||
-        "",
+      titleOfTheBill: item?.billTitle,
+      nameOfMinistersOrMovers: item?.senateBillMnaMovers
+        ? item?.senateBillMnaMovers
+            .map((mover) => mover?.mna?.mnaName)
+            .join(", ")
+        : "---",
+      //   nameOfMinistersOrMovers: item?.senateBillSenatorMovers
+      //     ? item?.senateBillSenatorMovers
+      //         .map((mover) => mover?.member?.memberName)
+      //         .join(", ")
+      //     : "---",
       billCategory: item?.billCategory,
-      billStatus: item?.billStatuses?.billStatusName,
       billFrom: item?.billFrom,
-      remarks: item?.billRemarks,
-      billDocuments: item?.billDocuments,
+      billStatus: item?.billStatuses?.billStatusName,
+      //   remarks: item?.billRemarks,
+      //   billDocuments: item?.billDocuments,
     }));
   };
 
@@ -94,13 +99,13 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
     }
     const data = {
       introducedBillSentStatus: "inLegislation",
-      billCategory: "Private Member Bill",
-      billFrom: formState.billFrom,
+      billCategory: "Government Bill",
+      billFrom: "From NA",
       fkBillStatus: formState.statusId,
       billType: formState.billType,
     };
 
-    localStorage.setItem("billData", JSON.stringify(data));
+    localStorage.setItem("govbillRecievedFromNA", JSON.stringify(data));
 
     try {
       const response = await mainSearchApi(
@@ -110,28 +115,26 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       );
       if (response?.success) {
         let transformedData;
-        if (data?.billFrom === "From Senate") {
-          transformedData = transformGovernmentSenateBillData(
+        if (data?.billFrom === "From NA") {
+          transformedData = transformPrivateNABillData(
             response?.data?.senateBills
           );
         }
-
-        if (introducedPrivateData && introducedPrivateData?.length > 0) {
-          let checkedIds = []; // ✅ Store found IDs first
+        if (goveRecievedFromNA && goveRecievedFromNA?.length > 0) {
+          let checkedIds = []; // ✅ Collect IDs first
 
           const updatedData = transformedData.map((item) => {
-            const found = introducedPrivateData.find(
+            const found = goveRecievedFromNA.find(
               (element) => element.id === item.id
             );
 
             if (found) {
               checkedIds.push(item.id); // ✅ Collect IDs instead of setting state in loop
-            } else {
             }
             return item;
           });
 
-          setIsChecked(checkedIds); // ✅ Update state only once
+          setIsChecked(checkedIds); // ✅ Update state once after the loop
           setSearchData(updatedData);
         } else {
           setSearchData(transformedData);
@@ -152,12 +155,12 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       billCategory: "",
       statusId: "",
       billType: "",
-      billFrom: "From Senate",
+      billFrom: "From NA",
       keywords: "",
     });
     setSearchData([]);
-    localStorage.removeItem("billData");
-    setIntroducedPrivateData([]);
+    localStorage.removeItem("govbillRecievedFromNA");
+    setGovRecievedFromNA([]);
     setIsChecked([]);
     setRemarksAttachmentVal(false);
   };
@@ -171,38 +174,38 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move for leave to introduce a Bill further to amend the ${item.billTitle} [${shortTitle}] `,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be taken into consideration`,
         },
         {
           ...item,
-          billTitle: `to introduce the Bill to amend the ${item.billTitle} [${shortTitle}]`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be passed`,
         },
       ]);
-      setIntroducedPrivateData(updatedData);
+      setGovRecievedFromNA(updatedData);
     } else {
-      setIntroducedPrivateData([]);
+      setGovRecievedFromNA([]);
     }
   }, [isChecked, searchdata]);
 
   useEffect(() => {
     if (Edit === true) {
-      if (introducedPrivateData?.length > 0) {
+      if (goveRecievedFromNA?.length > 0) {
         const EditData = {
           introducedBillSentStatus: "inLegislation",
-          billCategory: "Private Member Bill",
-          billFrom: "From Senate",
+          billCategory: "Government Bill",
+          billFrom: "From NA",
           billType: formState.billType,
           fkBillStatus: 3,
         };
         handleSearch(null, EditData);
       }
     } else {
-      const data = JSON.parse(localStorage.getItem("billData"));
+      const data = JSON.parse(localStorage.getItem("govbillRecievedFromNA"));
       if (data) {
         handleSearch(null, data);
       }
     }
-  }, []);
+  }, [Edit]);
 
   return (
     <>
@@ -224,7 +227,7 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
                     onChange={handleChange}
                     value={formState.billFrom}
                   >
-                    <option value="From Senate">Introduced In Senate</option>
+                    <option value="From NA">Recieved From NA</option>
                   </select>
                 </div>
 
@@ -300,11 +303,11 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
 
             <div className="container-fluid">
               <div className="mt-4">
-                <IntroducedInSenate
+                <RecievedFromNA
                   block={false}
-                  addBtnText={"Private Member Bill (Introduced In Senate)"}
+                  addBtnText={"Government Bill (Introduced In Senate)"}
                   handleAdd={""}
-                  tableTitle={"Private Member Bill Data (Introduced In Senate)"}
+                  tableTitle={"Government Bill Data (Introduced In Senate)"}
                   data={searchdata}
                   hideEditIcon={false}
                   // remarksAttachmentVal={remarksAttachmentVal}
@@ -330,4 +333,4 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
   );
 };
 
-export default PrivateMemberSenateBillIntroducedInSenate;
+export default GovernmentBillRecievedFromNAOrderOfDay;
