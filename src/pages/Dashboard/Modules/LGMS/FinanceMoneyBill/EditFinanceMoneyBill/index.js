@@ -2048,6 +2048,32 @@ const EditFinanceMoneyBill = () => {
                     <div className="row">
                       <div className="col">
                         <div className="mb-3">
+                          <label className="form-label">Short Bill Title</label>
+                          <textarea
+                            className={`form-control  ${
+                              formik.touched.billText && formik.errors.billText
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            id="billText"
+                            name="billText"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billText}
+                          ></textarea>
+                          {formik.touched.billText &&
+                            formik.errors.billText && (
+                              <div className="invalid-feedback">
+                                {formik.errors.billText}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
                           <label className="form-label">Bill Remarks</label>
                           <textarea
                             className={`form-control  ${

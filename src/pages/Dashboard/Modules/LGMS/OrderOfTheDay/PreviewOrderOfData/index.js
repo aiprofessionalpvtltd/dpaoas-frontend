@@ -80,6 +80,10 @@ const PreviewOrderOfDayPDF = ({
                   <strong>
                     <u>{item?.category}</u>
                   </strong>
+                  <br />
+                  <strong>
+                    <u>{item?.subCategory ? item?.subCategory : null}</u>
+                  </strong>
                 </h2>
                 {item?.data?.map((data, idx) => (
                   <p
@@ -92,15 +96,22 @@ const PreviewOrderOfDayPDF = ({
                     }}
                   >
                     <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
-                    {data?.nameOfMinistersOrMovers ? (
+                    <strong>
+                      {data?.nameOfMinistersOrMovers
+                        ? `SENATOR ${data?.nameOfMinistersOrMovers.toUpperCase()}, `
+                        : data?.nameOfMinister
+                          ? `${data?.nameOfMinister.toUpperCase()}, `
+                          : ""}
+                    </strong>
+                    {/* {data?.nameOfMinistersOrMovers ? (
                       <strong>{`SENATOR ${
                         data?.nameOfMinistersOrMovers
-                          ? data?.nameOfMinistersOrMovers
-                          : data?.nameOfSenator
+                          ? data?.nameOfMinistersOrMovers.toUpperCase()
+                          : data?.nameOfSenator.toUpperCase()
                       },`}</strong>
                     ) : (
                       ""
-                    )}{" "}
+                    )}{" "} */}
                     {data?.billTitle}.
                   </p>
                 ))}

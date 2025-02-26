@@ -2392,10 +2392,10 @@ const TestingEditSenateBills = () => {
                       </div>
                     </div>
 
-                    {/* <div className="row">
+                    <div className="row">
                       <div className="col">
                         <div className="mb-3">
-                          <label className="form-label">Bill Text</label>
+                          <label className="form-label">Short Bill Title</label>
                           <textarea
                             className={`form-control  ${
                               formik.touched.billText && formik.errors.billText
@@ -2416,7 +2416,7 @@ const TestingEditSenateBills = () => {
                             )}
                         </div>
                       </div>
-                    </div> */}
+                    </div>
 
                     <div className="row">
                       <div className="col">

@@ -760,7 +760,7 @@ export const TMSsidebarItemsDirector = [
         itemName: "Recived Legislative Bill",
         link: "/tms/legislativa-bill",
         icon: faClipboardList,
-      }
+      },
     ],
   },
 ];
@@ -1286,8 +1286,6 @@ export const LegislationSideBarItems = [
     ],
   },
 
-
-
   {
     itemName: "Manage",
     link: "/lgms/dashboard/ordinances",
@@ -1359,6 +1357,24 @@ export const LegislationSideBarItems = [
       // {
       //   itemName: "Committees",
       //   link: "/lgms/dashboard/manage/committees/list",
+      //   icon: faBookOpen,
+      // },
+    ],
+  },
+
+  {
+    itemName: "Report",
+    link: "/lgms/dashboard/reports",
+    icon: faBookOpen,
+    subItems: [
+      {
+        itemName: "Report Laid Before Senate",
+        link: "/lgms/dashboard/reports/parliamentaryaffairs/report",
+        icon: faBookOpen,
+      },
+      // {
+      //   itemName: "Search Finance Money Bills",
+      //   link: "/lgms/dashboard/bills/legislation-bills/finance-money-bill/search",
       //   icon: faBookOpen,
       // },
     ],

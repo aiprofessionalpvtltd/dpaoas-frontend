@@ -370,6 +370,8 @@ import PreviewOrderOfDay from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/Pre
 import LGMSMotionCallingAttentionNotice from "../pages/Dashboard/Modules/LGMS/LGMSMotion/MotionCallingAttentionNotice.js";
 import LGMSMotionUnderRule218 from "../pages/Dashboard/Modules/LGMS/LGMSMotion/MotionUnderRule218.js";
 import LGMSResolution from "../pages/Dashboard/Modules/LGMS/LGMSResolution/index.js";
+import LGMSAddEditReportOfParliamentaryAffairs from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/AddEditReportParliamentryAffairs/index.js";
+import LGMSReportParliamentaryAffairsList from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/ReportParliamentryList/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1277,6 +1279,14 @@ export const ProtectedRoutes = [
   {
     path: "/lgms/resolution",
     element: <LGMSResolution />,
+  },
+  {
+    path: "/lgms/dashboard/reports/parliamentaryaffairs/report",
+    element: <LGMSReportParliamentaryAffairsList />,
+  },
+  {
+    path: "/lgms/dashboard/reports/parliamentaryaffairs/report/addedit",
+    element: <LGMSAddEditReportOfParliamentaryAffairs />,
   },
 
   // End of LGMS Routes

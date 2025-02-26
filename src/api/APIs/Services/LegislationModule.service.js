@@ -1004,3 +1004,70 @@ export const SendNoticePrivateBillToTransaltion = async (id, data) => {
     throw error;
   }
 };
+
+// Create Parliamentary Affair Report
+export const createNewParliamentaryAffairReport = async (data) => {
+  try {
+    const response = await axiosClient.post(
+      "parliamentaryAffairsReports/create",
+      data
+    );
+    return response?.data;
+  } catch (error) {
+    console.log("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get All Parliamentary Affairs Report List
+export const GetAllParliamentaryReportList = async (currentPage, pageSize) => {
+  try {
+    const response = await axiosClient.get(
+      `parliamentaryAffairsReports/all?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getParliamentaryAffairReportID = async (id) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `parliamentaryAffairsReports/single/${id}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Update Affairs Report
+export const updateParliamentaryAffairsReport = async (id, data) => {
+  try {
+    const response = await axiosClient.put(
+      `/parliamentaryAffairsReports/update/${id}`,
+      data
+      // {
+      //   headers: {
+      //     accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
+    );
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};

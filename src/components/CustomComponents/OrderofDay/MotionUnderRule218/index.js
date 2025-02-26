@@ -137,7 +137,7 @@ function LGMSMotionUnderRule218OrderofDay({
         seachBarShow={false}
         hideBtn={true}
         hidebtn1={true}
-        block={true}
+        block={false}
         tableTitle="Motion Under Rule 218"
         headertitlebgColor={"#666"}
         singleDataCard={true}

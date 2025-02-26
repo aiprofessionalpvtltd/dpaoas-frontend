@@ -256,6 +256,7 @@ function AddEditTestingNABills() {
       billCategory: "",
       billType: "",
       billTitle: "",
+      billText: "",
       senateBillMnaMovers: null,
       senateBillMinistryMovers: null,
       selectedSenator: null,
@@ -367,6 +368,7 @@ function AddEditTestingNABills() {
     // formData.append("billCategory", values?.billCategory);
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);
+    formData.append("billText", values?.billText);
     formData.append("billFrom", "From NA");
     formData.append("fkUserId", userData && userData?.id);
     formData.append("fkBillStatus", 1);
@@ -1118,6 +1120,36 @@ function AddEditTestingNABills() {
                             formik.errors.billTitle && (
                               <div className="invalid-feedback">
                                 {formik.errors.billTitle}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Short Bill Title */}
+
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Short Bill Title{" "}
+                          </label>
+                          <textarea
+                            className={`form-control  ${
+                              formik.touched.billText && formik.errors.billText
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            id="billText"
+                            name="billText"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billText}
+                          ></textarea>
+                          {formik.touched.billText &&
+                            formik.errors.billText && (
+                              <div className="invalid-feedback">
+                                {formik.errors.billText}
                               </div>
                             )}
                         </div>

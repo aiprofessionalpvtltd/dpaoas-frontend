@@ -20,11 +20,6 @@ const BothMinisterSenator = ({
   getMinistriesOnTenure,
   ministryDataOnTenure,
 }) => {
-  console.log(
-    "formik from Both Component",
-    formik?.values?.fkMnaParliamentaryYearId
-  );
-
   const [ministerTenure, setMinisterTenure] = useState([]);
   const fetchTenures = async () => {
     try {

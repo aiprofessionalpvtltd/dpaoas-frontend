@@ -68,8 +68,7 @@ const GovernmentBillIntroducedInSenate = ({
       billCategory: item?.billCategory,
       billStatus: item?.billStatuses?.billStatusName,
       billFrom: item?.billFrom,
-      remarks: item?.billRemarks,
-      billDocuments: item?.billDocuments,
+      shortBillTitle: item?.billText,
     }));
   };
 
@@ -170,11 +169,11 @@ const GovernmentBillIntroducedInSenate = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move for leave to introduce a Bill further to amend the ${item.billTitle} [${shortTitle}] `,
+          billTitle: `to move for leave to introduce a Bill further to amend the ${item.billTitle} [${item?.shortBillTitle}] `,
         },
         {
           ...item,
-          billTitle: `to introduce the Bill to amend the ${item.billTitle} [${shortTitle}]`,
+          billTitle: `to introduce the Bill to amend the ${item.billTitle} [${item?.shortBillTitle}]`,
         },
       ]);
       setGovIntroducedInSenate(updatedData);
@@ -278,6 +277,7 @@ const GovernmentBillIntroducedInSenate = ({
                     type="submit"
                     className="btn btn-primary me-2"
                     onClick={handleSearch}
+                    disabled={!formState?.statusId}
                   >
                     Search
                   </button>

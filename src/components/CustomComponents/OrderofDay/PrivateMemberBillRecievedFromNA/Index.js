@@ -73,8 +73,7 @@ const PrivateMemberBillRecievedFromNA = ({
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       billStatus: item?.billStatuses?.billStatusName,
-      //   remarks: item?.billRemarks,
-      //   billDocuments: item?.billDocuments,
+      shortBillTitle: item?.billText,
     }));
   };
 
@@ -174,11 +173,11 @@ const PrivateMemberBillRecievedFromNA = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be taken into consideration`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortBillTitle}], be taken into consideration`,
         },
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be passed`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortBillTitle}], be passed`,
         },
       ]);
       setPrivateRecievedFromNA(updatedData);
@@ -282,6 +281,7 @@ const PrivateMemberBillRecievedFromNA = ({
                     type="submit"
                     className="btn btn-primary me-2"
                     onClick={handleSearch}
+                    disabled={!formState?.statusId}
                   >
                     Search
                   </button>
