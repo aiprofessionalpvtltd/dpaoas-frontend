@@ -4,15 +4,16 @@ import { getAllMotion } from "../../../../api/APIs/Services/Motion.service";
 import { Layout } from "../../../Layout";
 import CustomTable from "../../CustomTable";
 import { LegislationSideBarItems } from "../../../../utils/sideBarItems";
+import { GetAllParliamentaryReportList } from "../../../../api/APIs/Services/LegislationModule.service";
 
-function LGMSCallingAttentionNoticeOrderOfDay({
-  callingAttentionNotice,
-  setCallingAttentionNotice,
+function LGMSReportToBeLaidOrderofDay({
+  reportToBeLaidData,
+  setReportToBeLaid,
   Edit,
 }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
-  const [motionData, setMotionData] = useState([]);
+  const [reportLaidData, setReportLaidData] = useState([]);
   const [isChecked, setIsChecked] = useState([]);
   const pageSize = 10; // Set your desired page size
 
@@ -21,81 +22,67 @@ function LGMSCallingAttentionNoticeOrderOfDay({
     setCurrentPage(page);
   };
 
-  const transformMotionData = (apiData) => {
+  const transformData = (apiData) => {
     return apiData.map((res, index) => {
-      const english = [res?.englishText].filter(Boolean).join(", ");
-      const EnglishText = english.replace(/(<([^>]+)>)/gi, "");
-
-      const urdu = [res?.urduText].filter(Boolean).join(", ");
-      const UrduText = urdu.replace(/(<([^>]+)>)/gi, "");
-
       return {
+        SNo: index + 1,
         id: res?.id,
         internalId: res?.id,
-        nameOfMinistersOrMovers: res?.motionMovers[0]?.members?.memberName,
-        SessionName: res?.sessions?.sessionName
-          ? res?.sessions?.sessionName
-          : "",
-        motionType: res?.motionType ? res?.motionType : "",
-        englishText: EnglishText ? EnglishText : "",
-        urduText: UrduText ? UrduText : "",
-        motionStatus: res?.motionStatuses?.statusName,
-        memberPosition: res?.memberPosition,
+        nameOfMinister: res?.minister?.mnaName,
+        // ministerName: res?.minister?.mnaName,
+        parliamentaryYear: res?.parliamentaryYearsMna?.parliamentaryTenure,
+        ministryName: res?.ministry?.ministryName,
+        reportDescription: res?.description,
       };
     });
   };
 
-  const getMotionListData = async () => {
+  const getAllParliamentaryAffairsRepots = async () => {
     const motionSentStatus = "toLegislation";
     const motiontoStatus = "toLegislation";
     try {
-      const response = await getAllMotion(
+      const response = await GetAllParliamentaryReportList(
         currentPage,
-        pageSize,
-        motionSentStatus,
-        motiontoStatus
+        pageSize
       );
       if (response?.success) {
-        const filterData = response?.data?.rows.filter(
-          (item) => item?.motionType === "Call Attention Notice"
-        );
-        const transformedData = transformMotionData(filterData);
-        handleCheckedData(callingAttentionNotice, transformedData);
-        setCount(filterData?.length);
-        setMotionData(transformedData);
+        const transformedData = transformData(response?.data?.reports);
+        handleCheckedData(reportToBeLaidData, transformedData);
+        setCount(response?.data?.reports?.length);
+        setReportLaidData(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    getMotionListData();
+    getAllParliamentaryAffairsRepots();
   }, []);
 
   useEffect(() => {
     if (isChecked?.length > 0) {
-      localStorage.setItem("callingAttentionNotice", JSON.stringify(isChecked)); // ✅ Store as JSON string
+      localStorage.setItem("reportToBeLaidData", JSON.stringify(isChecked)); // ✅ Store as JSON string
 
-      const checkedData = motionData?.filter((item) =>
+      const checkedData = reportLaidData?.filter((item) =>
         isChecked.includes(item?.id)
       );
-
+      console.log("checkedDatacheckedData", checkedData);
       const updatedData = checkedData.map((item) => ({
         ...item,
-        billTitle: `to move that the House may discuss ${item?.englishText}`,
+        billTitle: `Minister for ${item?.ministryName} to lay before the Senate ${item?.reportDescription}`,
       }));
 
-      setCallingAttentionNotice(updatedData);
+      setReportToBeLaid(updatedData);
     } else {
-      setCallingAttentionNotice([]);
+      setReportToBeLaid([]);
     }
-  }, [isChecked, motionData]);
+  }, [isChecked, reportLaidData]);
 
-  const handleCheckedData = async (callingAttentionNotice, motionData) => {
+  const handleCheckedData = async (reportToBeLaidData, reportLaidData) => {
     if (Edit === true) {
-      if (callingAttentionNotice && callingAttentionNotice.length > 0) {
-        const updatedData = motionData.map((item) => {
-          const found = callingAttentionNotice.find(
+      if (reportToBeLaidData && reportToBeLaidData.length > 0) {
+        const updatedData = reportLaidData.map((item) => {
+          const found = reportToBeLaidData.find(
             (element) => element.id === item.id
           );
 
@@ -105,12 +92,12 @@ function LGMSCallingAttentionNoticeOrderOfDay({
           return item;
         });
 
-        setMotionData(updatedData);
+        setReportLaidData(updatedData);
       } else {
-        setMotionData(motionData);
+        setReportLaidData(reportLaidData);
       }
     } else {
-      const data = localStorage.getItem("callingAttentionNotice");
+      const data = localStorage.getItem("reportToBeLaidData");
 
       if (data) {
         try {
@@ -133,12 +120,12 @@ function LGMSCallingAttentionNoticeOrderOfDay({
       centerlogohide={true}
     >
       <CustomTable
-        data={motionData}
+        data={reportLaidData}
         seachBarShow={false}
         hideBtn={true}
         hidebtn1={true}
         block={false}
-        tableTitle="Call Attention Notice"
+        tableTitle="Reports To Be Laid In Senate Data"
         headertitlebgColor={"#666"}
         singleDataCard={true}
         headertitletextColor={"#FFF"}
@@ -157,4 +144,4 @@ function LGMSCallingAttentionNoticeOrderOfDay({
   );
 }
 
-export default LGMSCallingAttentionNoticeOrderOfDay;
+export default LGMSReportToBeLaidOrderofDay;

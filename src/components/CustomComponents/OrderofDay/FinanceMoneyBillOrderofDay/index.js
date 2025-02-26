@@ -283,6 +283,7 @@ const GovernmentFinanceMoneyBill = ({
                     type="submit"
                     className="btn btn-primary me-2"
                     onClick={handleSearch}
+                    disabled={!formState?.statusId}
                   >
                     Search
                   </button>

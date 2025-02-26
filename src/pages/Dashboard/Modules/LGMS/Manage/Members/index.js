@@ -74,17 +74,17 @@ function LGMSMembers() {
   const OldMembertransformData = (apiData) => {
     return apiData.map((item) => ({
       id: item?.id,
-      // memberName: `${item?.memberName}`,
+      memberName: `${item?.memberName}`,
       // politicalParty: `${item?.politicalParties?.partyName}`,
-      electionType: item?.electionType,
-      // memberTenure: item?.tenures?.tenureName
-      //   ? item?.tenures?.tenureName
-      //   : "---",
-      // memberTerm: item?.terms?.termName ? item?.terms?.termName : "---",
-      // parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
-      //   ? item?.parliamentaryYears?.parliamentaryTenure
-      //   : "---",
-      // memberProvince: item?.memberProvince ? item?.memberProvince : "---",
+      // electionType: item?.electionType,
+      memberTenure: item?.tenures?.tenureName
+        ? item?.tenures?.tenureName
+        : "---",
+      memberTerm: item?.terms?.termName ? item?.terms?.termName : "---",
+      parliamentaryYear: item?.parliamentaryYears?.parliamentaryTenure
+        ? item?.parliamentaryYears?.parliamentaryTenure
+        : "---",
+      memberProvince: item?.memberProvince ? item?.memberProvince : "---",
       // phoneNo: item?.phoneNo ? item?.phoneNo : "---",
       // gender: item?.gender,
       // fromDate: moment(item.fromDate).format("YYYY/MM/DD"),
@@ -408,6 +408,7 @@ function LGMSMembers() {
                       totalCount={count}
                       showSent={true}
                       handleSent={(item) => openModal(item?.id)}
+                      hideDeleteIcon={true}
                     />
                   ) : (
                     <CustomTable
@@ -431,6 +432,7 @@ function LGMSMembers() {
                       totalCount={count}
                       showSent={true}
                       handleSent={(item) => openModal(item?.id)}
+                      hideDeleteIcon={true}
                     />
                   )}
                 </div>

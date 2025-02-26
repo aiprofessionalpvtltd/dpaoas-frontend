@@ -87,6 +87,7 @@ function TestingAddSenate() {
       billCategory: "",
       billType: "",
       billTitle: "",
+      billText: "",
       selectedSenator: null,
       selectedMNA: null,
       selectedMinistry: null,
@@ -277,6 +278,7 @@ function TestingAddSenate() {
     );
     formData.append("billType", values?.billType);
     formData.append("billTitle", values?.billTitle);
+    formData.append("billText", values?.billText);
     formData.append("billFrom", "From Senate");
     formData.append("fkUserId", userData && userData?.id);
     formData.append("fkBillStatus", 1);
@@ -921,111 +923,35 @@ function TestingAddSenate() {
                         </div>
                       </div>
                     </div>
-                    {/* <div class="row">
-                      <div class="col-3">
-                        <div style={{ marginTop: "35px" }}>
-                          <div class="form-check">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              id="oldMinisterCheckbox"
-                              checked={isOldMinisterSelected}
-                              onChange={(e) =>
-                                setIsOldMinisterSelected(e.target.checked)
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="oldMinisterCheckbox"
-                            >
-                              Select Old Minister
-                            </label>
-                          </div>
+                    {/* Short Bill Title */}
+
+                    <div className="row">
+                      <div className="col">
+                        <div className="mb-3">
+                          <label className="form-label">
+                            Short Bill Title{" "}
+                          </label>
+                          <textarea
+                            className={`form-control  ${
+                              formik.touched.billText && formik.errors.billText
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            id="billText"
+                            name="billText"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.billText}
+                          ></textarea>
+                          {formik.touched.billText &&
+                            formik.errors.billText && (
+                              <div className="invalid-feedback">
+                                {formik.errors.billText}
+                              </div>
+                            )}
                         </div>
                       </div>
-                      {isOldMinisterSelected ? (
-                        <>
-                          <div class="col">
-                            <div class="mb-3">
-                              <label class="form-label">
-                                Select Old Minister
-                              </label>
-                              <Select
-                                options={MNAData.map((item) => ({
-                                  value: item.id,
-                                  label: item.mnaName,
-                                }))}
-                                onChange={(selectedOption) => {
-                                  formik.setFieldValue(
-                                    "selectedMNA",
-                                    selectedOption
-                                  );
-                                  formik.setFieldValue(
-                                    "selectedMinistry",
-                                    null
-                                  );
-                                  setMinisterID(selectedOption?.value);
-                                }}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.selectedMNA}
-                                name="selectedMNA"
-                                className={`${
-                                  formik.touched.selectedMNA &&
-                                  formik.errors.selectedMNA
-                                    ? "is-invalid"
-                                    : ""
-                                }`}
-                              />
-
-                              {formik.touched.selectedMNA &&
-                                formik.errors.selectedMNA && (
-                                  <div class="invalid-feedback">
-                                    {formik.errors.selectedMNA}
-                                  </div>
-                                )}
-                            </div>
-                          </div>
-
-                          <div className="col">
-                            <label className="form-label">
-                              Select Old Ministry
-                            </label>
-                            <Select
-                              options={
-                                ministryDataOnMinister &&
-                                ministryDataOnMinister.map((item) => ({
-                                  value: item.id,
-                                  label: item.ministryName,
-                                }))
-                              }
-                              name="selectedMinistry"
-                              id="selectedMinistry"
-                              onChange={(selectedOptions) =>
-                                formik.setFieldValue(
-                                  "selectedMinistry",
-                                  selectedOptions
-                                )
-                              }
-                              className={`${
-                                formik.touched.selectedMinistry &&
-                                formik.errors.selectedMinistry
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                              value={formik.values.selectedMinistry}
-                            />
-                            {formik.touched.selectedMinistry &&
-                              formik.errors.selectedMinistry && (
-                                <div class="invalid-feedback">
-                                  {formik.errors.selectedMinistry}
-                                </div>
-                              )}
-                          </div>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div> */}
+                    </div>
 
                     <div className="row mt-3">
                       <div class="d-grid gap-2 d-md-flex justify-content-md-end">

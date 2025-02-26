@@ -7,10 +7,7 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import {
-  LegislationSideBarItems,
-  QMSSideBarItems,
-} from "../../../../../../../utils/sideBarItems";
+import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import {
   createTerm,
   getAllTenures,

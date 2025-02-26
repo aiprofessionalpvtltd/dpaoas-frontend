@@ -65,16 +65,10 @@ const GovernmentBillRecievedFromNAOrderOfDay = ({
             .map((mover) => mover?.mna?.mnaName)
             .join(", ")
         : "---",
-      //   nameOfMinistersOrMovers: item?.senateBillSenatorMovers
-      //     ? item?.senateBillSenatorMovers
-      //         .map((mover) => mover?.member?.memberName)
-      //         .join(", ")
-      //     : "---",
       billCategory: item?.billCategory,
       billFrom: item?.billFrom,
       billStatus: item?.billStatuses?.billStatusName,
-      //   remarks: item?.billRemarks,
-      //   billDocuments: item?.billDocuments,
+      shortBillTitle: item?.billText,
     }));
   };
 
@@ -174,11 +168,11 @@ const GovernmentBillRecievedFromNAOrderOfDay = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be taken into consideration`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortBillTitle}], be taken into consideration`,
         },
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be passed`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortBillTitle}], be passed`,
         },
       ]);
       setGovRecievedFromNA(updatedData);
@@ -282,6 +276,7 @@ const GovernmentBillRecievedFromNAOrderOfDay = ({
                     type="submit"
                     className="btn btn-primary me-2"
                     onClick={handleSearch}
+                    disabled={!formState?.statusId}
                   >
                     Search
                   </button>
