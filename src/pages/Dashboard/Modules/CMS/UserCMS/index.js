@@ -209,22 +209,117 @@ function CMSUserDashboard() {
     }
   };
 
-  const hendleExportExcel = async () => {
-    try {
-      const response = await getallComplaint();
-      if (response?.success) {
-        // Export to Excel logic
-        const worksheet = XLSX.utils.json_to_sheet(response?.data?.complaints);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-        //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
-        //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
-        XLSX.writeFile(workbook, "DataSheet.xlsx");
+const hendleExportExcel = async () => {
+  try {
+    const response = await getallComplaint();
+    if (response?.success) {
+      // Clean and format the data
+      const cleanData = response?.data?.complaints.map(item => ({
+        "Date": moment(item["complaintIssuedDate"]).format("DD/MM/YYYY"),
+        "User Name": item["userName"],
+        "Branch/Office": item["complaintType"]?.["branchName"],
+        "Nature of Complaint": item["complaintCategory"]?.["complaintCategoryName"],
+        "Resolve User": `${item['resolverUser']?.['employee']?.['firstName'] || ''} ${item['resolverUser']?.['employee']?.['lastName'] || ''}`.trim(),
+        "Status": item["complaintStatus"],
+      }));
+
+       // Create the worksheet from the data
+      const worksheet = XLSX.utils.json_to_sheet(cleanData);
+      
+      // Get the range of cells
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+      
+      // Set column widths for better readability
+      const cols = [];
+      const columnHeaders = Object.keys(cleanData[0]);
+      columnHeaders.forEach((header, index) => {
+        // Set wider columns for User Name and Branch Name
+        if (header === "User Name") {
+          cols.push({ wch: 30 }); // Wider column for User Name
+        } else if (header === "Branch/Office") {
+          cols.push({ wch: 30 }); // Wider column for Branch Name
+        } else {
+          cols.push({ wch: Math.max(header.length * 1.5, 15) }); // Default width for other columns
+        }
+      });
+      worksheet['!cols'] = cols;
+      
+      // Style header row (bold, background color)
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_address = XLSX.utils.encode_cell({ r: 0, c: C });
+        if (!worksheet[cell_address]) continue;
+        
+        worksheet[cell_address].s = {
+          font: { bold: true, color: { rgb: "FFFFFF" } },
+          fill: { fgColor: { rgb: "4472C4" } },
+          border: {
+            top: { style: 'medium', color: { rgb: "000000" } },
+            bottom: { style: 'medium', color: { rgb: "000000" } },
+            left: { style: 'medium', color: { rgb: "000000" } },
+            right: { style: 'medium', color: { rgb: "000000" } }
+          },
+          alignment: { horizontal: 'center', vertical: 'center', wrapText: true }
+        };
       }
-    } catch (error) {
-      showErrorMessage(error?.response?.data?.message);
+      
+      // Apply alternating row colors and borders to all data cells
+      for (let R = 1; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!worksheet[cell_address]) {
+            worksheet[cell_address] = { v: '' }; // Add empty cell to ensure borders are applied
+          }
+          
+          worksheet[cell_address].s = {
+            border: {
+              top: { style: 'thin', color: { rgb: "D3D3D3" } },
+              bottom: { style: 'thin', color: { rgb: "D3D3D3" } },
+              left: { style: 'thin', color: { rgb: "D3D3D3" } },
+              right: { style: 'thin', color: { rgb: "D3D3D3" } }
+            },
+            fill: { 
+              fgColor: { rgb: R % 2 ? "F2F2F2" : "FFFFFF" } // Alternating row colors
+            },
+            alignment: { horizontal: 'left', vertical: 'center', wrapText: true }
+          };
+          
+          // Format date cells specifically
+          if (C === 0 && worksheet[cell_address].v) { // Assuming first column is date
+            if (typeof worksheet[cell_address].v === 'string' && worksheet[cell_address].v.includes('-')) {
+              worksheet[cell_address].z = 'yyyy-mm-dd'; // Set date format
+            }
+          }
+        }
+      }
+      
+      // Create workbook and append the worksheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Complaints');
+      
+      // Add some file properties
+      workbook.Props = {
+        Title: "Complaints Report",
+        Subject: "Complaints Data",
+        Author: "System",
+        CreatedDate: new Date()
+      };
+      
+      // Write the file
+      XLSX.writeFile(workbook, 'Complaints_Report.xlsx', { 
+        bookType: 'xlsx',
+        bookSST: false,
+        type: 'binary'
+      });
+      
+      console.log("Excel file exported successfully");
     }
-  };
+  } catch (error) {
+    console.error("Export failed:", error);
+    showErrorMessage(error?.response?.data?.message || "Failed to export data");
+  }
+};
+
+ 
 
   const hendleEdit = async (id) => {
     try {
