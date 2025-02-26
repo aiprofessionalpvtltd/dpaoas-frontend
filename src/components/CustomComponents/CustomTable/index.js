@@ -488,7 +488,7 @@ function CustomTable({
                                 {item[key]}
                               </span>
                             </OverlayTrigger>
-                          ) : <p style={{ textAlign: "justify" }}>{item[key]}</p> }
+                          ) : <p style={{ textAlign: "center" }}>{item[key]}</p> }
                         </td>
                       ))}
                       {isRemarksAttachhments && (
@@ -936,7 +936,7 @@ function CustomTable({
                               </span>
                             </OverlayTrigger>
                           ) :(
-                            <p style={{ textAlign: "justify" }}>{item[key]}</p>
+                            <p style={{ textAlign: "center" }}>{item[key]}</p>
                           )}
                         </td>
                       ))}
