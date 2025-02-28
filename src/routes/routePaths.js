@@ -372,6 +372,7 @@ import LGMSMotionUnderRule218 from "../pages/Dashboard/Modules/LGMS/LGMSMotion/M
 import LGMSResolution from "../pages/Dashboard/Modules/LGMS/LGMSResolution/index.js";
 import LGMSAddEditReportOfParliamentaryAffairs from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/AddEditReportParliamentryAffairs/index.js";
 import LGMSReportParliamentaryAffairsList from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/ReportParliamentryList/index.js";
+import QMSQuestionRephase from "../pages/Dashboard/Modules/QMS/Question/QuestionRephase/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -681,6 +682,7 @@ export const ProtectedRoutes = [
   { path: "/qms/question/detail", element: <QMSQuestionDetail /> },
   { path: "/qms/question/new", element: <QMSNewQuestion /> },
   { path: "/qms/question/delete", element: <QMSDeleteQuestion /> },
+  { path: "/qms/question/rephase", element: <QMSQuestionRephase /> },
 
   { path: "/qms/resolution", element: <QMSQuestionDashboard /> },
   { path: "/qms/resolution/list", element: <QMSResolutionList /> },

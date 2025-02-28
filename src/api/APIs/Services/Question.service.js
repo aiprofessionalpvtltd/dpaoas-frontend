@@ -867,3 +867,15 @@ export const getQuestionListCountsHourStatement = async (id) => {
     throw error;
   }
 };
+
+//Rephase Question 
+export const rephaseQuestion = async (data) => {
+  try {
+    //   const token = getAuthToken()
+    const response = await axiosClient.post(`/paraphraser`, data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+}
