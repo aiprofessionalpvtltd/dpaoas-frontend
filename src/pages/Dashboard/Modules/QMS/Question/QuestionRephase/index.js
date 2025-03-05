@@ -37,7 +37,7 @@ function QMSQuestionRephase() {
     try {
       const response = await rephaseQuestion(payload);
       if (response.success) {
-        showSuccessMessage("Text Successfully Rephased");
+        showSuccessMessage("Text Successfully Rephrased");
         setSearchedData(response.paraphrased);
       }
     } catch (error) {
@@ -51,7 +51,7 @@ function QMSQuestionRephase() {
       <Header
         dashboardLink={"/qms/dashboard"}
         addLink1={"/qms/question/rephase"}
-        title1={"Question Rephase"}
+        title1={"Question Rephrase"}
       />
       <ToastContainer />
       <div class="container-fluid">
@@ -60,7 +60,7 @@ function QMSQuestionRephase() {
             class="card-header red-bg"
             style={{ background: "#14ae5c !important" }}
           >
-            <h1>Question Rephase</h1>
+            <h1>Question Rephrase</h1>
           </div>
           <div class="card-body">
             <div class="container-fluid">
@@ -68,7 +68,7 @@ function QMSQuestionRephase() {
                 <div className="row">
                   <div className="col">
                     <div className="mb-3">
-                      <label className="form-label">Text To Rephase</label>
+                      <label className="form-label">Text To Rephrase</label>
                       <textarea
                         className={`form-control ${
                           formik.touched.text && formik.errors.text
