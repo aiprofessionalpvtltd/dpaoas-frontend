@@ -50,6 +50,14 @@ const customStyles = {
 function CMSAdminDashboard() {
   const navigate = useNavigate();
   const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
+  const [complaintCounts, setComplaintCounts] = useState({
+    software: 0,
+    printer: 0,
+    networkInternet: 0,
+    tonerInstallation: 0,
+    hardware: 0,
+    other: 0,
+  });
 
   const [complaintType, setComplaintType] = useState([]);
   const [inprogressCount, setInprogressCount] = useState(0);
@@ -175,6 +183,28 @@ function CMSAdminDashboard() {
         const countresolved = response?.data?.complaints.filter(
           (item) => item.complaintStatus === "closed"
         ).length;
+        const counts = {
+          software: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Software"
+          ).length,
+          printer: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Printer"
+          ).length,
+          networkInternet: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Network/Internet"
+          ).length,
+          tonerInstallation: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Toner Installation"
+          ).length,
+          hardware: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Hardware"
+          ).length,
+          other: response.data.complaints.filter(
+            (item) => item.complaintCategory.complaintCategoryName === "Other"
+          ).length,
+        };
+    
+        setComplaintCounts(counts);
         setInprogressCount(countInProgress);
         setPendingCount(countPending);
         setResolvedCount(countresolved);
@@ -471,7 +501,7 @@ function CMSAdminDashboard() {
     CountComplaints();
     getComplaint();
   }, [getComplaint]);
-
+   
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
       <Header dashboardLink={"/cms/admin/dashboard"} />
@@ -567,6 +597,70 @@ function CMSAdminDashboard() {
                 percentage={"100"}
                 value={
                   inprogressCount < 10 ? `0${inprogressCount}` : inprogressCount
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Neture Of Complainet */}
+      <div class="row">
+        <div style={{ padding: "0 30px 0 24px" }}>
+          <div class="mt-5 mb-3">
+            <div class="row">
+              <LeaveCard
+                available={"06"}
+                used={"05"}
+                title={"Software Complaint"}
+                percentage={"60"}
+                value={complaintCounts?.software < 10 ? `0${complaintCounts?.software}` : complaintCounts?.software}
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Hardware Complaint"}
+                percentage={"80"}
+                value={complaintCounts?.hardware < 10 ? `0${complaintCounts?.hardware}` : complaintCounts?.hardware}
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Network/Internet Complaint"}
+                percentage={"100"}
+                value={
+                  complaintCounts?.networkInternet < 10 ? `0${complaintCounts?.networkInternet}` : complaintCounts?.networkInternet
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div style={{ padding: "0 30px 0 24px" }}>
+          <div class="mt-5 mb-3">
+            <div class="row">
+              <LeaveCard
+                available={"06"}
+                used={"05"}
+                title={"Printer Complaint"}
+                percentage={"60"}
+                value={complaintCounts?.printer < 10 ? `0${complaintCounts?.printer}` : complaintCounts?.printer}
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Toner Installation Complaint"}
+                percentage={"80"}
+                value={complaintCounts?.tonerInstallation < 10 ? `0${complaintCounts?.tonerInstallation}` : complaintCounts?.tonerInstallation}
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Other Complaint"}
+                percentage={"100"}
+                value={
+                  complaintCounts?.other < 10 ? `0${complaintCounts?.other}` : complaintCounts?.other
                 }
               />
             </div>
