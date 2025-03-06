@@ -668,7 +668,8 @@ function CMSAdminDashboard() {
         </div>
       </div>
 
-      <div class="row">
+     {/* Inventory Count */}
+      {/* <div class="row">
         <div style={{ padding: "0 30px 0 24px" }}>
           <div class="mt-5 mb-3">
             <div class="row">
@@ -699,9 +700,9 @@ function CMSAdminDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div class="row">
+      {/* <div class="row">
         <div style={{ padding: "0 30px 0 24px" }}>
           <div class="mt-5 mb-3">
             <div class="row">
@@ -724,7 +725,7 @@ function CMSAdminDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div class="mt-3">
         <div class="container-fluid ">
           <div className="dash-detail-container">
