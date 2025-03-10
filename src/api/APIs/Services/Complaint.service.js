@@ -189,7 +189,25 @@ export const getallComplaint = async (currentPage, pageSize) => {
       throw error;
     }
   };
-
+  //Admin Complaint Counts
+  export const allComplaintCounts = async (data) => {
+    const filteredSearchParams = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== ""),
+    );
+    try {
+      // const token = getAuthToken();
+      const response = await axiosClient.get(
+        `/complaints/counts`,
+        {
+          params: filteredSearchParams,
+        }
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching API endpoint:", error);
+      throw error;
+    }
+  };
   export const complaintDelete = async (id) => {
     try {
       // const token = getAuthToken();
