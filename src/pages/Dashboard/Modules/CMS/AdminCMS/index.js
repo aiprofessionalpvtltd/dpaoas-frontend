@@ -151,8 +151,8 @@ function CMSAdminDashboard() {
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
       ResolvedDate:
-        item?.complaintResolvedDate &&
-        moment(item?.complaintResolvedDate).format("DD/MM/YYYY"),
+        item?.complaintResolvedDate ?
+        moment(item?.complaintResolvedDate).format("DD/MM/YYYY") : "--",
       TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}` : "--",
       tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity : "--",
       complaintStatus: item?.complaintStatus,
