@@ -180,7 +180,7 @@ function MMSSearchMotion() {
       motionWeek: values?.motionWeek,
       motionType: values?.motionType,
       memberPosition:values?.memberPosition,
-      motionSentStatus:"inMotion",
+      motionSentStatus:["inMotion","toMotion"],
     };
     setCount(null);
 
