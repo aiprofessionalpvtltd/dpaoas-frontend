@@ -9,6 +9,7 @@ import Header from "../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import {
   SearchComplaint,
+  allComplaintCounts,
   complaintDelete,
   getAllInventory,
   getallComplaint,
@@ -50,6 +51,14 @@ const customStyles = {
 function CMSAdminDashboard() {
   const navigate = useNavigate();
   const { employeeData, employeesAsEngineersData } = useContext(AuthContext);
+  const [complaintCounts, setComplaintCounts] = useState({
+    software: 0,
+    printer: 0,
+    networkInternet: 0,
+    tonerInstallation: 0,
+    hardware: 0,
+    other: 0,
+  });
 
   const [complaintType, setComplaintType] = useState([]);
   const [inprogressCount, setInprogressCount] = useState(0);
@@ -60,6 +69,9 @@ function CMSAdminDashboard() {
   const [outoforder, setOutOfOrder] = useState(0);
   const [issued, setIssued] = useState(0);
   const [disposeOf, setDisposeOf] = useState(0);
+
+  const [countfromDate, setCountFromDate] = useState(null);
+  const [countToDate, setCountToDate] = useState(null);
 
   const [count, setCount] = useState(null);
   const [complaintData, setComplaintData] = useState([]);
@@ -139,8 +151,8 @@ function CMSAdminDashboard() {
         `${item?.resolverUser?.employee?.firstName}${item?.resolverUser?.employee?.lastName}`,
       complaintDate: moment(item?.complaintIssuedDate).format("DD/MM/YYYY"),
       ResolvedDate:
-        item?.complaintResolvedDate &&
-        moment(item?.complaintResolvedDate).format("DD/MM/YYYY"),
+        item?.complaintResolvedDate ?
+        moment(item?.complaintResolvedDate).format("DD/MM/YYYY") : "--",
       TonerModel: item?.tonerModels ? `${item?.tonerModels?.tonerModel}` : "--",
       tonerQuantity: item?.tonerQuantity ? item?.tonerQuantity : "--",
       complaintStatus: item?.complaintStatus,
@@ -163,21 +175,35 @@ function CMSAdminDashboard() {
   }, [currentPage, pageSize, setCount, setComplaintData]);
 
   const CountComplaints = async () => {
+    const Data = {
+      fromDate: countfromDate,
+      toDate: countToDate,
+    };
     try {
-      const response = await getallComplaint();
+      const response = await allComplaintCounts(Data);
       if (response?.success) {
-        const countInProgress = response?.data?.complaints.filter(
-          (item) => item.complaintStatus === "in-progress"
-        ).length;
-        const countPending = response?.data?.complaints.filter(
-          (item) => item.complaintStatus === "pending"
-        ).length;
-        const countresolved = response?.data?.complaints.filter(
-          (item) => item.complaintStatus === "closed"
-        ).length;
-        setInprogressCount(countInProgress);
-        setPendingCount(countPending);
-        setResolvedCount(countresolved);
+        const categoryMap = {
+          Software: "software",
+          Printer: "printer",
+          "Network/Internet": "networkInternet",
+          "Toner Installation": "tonerInstallation",
+          Hardware: "hardware",
+          Other: "other",
+        };
+
+        const counts = response?.data?.byCategory.reduce(
+          (acc, category) => {
+            const key = categoryMap[category.categoryName];
+            if (key) acc[key] = Number(category.count);
+            return acc;
+          },
+          { ...complaintCounts }
+        );
+
+        setComplaintCounts(counts);
+        setInprogressCount(response?.data?.byStatus?.["in-progress"] ?? 0);
+        setPendingCount(response?.data?.byStatus?.pending ?? 0);
+        setResolvedCount(response?.data?.byStatus?.closed ?? 0);
       }
     } catch (error) {
       console.log(error);
@@ -356,21 +382,24 @@ function CMSAdminDashboard() {
       const response = await getallComplaint();
       if (response?.success) {
         // Clean and format the data
-        const cleanData = response?.data?.complaints.map(item => ({
-          "Date": moment(item["complaintIssuedDate"]).format("DD/MM/YYYY"),
+        const cleanData = response?.data?.complaints.map((item) => ({
+          Date: moment(item["complaintIssuedDate"]).format("DD/MM/YYYY"),
           "User Name": item["userName"],
           "Branch/Office": item["complaintType"]?.["branchName"],
-          "Nature of Complaint": item["complaintCategory"]?.["complaintCategoryName"],
-          "Resolve User": `${item['resolverUser']?.['employee']?.['firstName'] || ''} ${item['resolverUser']?.['employee']?.['lastName'] || ''}`.trim(),
-          "Status": item["complaintStatus"],
+          "Nature of Complaint":
+            item["complaintCategory"]?.["complaintCategoryName"],
+          "Resolve User": `${
+            item["resolverUser"]?.["employee"]?.["firstName"] || ""
+          } ${item["resolverUser"]?.["employee"]?.["lastName"] || ""}`.trim(),
+          Status: item["complaintStatus"],
         }));
-  
-         // Create the worksheet from the data
+
+        // Create the worksheet from the data
         const worksheet = XLSX.utils.json_to_sheet(cleanData);
-        
+
         // Get the range of cells
-        const range = XLSX.utils.decode_range(worksheet['!ref']);
-        
+        const range = XLSX.utils.decode_range(worksheet["!ref"]);
+
         // Set column widths for better readability
         const cols = [];
         const columnHeaders = Object.keys(cleanData[0]);
@@ -384,83 +413,97 @@ function CMSAdminDashboard() {
             cols.push({ wch: Math.max(header.length * 1.5, 15) }); // Default width for other columns
           }
         });
-        worksheet['!cols'] = cols;
-        
+        worksheet["!cols"] = cols;
+
         // Style header row (bold, background color)
         for (let C = range.s.c; C <= range.e.c; ++C) {
           const cell_address = XLSX.utils.encode_cell({ r: 0, c: C });
           if (!worksheet[cell_address]) continue;
-          
+
           worksheet[cell_address].s = {
             font: { bold: true, color: { rgb: "FFFFFF" } },
             fill: { fgColor: { rgb: "4472C4" } },
             border: {
-              top: { style: 'medium', color: { rgb: "000000" } },
-              bottom: { style: 'medium', color: { rgb: "000000" } },
-              left: { style: 'medium', color: { rgb: "000000" } },
-              right: { style: 'medium', color: { rgb: "000000" } }
+              top: { style: "medium", color: { rgb: "000000" } },
+              bottom: { style: "medium", color: { rgb: "000000" } },
+              left: { style: "medium", color: { rgb: "000000" } },
+              right: { style: "medium", color: { rgb: "000000" } },
             },
-            alignment: { horizontal: 'center', vertical: 'center', wrapText: true }
+            alignment: {
+              horizontal: "center",
+              vertical: "center",
+              wrapText: true,
+            },
           };
         }
-        
+
         // Apply alternating row colors and borders to all data cells
         for (let R = 1; R <= range.e.r; ++R) {
           for (let C = range.s.c; C <= range.e.c; ++C) {
             const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
             if (!worksheet[cell_address]) {
-              worksheet[cell_address] = { v: '' }; // Add empty cell to ensure borders are applied
+              worksheet[cell_address] = { v: "" }; // Add empty cell to ensure borders are applied
             }
-            
+
             worksheet[cell_address].s = {
               border: {
-                top: { style: 'thin', color: { rgb: "D3D3D3" } },
-                bottom: { style: 'thin', color: { rgb: "D3D3D3" } },
-                left: { style: 'thin', color: { rgb: "D3D3D3" } },
-                right: { style: 'thin', color: { rgb: "D3D3D3" } }
+                top: { style: "thin", color: { rgb: "D3D3D3" } },
+                bottom: { style: "thin", color: { rgb: "D3D3D3" } },
+                left: { style: "thin", color: { rgb: "D3D3D3" } },
+                right: { style: "thin", color: { rgb: "D3D3D3" } },
               },
-              fill: { 
-                fgColor: { rgb: R % 2 ? "F2F2F2" : "FFFFFF" } // Alternating row colors
+              fill: {
+                fgColor: { rgb: R % 2 ? "F2F2F2" : "FFFFFF" }, // Alternating row colors
               },
-              alignment: { horizontal: 'left', vertical: 'center', wrapText: true }
+              alignment: {
+                horizontal: "left",
+                vertical: "center",
+                wrapText: true,
+              },
             };
-            
+
             // Format date cells specifically
-            if (C === 0 && worksheet[cell_address].v) { // Assuming first column is date
-              if (typeof worksheet[cell_address].v === 'string' && worksheet[cell_address].v.includes('-')) {
-                worksheet[cell_address].z = 'yyyy-mm-dd'; // Set date format
+            if (C === 0 && worksheet[cell_address].v) {
+              // Assuming first column is date
+              if (
+                typeof worksheet[cell_address].v === "string" &&
+                worksheet[cell_address].v.includes("-")
+              ) {
+                worksheet[cell_address].z = "yyyy-mm-dd"; // Set date format
               }
             }
           }
         }
-        
+
         // Create workbook and append the worksheet
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Complaints');
-        
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Complaints");
+
         // Add some file properties
         workbook.Props = {
           Title: "Complaints Report",
           Subject: "Complaints Data",
           Author: "System",
-          CreatedDate: new Date()
+          CreatedDate: new Date(),
         };
-        
+
         // Write the file
-        XLSX.writeFile(workbook, 'Complaints_Report.xlsx', { 
-          bookType: 'xlsx',
+        XLSX.writeFile(workbook, "Complaints_Report.xlsx", {
+          bookType: "xlsx",
           bookSST: false,
-          type: 'binary'
+          type: "binary",
         });
-        
+
         console.log("Excel file exported successfully");
       }
     } catch (error) {
       console.error("Export failed:", error);
-      showErrorMessage(error?.response?.data?.message || "Failed to export data");
+      showErrorMessage(
+        error?.response?.data?.message || "Failed to export data"
+      );
     }
   };
-  
+
   useEffect(() => {
     AllComplaintTypeApi();
     AllComplaintCategoriesApi();
@@ -468,9 +511,14 @@ function CMSAdminDashboard() {
   }, []);
 
   useEffect(() => {
-    CountComplaints();
     getComplaint();
   }, [getComplaint]);
+
+  useEffect(() => {
+    if (countfromDate === null && countToDate === null) {
+      CountComplaints();
+    }
+  }, [countfromDate, countToDate]);
 
   return (
     <Layout module={true} sidebarItems={CMSsidebarItems} centerlogohide={true}>
@@ -544,6 +592,84 @@ function CMSAdminDashboard() {
 
       <div class="row">
         <div style={{ padding: "0 30px 0 24px" }}>
+          <div class="mt-2 mb-2">
+            <div className="row">
+              <div className="col-md-4">
+                <div className="position-relative">
+                  <label className="form-label">From Date</label>
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "15px",
+                      top: "36px",
+                      zIndex: 1,
+                      fontSize: "20px",
+                      zIndex: "1",
+                      color: "#666",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                  </span>
+                  <DatePicker
+                    selected={countfromDate}
+                    onChange={(date) => setCountFromDate(date)}
+                    className="form-control"
+                    placeholderText="Select from date"
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-4">
+                <div className="position-relative">
+                  <label className="form-label">To Date</label>
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "15px",
+                      top: "36px",
+                      zIndex: 1,
+                      fontSize: "20px",
+                      zIndex: "1",
+                      color: "#666",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                  </span>
+                  <DatePicker
+                    selected={countToDate}
+                    onChange={(date) => setCountToDate(date)}
+                    className="form-control"
+                    placeholderText="Select to date"
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-4 d-flex align-items-end gap-2">
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={CountComplaints}
+                >
+                  Search
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  type="button"
+                  onClick={() => {
+                    setCountFromDate(null);
+                    setCountToDate(null);
+                  }}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style={{ padding: "0 30px 0 24px" }}>
           <div class="mt-5 mb-3">
             <div class="row">
               <LeaveCard
@@ -574,7 +700,92 @@ function CMSAdminDashboard() {
         </div>
       </div>
 
+      {/* Neture Of Complainet */}
       <div class="row">
+        <div style={{ padding: "0 30px 0 24px" }}>
+          <div class="mt-5 mb-3">
+            <div class="row">
+              <LeaveCard
+                available={"06"}
+                used={"05"}
+                title={"Software Complaint"}
+                percentage={"60"}
+                value={
+                  complaintCounts?.software < 10
+                    ? `0${complaintCounts?.software}`
+                    : complaintCounts?.software
+                }
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Hardware Complaint"}
+                percentage={"80"}
+                value={
+                  complaintCounts?.hardware < 10
+                    ? `0${complaintCounts?.hardware}`
+                    : complaintCounts?.hardware
+                }
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Network/Internet Complaint"}
+                percentage={"100"}
+                value={
+                  complaintCounts?.networkInternet < 10
+                    ? `0${complaintCounts?.networkInternet}`
+                    : complaintCounts?.networkInternet
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div style={{ padding: "0 30px 0 24px" }}>
+          <div class="mt-5 mb-3">
+            <div class="row">
+              <LeaveCard
+                available={"06"}
+                used={"05"}
+                title={"Printer Complaint"}
+                percentage={"60"}
+                value={
+                  complaintCounts?.printer < 10
+                    ? `0${complaintCounts?.printer}`
+                    : complaintCounts?.printer
+                }
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Toner Installation Complaint"}
+                percentage={"80"}
+                value={
+                  complaintCounts?.tonerInstallation < 10
+                    ? `0${complaintCounts?.tonerInstallation}`
+                    : complaintCounts?.tonerInstallation
+                }
+              />
+              <LeaveCard
+                available={"05"}
+                used={"04"}
+                title={"Other Complaint"}
+                percentage={"100"}
+                value={
+                  complaintCounts?.other < 10
+                    ? `0${complaintCounts?.other}`
+                    : complaintCounts?.other
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Inventory Count */}
+      {/* <div class="row">
         <div style={{ padding: "0 30px 0 24px" }}>
           <div class="mt-5 mb-3">
             <div class="row">
@@ -605,9 +816,9 @@ function CMSAdminDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div class="row">
+      {/* <div class="row">
         <div style={{ padding: "0 30px 0 24px" }}>
           <div class="mt-5 mb-3">
             <div class="row">
@@ -630,7 +841,7 @@ function CMSAdminDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div class="mt-3">
         <div class="container-fluid ">
           <div className="dash-detail-container">

@@ -170,7 +170,7 @@ const Miscellaneous = () => {
       <Header
         dashboardLink={"/mms/dashboard"}
         addLink1={"/mms/motion-miscelleneuos"}
-        title1={"Search Miscelleneuos"}
+        title1={"Search Miscellaneous"}
       />
       <ToastContainer />
       <div>
@@ -180,7 +180,7 @@ const Miscellaneous = () => {
               class="card-header red-bg"
               style={{ background: "#14ae5c !important" }}
             >
-              <h1>Search</h1>
+              <h1>Search Miscellaneous</h1>
             </div>
             <div class="card-body">
               <form onSubmit={formik.handleSubmit}>

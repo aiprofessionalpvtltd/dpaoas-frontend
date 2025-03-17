@@ -371,6 +371,11 @@ export const QMSSideBarItems = [
         link: "/qms/reports/question-list",
         icon: faClipboardList,
       },
+      {
+        itemName: "Question Rephrase",
+        link: "/qms/question/rephase",
+        icon: faClipboardList,
+      },
     ],
   },
   {
