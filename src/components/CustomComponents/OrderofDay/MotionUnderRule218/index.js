@@ -31,9 +31,7 @@ function LGMSMotionUnderRule218OrderofDay({
       return {
         id: res?.id,
         internalId: res?.id,
-        nameOfMinistersOrMovers: res?.motionMovers?.map(
-          (item) => item?.members?.memberName
-        ),
+        nameOfMinistersOrMovers: res?.motionMovers?.[0]?.members?.memberName,
         SessionName: res?.sessions?.sessionName
           ? res?.sessions?.sessionName
           : "",

@@ -28,9 +28,10 @@ function LGMSResolutionOrderOfDay({
       return {
         SrNo: index + 1,
         id: leave.id,
-        nameOfMinistersOrMovers: leave?.resolutionMoversAssociation?.map(
-          (item) => item?.memberAssociation?.memberName
-        ),
+        nameOfMinistersOrMovers:
+          leave?.resolutionMoversAssociation?.[0]?.memberAssociation
+            ?.memberName,
+
         SessionNumber: leave?.session?.sessionName
           ? leave?.session?.sessionName
           : "",
