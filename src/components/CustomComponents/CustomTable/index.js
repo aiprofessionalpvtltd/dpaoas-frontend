@@ -46,6 +46,7 @@ function CustomTable({
   handlePrint,
   handleUser,
   handleDuplicate,
+  showduplicate,
   hideUserIcon,
   headertitlebgColor,
   headertitletextColor,
@@ -802,6 +803,20 @@ function CustomTable({
                               </OverlayTrigger>
                             </>
                           )}
+                          {showduplicate && (
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={duplicateTooltip}
+                              >
+                                <button
+                                  onClick={() => handleDuplicate(item)}
+                                  className="btn-xs black circle-btn"
+                                  data-id={item.id}
+                                >
+                                  <FontAwesomeIcon icon={faClone} />
+                                </button>
+                              </OverlayTrigger>
+                              )}
                           {showResolve && (
                             <OverlayTrigger
                               placement="top"
@@ -1092,6 +1107,20 @@ function CustomTable({
                               </OverlayTrigger>
                             </>
                           )}
+                          {showduplicate && (
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={duplicateTooltip}
+                              >
+                                <button
+                                  onClick={() => handleDuplicate(item)}
+                                  className="btn-xs black circle-btn"
+                                  data-id={item.id}
+                                >
+                                  <FontAwesomeIcon icon={faClone} />
+                                </button>
+                              </OverlayTrigger>
+                              )}
                           {showAttendance && (
                             <OverlayTrigger
                               placement="top"

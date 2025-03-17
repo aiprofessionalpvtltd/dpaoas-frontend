@@ -572,7 +572,7 @@ function QMSReportQuestionList() {
                 handleViewAttachment={(item) => handlePrivewHourStaement(item.id)}
                 showView={true}
                 handleView={(item) => handlePrivewSingleQuestion(item.id)}
-                hideUserIcon={true}
+                showduplicate={true}
                 handleDuplicate={(item) => {
                   handleDuplicateList(item.id);
                 }}
