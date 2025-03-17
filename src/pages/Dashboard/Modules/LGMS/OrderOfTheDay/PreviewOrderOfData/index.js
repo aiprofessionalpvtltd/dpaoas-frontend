@@ -98,9 +98,9 @@ const PreviewOrderOfDayPDF = ({
                     <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
                     <strong>
                       {data?.nameOfMinistersOrMovers
-                        ? `SENATOR ${data?.nameOfMinistersOrMovers.toUpperCase()}, `
+                        ? `SENATOR ${data?.nameOfMinistersOrMovers?.toUpperCase()}, `
                         : data?.nameOfMinister
-                          ? `${data?.nameOfMinister.toUpperCase()}, `
+                          ? `${data?.nameOfMinister?.toUpperCase()}, `
                           : ""}
                     </strong>
                     {/* {data?.nameOfMinistersOrMovers ? (

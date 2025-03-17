@@ -68,7 +68,8 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       billCategory: item?.billCategory,
       billStatus: item?.billStatuses?.billStatusName,
       billFrom: item?.billFrom,
-      shortBillTitle: item?.billText,
+      remarks: item?.billRemarks,
+      billDocuments: item?.billDocuments,
     }));
   };
 
@@ -116,27 +117,21 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
         }
 
         if (introducedPrivateData && introducedPrivateData?.length > 0) {
-          let checkedIds = []; // ✅ Store found IDs first
-
           const updatedData = transformedData.map((item) => {
             const found = introducedPrivateData.find(
               (element) => element.id === item.id
             );
 
             if (found) {
-              checkedIds.push(item.id); // ✅ Collect IDs instead of setting state in loop
-            } else {
+              setIsChecked((prevChecked) => [...prevChecked, item.id]); // Push ID if found
             }
             return item;
           });
 
-          setIsChecked(checkedIds); // ✅ Update state only once
           setSearchData(updatedData);
         } else {
           setSearchData(transformedData);
-          setIsChecked([]); // ✅ Reset only when no data is found
         }
-
         setBillFrom(data?.billFrom);
         setCount(response?.data?.count);
         showSuccessMessage(response?.message);
@@ -170,16 +165,14 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move for leave to introduce a Bill further to amend the ${item.billTitle} [${item?.shortBillTitle}] `,
+          billTitle: `to move for leave to introduce a Bill further to amend the ${item.billTitle} [${shortTitle}] `,
         },
         {
           ...item,
-          billTitle: `to introduce the Bill to amend the ${item.billTitle} [${item?.shortBillTitle}]`,
+          billTitle: `to introduce the Bill to amend the ${item.billTitle} [${shortTitle}]`,
         },
       ]);
       setIntroducedPrivateData(updatedData);
-    } else {
-      setIntroducedPrivateData([]);
     }
   }, [isChecked, searchdata]);
 
@@ -201,7 +194,7 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
         handleSearch(null, data);
       }
     }
-  }, []);
+  }, [Edit]);
 
   return (
     <>
@@ -278,7 +271,6 @@ const PrivateMemberSenateBillIntroducedInSenate = ({
                     type="submit"
                     className="btn btn-primary me-2"
                     onClick={handleSearch}
-                    disabled={!formState?.statusId}
                   >
                     Search
                   </button>
