@@ -8,10 +8,7 @@ import TimePicker from "react-time-picker";
 import moment from "moment";
 import { getSessionSitting } from "../../../../../../api/APIs/Services/ManageQMS.service";
 import { OrderOfTheDayByID } from "../../../../../../api/APIs/Services/Legislation.service";
-import {
-  showErrorMessage,
-  showSuccessMessage,
-} from "../../../../../../utils/ToastAlert";
+import { showErrorMessage } from "../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import PrivateMemberSenateBillIntroducedInSenate from "../../../../../../components/CustomComponents/OrderofDay/PrivateMemberSenateBillOrderofDay";
@@ -30,17 +27,12 @@ const LGMSCreateOrderOftheDay = () => {
   const location = useLocation();
   const [sittingDays, setSittingDays] = useState([]);
   const { sessions } = useContext(AuthContext);
-  const [descriptionData, setDescriptionData] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [isMondayCheckBoxChecked, setIsMondayCheckBoxChecked] = useState(false);
   const [selectedTab, setSelectedTab] = useState(
     "Private Introduced In Senate"
   );
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [isBillDataLoaded, setIsBillDataLoded] = useState({
-    PrivateRecievedFromNA: false,
-  });
-
   const [count, setCount] = useState(null);
   const [selectedTabData, setSelectedTabData] = useState([]);
   const [introducedPrivateData, setIntroducedPrivateData] = useState([]);
@@ -71,6 +63,7 @@ const LGMSCreateOrderOftheDay = () => {
       sittingLabel: "",
       isMonday: "",
       startTime: "",
+      actingSecretary: "",
     },
     onSubmit: (values) => {
       // Add your submit logic here
@@ -133,6 +126,9 @@ const LGMSCreateOrderOftheDay = () => {
         }
         if (data?.sittingTime) {
           formik.setFieldValue("startTime", data?.sittingTime);
+        }
+        if (data?.actingSecretary) {
+          formik.setFieldValue("actingSecretary", data?.actingSecretary);
         }
 
         if (data?.isMonday) {
@@ -208,8 +204,8 @@ const LGMSCreateOrderOftheDay = () => {
         }
         const motionCallingAttentionNotice = data?.content?.filter(
           (item) =>
-            item.category === "Calling Attention Notices" ||
-            item.category === "Calling Attention Notice"
+            item.category === "CALLING ATTENTION NOTICES" ||
+            item.category === "CALLING ATTENTION NOTICE"
         );
 
         // Ensure we're setting valid data
@@ -370,8 +366,8 @@ const LGMSCreateOrderOftheDay = () => {
       {
         category: `${
           callingAttentionNotice?.length > 2
-            ? "Calling Attention Notices"
-            : "Calling Attention Notice"
+            ? "CALLING ATTENTION NOTICES"
+            : "CALLING ATTENTION NOTICE"
         }`,
         data: callingAttentionNotice,
       },
@@ -440,6 +436,7 @@ const LGMSCreateOrderOftheDay = () => {
           startTime={moment(formik.values.startTime, "HH:mm").format("hh:mm A")}
           sittingId={formik?.values.sittingId}
           isMondayCheckBoxChecked={isMondayCheckBoxChecked}
+          actingSecretary={formik.values.actingSecretary}
           isView={false}
           isEdit={location?.state?.id ? true : false}
           OrderOfTheDayID={location?.state?.id ? location?.state?.id : null}
@@ -562,6 +559,34 @@ const LGMSCreateOrderOftheDay = () => {
                 </div>
               </div>
               <div className="row">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="" class="form-label">
+                      Acting Secretary
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-control  ${
+                        formik.touched.actingSecretary &&
+                        formik.errors.actingSecretary
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      id="actingSecretary"
+                      name="actingSecretary"
+                      placeholder={"Acting Secretary"}
+                      value={formik.values.actingSecretary}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.actingSecretary &&
+                      formik.errors.actingSecretary && (
+                        <div className="invalid-feedback">
+                          {formik.errors.actingSecretary}
+                        </div>
+                      )}
+                  </div>
+                </div>
                 <div className="col-4">
                   <div
                     class="form-check"

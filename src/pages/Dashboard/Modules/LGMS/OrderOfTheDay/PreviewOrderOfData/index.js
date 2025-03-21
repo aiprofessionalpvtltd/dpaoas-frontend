@@ -6,6 +6,7 @@ const PreviewOrderOfDayPDF = ({
   formatedData,
   startTime,
   contentRef,
+  actingSecretary,
 }) => {
   const pdfRef = useRef();
   let bullet = 2;
@@ -129,7 +130,7 @@ const PreviewOrderOfDayPDF = ({
                 fontFamily: "verdana",
               }}
             >
-              Syed Hasnain Haider <br />
+              {actingSecretary ? actingSecretary : "Syed Hasnain Haider"} <br />
               <span>Secretary</span>
             </strong>
           </div>
