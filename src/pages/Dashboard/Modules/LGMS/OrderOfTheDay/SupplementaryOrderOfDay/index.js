@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { LegislationSideBarItems } from "../../../../../utils/sideBarItems";
-import CustomTable from "../../../../../components/CustomComponents/CustomTable";
-import { Layout } from "../../../../../components/Layout";
+import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
+import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
+import { Layout } from "../../../../../../components/Layout";
 import { ToastContainer } from "react-toastify";
-import Header from "../../../../../components/Header";
+import Header from "../../../../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import {
   showErrorMessage,
   showSuccessMessage,
-} from "../../../../../utils/ToastAlert";
+} from "../../../../../../utils/ToastAlert";
 import {
   deleteOrderOfTheDay,
   listOrderOfTheDay,
   OrderOfTheDayByID,
-} from "../../../../../api/APIs/Services/Legislation.service";
-import PDFOrderOfDayModel from "../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
+} from "../../../../../../api/APIs/Services/Legislation.service";
+import PDFOrderOfDayModel from "../../../../../../components/CustomComponents/OrderofDay/PDFPreviewModel";
 
-function ListOrderOfDay() {
+function SupplementaryOrderOfDayList() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
@@ -27,6 +27,7 @@ function ListOrderOfDay() {
     sittingId,
     sittingTime,
     sittingDate,
+    actingSecretary,
     content = [],
   } = singleOrderofDay || {};
   const pageSize = 10; // Set your desired page size
@@ -52,6 +53,7 @@ function ListOrderOfDay() {
       sittingDate: item?.sittingDate,
       sittingTime: item?.sittingTime,
       orderOfDayType: item?.type,
+      actingSecretary: item?.actingSecretary && item?.actingSecretary,
     }));
   };
 
@@ -60,11 +62,11 @@ function ListOrderOfDay() {
       const response = await listOrderOfTheDay(currentPage, pageSize);
       if (response?.success) {
         const transformedData = transformOrderOfTheDayData(response?.data);
-        const simpleOrdersData = transformedData.filter(
-          (item) => item.orderOfDayType === "SimpleOrder"
-        );
         setCount(response?.data?.count);
-        setOrderOfTheDayData(simpleOrdersData);
+        const supplementaryOrdersData = transformedData.filter(
+          (item) => item.orderOfDayType === "Supplementary"
+        );
+        setOrderOfTheDayData(supplementaryOrdersData);
       }
     } catch (error) {
       console.log(error);
@@ -107,7 +109,7 @@ function ListOrderOfDay() {
       <Header
         dashboardLink={"/lgms/dashboard"}
         addLink1={"/lgms/dashboard"}
-        title1={"list Order Of The Day"}
+        title1={"List Supplementary Order Of The Day"}
       />
 
       {showModal && showModal && (
@@ -120,6 +122,8 @@ function ListOrderOfDay() {
           startTime={sittingTime}
           sittingId={sittingId}
           isView={true}
+          actingSecretary={actingSecretary}
+          type={"Supplementary"}
           // isMondayCheckBoxChecked={isMondayCheckBoxChecked}
         />
       )}
@@ -129,10 +133,12 @@ function ListOrderOfDay() {
           <CustomTable
             block={false}
             data={orderOfTheDayData}
-            tableTitle="Order Of The Day List"
-            addBtnText="Add New Order Of The Day"
+            tableTitle="Supplementary Order Of The Day List"
+            addBtnText="Add New Supplementary Order Of The Day"
             handleAdd={() =>
-              navigate("/lgms/dashboard/order-of-the-day/addedit")
+              navigate("/lgms/dashboard/order-of-the-day/addedit", {
+                state: { isSupplementaryOrderOfDay: true },
+              })
             }
             handleEdit={(item) =>
               navigate("/lgms/dashboard/order-of-the-day/addedit", {
@@ -165,4 +171,4 @@ function ListOrderOfDay() {
   );
 }
 
-export default ListOrderOfDay;
+export default SupplementaryOrderOfDayList;
