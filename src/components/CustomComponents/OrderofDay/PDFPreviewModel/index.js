@@ -25,6 +25,7 @@ function PDFOrderOfDayModel({
   isView,
   isEdit,
   OrderOfTheDayID,
+  type,
 }) {
   const navigate = useNavigate();
   const contentRef = useRef(null); // Reference to capture PDF content
@@ -59,6 +60,7 @@ function PDFOrderOfDayModel({
       actingSecretary: actingSecretary,
       isMonday: isMondayCheckBoxChecked,
       content: selectedTabData,
+      type: type,
     };
     try {
       const response = await createOrderOfTheDay(Data);
@@ -72,9 +74,16 @@ function PDFOrderOfDayModel({
         localStorage.removeItem("resolution");
         localStorage.removeItem("MotionUnderRule218");
         localStorage.removeItem("callingAttentionNotice");
-        setTimeout(() => {
-          navigate("/lgms/dashboard/order-of-the-day/list");
-        }, 3000);
+
+        if (type === "Supplementary") {
+          setTimeout(() => {
+            navigate("/lgms/dashboard/supplementary-order-of-the-day/list");
+          }, 3000);
+        } else {
+          setTimeout(() => {
+            navigate("/lgms/dashboard/order-of-the-day/list");
+          }, 3000);
+        }
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -91,6 +100,7 @@ function PDFOrderOfDayModel({
       isMonday: isMondayCheckBoxChecked,
       actingSecretary: actingSecretary,
       content: selectedTabData,
+      type: type,
     };
     try {
       const response = await updateOrderOfTheDay(OrderOfTheDayID, Data);
@@ -104,9 +114,15 @@ function PDFOrderOfDayModel({
         localStorage.removeItem("resolution");
         localStorage.removeItem("MotionUnderRule218");
         localStorage.removeItem("callingAttentionNotice");
-        setTimeout(() => {
-          navigate("/lgms/dashboard/order-of-the-day/list");
-        }, 3000);
+        if (type === "Supplementary") {
+          setTimeout(() => {
+            navigate("/lgms/dashboard/supplementary-order-of-the-day/list");
+          }, 3000);
+        } else {
+          setTimeout(() => {
+            navigate("/lgms/dashboard/order-of-the-day/list");
+          }, 3000);
+        }
       }
     } catch (error) {
       showErrorMessage(error?.response?.data?.message);
@@ -141,6 +157,7 @@ function PDFOrderOfDayModel({
                 isMondayCheckBoxChecked={isMondayCheckBoxChecked}
                 actingSecretary={actingSecretary}
                 contentRef={contentRef}
+                type={type}
               />
             </div>
           </Modal.Body>

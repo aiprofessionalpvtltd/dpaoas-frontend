@@ -1288,6 +1288,11 @@ export const LegislationSideBarItems = [
         link: "/lgms/dashboard/order-of-the-day/list",
         icon: faBookOpen,
       },
+      {
+        itemName: "List Supplementary Order of The Day",
+        link: "/lgms/dashboard/supplementary-order-of-the-day/list",
+        icon: faBookOpen,
+      },
     ],
   },
 

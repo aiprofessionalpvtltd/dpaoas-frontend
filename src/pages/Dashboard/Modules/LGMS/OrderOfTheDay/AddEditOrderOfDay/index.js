@@ -32,6 +32,11 @@ const LGMSCreateOrderOftheDay = () => {
   const [selectedTab, setSelectedTab] = useState(
     "Private Introduced In Senate"
   );
+  const [type, setType] = useState(
+    location && location?.state?.isSupplementaryOrderOfDay === true
+      ? "Supplementary"
+      : "SimpleOrder"
+  );
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [count, setCount] = useState(null);
   const [selectedTabData, setSelectedTabData] = useState([]);
@@ -116,6 +121,9 @@ const LGMSCreateOrderOftheDay = () => {
         if (data?.fkSessionId) {
           formik.setFieldValue("sessionId", data?.fkSessionId);
           SearchSessionSittingApi({ sessionId: data?.fkSessionId });
+        }
+        if (data?.type) {
+          setType(data?.type);
         }
         if (data?.sittingId) {
           formik.setFieldValue("sittingId", data?.sittingId);
@@ -440,6 +448,7 @@ const LGMSCreateOrderOftheDay = () => {
           isView={false}
           isEdit={location?.state?.id ? true : false}
           OrderOfTheDayID={location?.state?.id ? location?.state?.id : null}
+          type={type}
         />
       )}
       <div className="container-fluid">
@@ -559,7 +568,7 @@ const LGMSCreateOrderOftheDay = () => {
                 </div>
               </div>
               <div className="row">
-                <div class="col">
+                <div class="col-3">
                   <div class="mb-3">
                     <label for="" class="form-label">
                       Acting Secretary

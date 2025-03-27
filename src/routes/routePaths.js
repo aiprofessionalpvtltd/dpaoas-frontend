@@ -373,6 +373,7 @@ import LGMSResolution from "../pages/Dashboard/Modules/LGMS/LGMSResolution/index
 import LGMSAddEditReportOfParliamentaryAffairs from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/AddEditReportParliamentryAffairs/index.js";
 import LGMSReportParliamentaryAffairsList from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/ReportParliamentryList/index.js";
 import QMSQuestionRephase from "../pages/Dashboard/Modules/QMS/Question/QuestionRephase/index.js";
+import SupplementaryOrderOfDayList from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/SupplementaryOrderOfDay/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -1079,6 +1080,18 @@ export const ProtectedRoutes = [
     path: "/lgms/dashboard/order-of-the-day/addedit",
     element: <LGMSCreateOrderOftheDay />,
   },
+  {
+    path: "/lgms/dashboard/supplementary-order-of-the-day/list",
+    element: <SupplementaryOrderOfDayList />,
+  },
+  // {
+  //   path: "/lgms/dashboard/order-of-the-day/preview",
+  //   element: <PreviewOrderOfDay />,
+  // },
+  // {
+  //   path: "/lgms/dashboard/order-of-the-day/addedit",
+  //   element: <LGMSCreateOrderOftheDay />,
+  // },
 
   {
     path: "/lgms/dashboard/bills/search-government-bills",

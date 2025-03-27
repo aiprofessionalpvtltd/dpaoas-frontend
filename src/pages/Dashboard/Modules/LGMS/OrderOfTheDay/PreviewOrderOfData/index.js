@@ -7,6 +7,7 @@ const PreviewOrderOfDayPDF = ({
   startTime,
   contentRef,
   actingSecretary,
+  type,
 }) => {
   const pdfRef = useRef();
   let bullet = 2;
@@ -52,7 +53,12 @@ const PreviewOrderOfDayPDF = ({
             fontFamily: "verdana",
           }}
         >
-          <strong> ORDERS OF THE DAY </strong>
+          <strong>
+            {" "}
+            {type === "Supplementary"
+              ? "SUPPLEMENTARY ORDER OF THE DAY"
+              : "ORDERS OF THE DAY "}
+          </strong>
         </h2>
 
         <p style={{ fontSize: "20px", fontFamily: "verdana" }}>
@@ -98,11 +104,15 @@ const PreviewOrderOfDayPDF = ({
                   >
                     <strong style={{ marginRight: "20px" }}>{bullet++}.</strong>
                     <strong>
-                      {data?.nameOfMinistersOrMovers
-                        ? `SENATOR ${data?.nameOfMinistersOrMovers?.toUpperCase()}, `
-                        : data?.nameOfMinister
-                          ? `${data?.nameOfMinister?.toUpperCase()}, `
-                          : ""}
+                      {Array.isArray(data?.nameOfMinistersOrMovers)
+                        ? data?.nameOfMinistersOrMovers
+                            .map((name) => `SENATOR ${name.toUpperCase()}`)
+                            .join(", ") + ", "
+                        : data?.nameOfMinistersOrMovers
+                          ? `SENATOR ${data?.nameOfMinistersOrMovers.toUpperCase()}, `
+                          : data?.nameOfMinister
+                            ? `SENATOR ${data?.nameOfMinister.toUpperCase()}, `
+                            : ""}
                     </strong>
                     {/* {data?.nameOfMinistersOrMovers ? (
                       <strong>{`SENATOR ${
@@ -131,7 +141,7 @@ const PreviewOrderOfDayPDF = ({
               }}
             >
               {actingSecretary ? actingSecretary : "Syed Hasnain Haider"} <br />
-              <span>Secretary</span>
+              {actingSecretary ? "Acting Secretary" : "Secretary"}
             </strong>
           </div>
         </div>
