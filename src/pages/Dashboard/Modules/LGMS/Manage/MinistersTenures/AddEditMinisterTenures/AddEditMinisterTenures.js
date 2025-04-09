@@ -21,7 +21,10 @@ import {
 } from "../../../../../../../utils/ToastAlert";
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
-import { createMinisterTenure } from "../../../../../../../api/APIs/Services/LegislationModule.service";
+import {
+  createMinisterTenure,
+  updateMinisterTenure,
+} from "../../../../../../../api/APIs/Services/LegislationModule.service";
 
 const validationSchema = Yup.object({
   tenure: Yup.string().required("Tenure name is required"),
@@ -70,7 +73,7 @@ function LGMSAddEditMinisterTenures() {
         showSuccessMessage(response?.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/lgms/dashboard/manage/tenures/list");
+          navigate("/lgms/dashboard/manage/minister-tenures/list");
         }, 3000);
       }
     } catch (error) {
@@ -87,12 +90,12 @@ function LGMSAddEditMinisterTenures() {
     };
 
     try {
-      const response = await updateTenure(location?.state?.id, data);
+      const response = await updateMinisterTenure(location?.state?.id, data);
       if (response?.success) {
         showSuccessMessage(response?.message);
         formik.resetForm();
         setTimeout(() => {
-          navigate("/lgms/dashboard/manage/tenures/list");
+          navigate("/lgms/dashboard/manage/minister-tenures/list");
         }, 3000);
       }
     } catch (error) {

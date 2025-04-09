@@ -49,6 +49,7 @@ const GovernmentFinanceMoneyBill = ({
 
   // Transform Government Bill Data
   const transformPrivateNABillData = (apiData) => {
+    console.log("apiData", apiData);
     const docs = apiData?.map((item) => item?.billDocuments);
     if (docs?.length > 0) {
       setRemarksAttachmentVal(true);
@@ -61,6 +62,7 @@ const GovernmentFinanceMoneyBill = ({
       internalId: item?.id,
       fileNumber: item?.fileNumber,
       titleOfTheBill: item?.billTitle,
+      shortTitle: item?.billText,
       nameOfMinistersOrMovers: item?.senateBillMnaMovers
         ? item?.senateBillMnaMovers
             .map((mover) => mover?.mna?.mnaName)
@@ -175,11 +177,11 @@ const GovernmentFinanceMoneyBill = ({
       const updatedData = checkedData.flatMap((item) => [
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be taken into consideration`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortTitle}], be taken into consideration`,
         },
         {
           ...item,
-          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${shortTitle}], be passed`,
+          billTitle: `to move that the Bill to ${item.titleOfTheBill} [${item?.shortTitle}], be passed`,
         },
       ]);
       setGovFinanceMoneyBill(updatedData);

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import moment from "moment";
 
 const PreviewOrderOfDayPDF = ({
@@ -9,10 +9,7 @@ const PreviewOrderOfDayPDF = ({
   actingSecretary,
   type,
 }) => {
-  const pdfRef = useRef();
   let bullet = 2;
-
-  console.log("selectedTabData", selectedTabData);
 
   const formattedDate = moment(formatedData, "YYYY/MM/DD").format(
     "Do MMMM, YYYY"
