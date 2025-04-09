@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import {
   createCommitteesRecommendation,
+  getMinisterByParliamentaryYearID,
+  getMinisterParliamentaryYearsByTenure,
   getSingleMinisterByID,
   UpdateCommitteeRecommendation,
 } from "../../api/APIs/Services/LegislationModule.service";
@@ -93,7 +95,6 @@ function UpdateMemberParliamentaryYear({
     try {
       const response = await getParliamentaryYearsByTenureID(id);
       if (response?.success) {
-        console.log(response?.data?.data);
         setParliamentaryYearData(response?.data);
         // setTonerModels(transformedData);
       }
@@ -121,6 +122,19 @@ function UpdateMemberParliamentaryYear({
       }
     } catch (error) {
       console.log(error?.response?.data?.message);
+    }
+  };
+
+  const handleMinisterParliamentaryYears = async (id) => {
+    try {
+      const response = await getMinisterParliamentaryYearsByTenure(id);
+      setParliamentaryYearData([]);
+      if (response?.success) {
+        setParliamentaryYearData(response?.data);
+        // setTonerModels(transformedData);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -159,12 +173,12 @@ function UpdateMemberParliamentaryYear({
       console.log("ministerByID", ministerByID);
       formik.setValues({
         memberName: ministerByID?.mnaName || "",
-        memberTenure: ministerByID?.fkTenureId || "",
-        fkParliamentaryYearId: ministerByID?.parliamentaryYears?.id,
+        memberTenure: ministerByID?.fkMinisterTenureId || "",
+        fkParliamentaryYearId: ministerByID?.mnaParliamentaryYears?.id,
       });
     }
-    if (ministerByID?.fkTenureId) {
-      getParliamentaryYearsonTheBaseOfTenure(ministerByID?.fkTenureId);
+    if (ministerByID?.fkMinisterTenureId) {
+      handleMinisterParliamentaryYears(ministerByID?.fkMinisterTenureId);
     }
   }, [memberById, ministerByID, formik.setValues]);
 

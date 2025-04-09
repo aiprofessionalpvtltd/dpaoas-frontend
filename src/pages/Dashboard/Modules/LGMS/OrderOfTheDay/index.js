@@ -28,6 +28,8 @@ function ListOrderOfDay() {
     sittingTime,
     sittingDate,
     content = [],
+    isMondayCheckBoxChecked,
+    actingSecretary,
   } = singleOrderofDay || {};
   const pageSize = 10; // Set your desired page size
 
@@ -120,7 +122,8 @@ function ListOrderOfDay() {
           startTime={sittingTime}
           sittingId={sittingId}
           isView={true}
-          // isMondayCheckBoxChecked={isMondayCheckBoxChecked}
+          isMondayCheckBoxChecked={isMondayCheckBoxChecked}
+          actingSecretary={actingSecretary}
         />
       )}
 

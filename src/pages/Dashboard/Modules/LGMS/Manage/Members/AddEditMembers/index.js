@@ -2,24 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import DatePicker from "react-datepicker";
 import Header from "../../../../../../../components/Header";
 import { Layout } from "../../../../../../../components/Layout";
-import {
-  LegislationSideBarItems,
-  QMSSideBarItems,
-} from "../../../../../../../utils/sideBarItems";
+import { LegislationSideBarItems } from "../../../../../../../utils/sideBarItems";
 import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../../utils/ToastAlert";
 import {
   createMember,
-  getAllParliamentaryYears,
   getAllPoliticalParties,
   getAllTenures,
   getMembersByID,
-  getParliamentaryYearsByTenureID,
   getParliamentaryYearsByTermID,
   getTermByTenureID,
   updateMembers,
@@ -40,13 +34,9 @@ function LGMSMembersAddEditForm() {
   const navigate = useNavigate();
   const [tenures, setTenures] = useState([]);
   const [tenuresTerms, setTenuresTerms] = useState([]);
-  const [selectedTenureType, setSelectedTenureType] = useState(null);
-  // const [tenureID, setTenureID] = useState(null);
   const [memberById, setMemberById] = useState();
   const [allparties, setAllParties] = useState([]);
   const [parliamentaryYearData, setParliamentaryYearData] = useState([]);
-  console.log("parliamentaryYearData", parliamentaryYearData);
-
   const formik = useFormik({
     initialValues: {
       memberName: "",

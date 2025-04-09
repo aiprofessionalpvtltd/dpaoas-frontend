@@ -66,7 +66,6 @@ function LGMSReportToBeLaidOrderofDay({
       const checkedData = reportLaidData?.filter((item) =>
         isChecked.includes(item?.id)
       );
-      console.log("checkedDatacheckedData", checkedData);
       const updatedData = checkedData.map((item) => ({
         ...item,
         billTitle: `Minister for ${item?.ministryName} to lay before the Senate ${item?.reportDescription}`,

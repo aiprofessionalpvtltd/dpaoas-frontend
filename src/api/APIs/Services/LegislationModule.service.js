@@ -786,6 +786,27 @@ export const createMinisterTenure = async (data) => {
   }
 };
 
+export const updateMinisterTenure = async (id, data) => {
+  try {
+    // const token = getAuthToken();
+    const response = await axiosClient.put(
+      `/tenuresMinister/update/${id}`,
+      data,
+      {
+        // headers: {
+        //   accept: "application/json",
+        //   "Content-Type": "multipart/form-data",
+        // },
+      }
+    );
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getAllMinisterTenures = async (
   currentPage,
   pageSize,

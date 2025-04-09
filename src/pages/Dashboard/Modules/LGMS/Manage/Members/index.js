@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../../../../../components/Layout";
-import {
-  LegislationSideBarItems,
-  QMSSideBarItems,
-} from "../../../../../../utils/sideBarItems";
+import { LegislationSideBarItems } from "../../../../../../utils/sideBarItems";
 import Header from "../../../../../../components/Header";
 import CustomTable from "../../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +11,6 @@ import {
   getParliamentaryYearsByTermID,
   getTermByTenureID,
 } from "../../../../../../api/APIs/Services/ManageQMS.service";
-import moment from "moment";
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -36,11 +32,6 @@ function LGMSMembers() {
   const [count, setCount] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [toUpdateMemberId, setToUpdateMemberId] = useState(null);
-  const [membersOnParliamentaryYear, setMembersOnParliamentaryYear] = useState(
-    []
-  );
-
-  console.log("members", members);
   const pageSize = 200; // Set your desired page size
 
   const handlePageChange = (page) => {
@@ -101,7 +92,6 @@ function LGMSMembers() {
     },
     onSubmit: (values) => {
       const parliamentaryYearId = values?.parliamentaryYear?.value;
-      console.log("values", values);
       SearchMemberApi(parliamentaryYearId);
     },
   });
@@ -110,11 +100,8 @@ function LGMSMembers() {
     try {
       const response =
         await getMemberByParliamentaryYearID(parliamentaryYearId);
-      console.log("response ", response);
       if (response?.success) {
         const transformedData = OldMembertransformData(response?.data);
-        console.log("apiData", transformedData);
-
         setOldMembers(transformedData);
         // setCount(response?.data?.count);
       }
