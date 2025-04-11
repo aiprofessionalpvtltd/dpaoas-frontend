@@ -120,10 +120,10 @@ function LGMSAddEditMinistries() {
     if (singleMinsitryData) {
       formik.setValues({
         ministryName: singleMinsitryData[0]?.ministryName || "",
-        fkTenureId: singleMinsitryData[0]?.tenure
+        fkTenureId: singleMinsitryData[0]?.tenuresMinisters
           ? {
-              value: singleMinsitryData[0]?.tenure?.id,
-              label: singleMinsitryData[0]?.tenure?.tenureName,
+              value: singleMinsitryData[0]?.tenuresMinisters?.id,
+              label: singleMinsitryData[0]?.tenuresMinisters?.tenureName,
             }
           : "",
         ministryStatus: singleMinsitryData[0]?.ministryStatus || "",
