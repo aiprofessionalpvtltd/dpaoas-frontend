@@ -28,6 +28,7 @@ import {
   getAllMinisterTenures,
   getMinisterParliamentaryYearsByID,
   getMinisterParliamentaryYearsByTenure,
+  updateMinisterParliamentaryYears,
 } from "../../../../../../../api/APIs/Services/LegislationModule.service";
 const validationSchema = Yup.object({
   parliamentaryTenure: Yup.string().required("Tenure is required"),
@@ -190,14 +191,14 @@ function LGMSAddEditMininsterParliamentaryYearForm() {
     };
 
     try {
-      const response = await updateParliamentaryYears(
+      const response = await updateMinisterParliamentaryYears(
         location?.state?.id,
         data
       );
       if (response?.success) {
         showSuccessMessage(response?.message);
         setTimeout(() => {
-          navigate("/lgms/dashboard/manage/parliamentary-year/list");
+          navigate("/lgms/dashboard/manage/minister/parliamentary-year/list");
         }, 3000);
       }
     } catch (error) {
