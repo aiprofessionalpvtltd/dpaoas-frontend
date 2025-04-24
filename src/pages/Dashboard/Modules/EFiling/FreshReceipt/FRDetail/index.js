@@ -21,7 +21,10 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../../../../utils/ToastAlert";
-import { getLLEmployee } from "../../../../../../api/APIs/Services/organizational.service";
+import {
+  getHLEmployee,
+  getLLEmployee,
+} from "../../../../../../api/APIs/Services/organizational.service";
 import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
@@ -97,11 +100,19 @@ function FRDetail() {
     try {
       const response = await getFreshReceiptById(receptId);
       if (response.success) {
-        console.log('====================================');
-        console.log("response?.data?.freshReceipt", response?.data?.freshReceipt);
-        console.log('====================================');
+        console.log("====================================");
+        console.log(
+          "response?.data?.freshReceipt",
+          response?.data?.freshReceipt
+        );
+        console.log("====================================");
         setRemarksData(response?.data?.freshReceipt);
-        getEmployeeData(response?.data?.createdByUser?.employee?.branches?.id);
+        console.log(
+          "response?.data?.freshReceipt",
+          response?.data?.fkUserBranchId
+        );
+
+        getEmployeeData(response?.data?.fkUserBranchId);
         setDescriptionData(response?.data?.shortDescription);
         setAttachments(response?.data?.freshReceiptsAttachments);
         // showSuccessMessage(response.message);
@@ -135,10 +146,16 @@ function FRDetail() {
     const branchData = await getBranchById(fkBranchId);
 
     try {
-      const response = await getLLEmployee(UserData?.fkUserId, branchData?.data?.branchName);
+      const response = await getHLEmployee(
+        UserData?.fkUserId,
+        UserData?.branch?.id,
+        branchData?.data?.branchName
+      );
       if (response?.success) {
         const filteredData = response?.data?.filter(
-          (item) => item?.userName !== UserData?.userName
+          (item) =>
+            item?.userName !== UserData?.userName &&
+            item?.users?.attendance_status == "PRESENT"
         );
         setEmployeeData(filteredData);
       }
@@ -186,9 +203,8 @@ function FRDetail() {
   const [customAssignedTo, setCustomAssignedTo] = useState();
 
   const hendleAssiginFileCaseApi = async () => {
-
     // const assignedToValue = customAssignedTo === "Jamil Ahmed" ? 57 : modalInputValue?.assignedTo;
-    
+
     const data = {
       submittedBy: UserData?.fkUserId,
       assignedTo: modalInputValue?.assignedTo,
@@ -356,36 +372,39 @@ function FRDetail() {
             <div class="mb-3">
               <label class="form-label">Mark To</label>
               <select
-  className="form-select"
-  id="assignedTo"
-  name="assignedTo"
-  onChange={(e) => {
-    const selectedValue = e.target.value;
-    const selectedItem = employeeData.find(
-      (item) => item.fkUserId.toString() === selectedValue
-    );
+                className="form-select"
+                id="assignedTo"
+                name="assignedTo"
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  const selectedItem = employeeData.find(
+                    (item) => item.fkUserId.toString() === selectedValue
+                  );
 
-    // Update modal input state
-    setModalInputValue((prevState) => ({
-      ...prevState,
-      assignedTo: selectedValue,
-    }));
+                  // Update modal input state
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    assignedTo: selectedValue,
+                  }));
 
-    // Update customAssignedTo with firstName of selected item
-    setCustomAssignedTo(selectedItem?.firstName || "");
-  }}
-  value={modalInputValue.assignedTo}
->
-  <option value="" disabled>
-    Select
-  </option>
-  {employeeData &&
-    employeeData.map((item) => (
-      <option key={item.fkUserId} value={item.fkUserId.toString()}>
-        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
-      </option>
-    ))}
-</select>
+                  // Update customAssignedTo with firstName of selected item
+                  setCustomAssignedTo(selectedItem?.firstName || "");
+                }}
+                value={modalInputValue.assignedTo}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                {employeeData &&
+                  employeeData.map((item) => (
+                    <option
+                      key={item.fkUserId}
+                      value={item.fkUserId.toString()}
+                    >
+                      {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+                    </option>
+                  ))}
+              </select>
             </div>
           </div>
         </div>

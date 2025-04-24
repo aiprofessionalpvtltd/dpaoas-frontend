@@ -45,7 +45,7 @@ function FileReceipt() {
       isEditable: item?.isEditable,
       id: item?.id,
       frType: item?.frType,
-      Branch: item?.createdByUser?.employee?.branches?.branchName,
+      Branch: item?.userBranches?.branchName,
       initiatedBy: item?.createdByUser?.employee?.firstName,
       Sender:
         item?.freshReceipt?.length > 0
