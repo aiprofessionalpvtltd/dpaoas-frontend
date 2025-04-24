@@ -1017,6 +1017,19 @@ function FileDetail() {
     return strippedText.trim().length === 0; // Check if the content is truly empty after stripping HTML
   };
 
+  const uniqueRemarks = Array.from(
+    new Map(
+      remarksData.map((item) => [
+        `${item.id || ""}-${item.comment || ""}-${item.CommentStatus || ""}-${
+          item.submittedBy || ""
+        }-${item.assignedTo || ""}-${
+          item.createdAt ? new Date(item.createdAt).toISOString() : ""
+        }`,
+        item,
+      ])
+    ).values()
+  );
+
   return (
     <Layout
       centerlogohide={true}
@@ -1789,80 +1802,55 @@ function FileDetail() {
                 </div>
 
                 <div style={{ maxHeight: "712px", overflowY: "scroll" }}>
-                  {remarksData?.length > 0 ? (
-                    remarksData?.map((item) => (
-                      <>
-                        {(item?.CommentStatus !== null ||
-                          item?.comment !== null) && (
+                  {uniqueRemarks.map(
+                    (item) =>
+                      (item?.CommentStatus !== null ||
+                        item?.comment !== null) && (
+                        <div
+                          className="d-flex flex-row p-3 ps-3"
+                          style={{ borderBottom: "1px solid #ddd" }}
+                        >
                           <div
-                            class="d-flex flex-row p-3 ps-3"
-                            style={{ borderBottom: "1px solid #ddd" }}
+                            className="w-100"
+                            style={{ position: "relative" }}
                           >
-                            <>
-                              <div
-                                class="w-100"
-                                style={{ position: "relative" }}
-                              >
-                                <div class="d-flex justify-content-between align-items-center">
-                                  <div class="d-flex flex-row align-items-center">
-                                    <div style={{ float: "left" }}>
-                                      <span
-                                        class="mr-2"
-                                        style={{
-                                          fontSize: "14px",
-                                        }}
-                                      >{`${item?.submittedUser?.employee?.firstName}  ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}</span>
-                                    </div>
-                                  </div>
-                                  <div style={{ float: "right" }}>
-                                    <small>
-                                      {moment(item?.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )}
-                                    </small>
-                                    <small className="ms-2">
-                                      {moment(item?.createdAt).format(
-                                        "hh:mm a"
-                                      )}
-                                    </small>
-                                  </div>
-                                </div>
-                                <p
-                                  class="text-justify comment-text mb-0"
-                                  style={{
-                                    fontSize: "18px",
-                                    color:
-                                      item?.submittedUser?.employee
-                                        ?.userType === "Officer"
-                                        ? "green"
-                                        : item?.submittedUser?.employee
-                                              ?.userType === "Section"
-                                          ? "blue"
-                                          : "black",
-                                  }}
+                            <div className="d-flex justify-content-between align-items-center">
+                              <div className="d-flex flex-row align-items-center">
+                                <span
+                                  className="mr-2"
+                                  style={{ fontSize: "14px" }}
                                 >
-                                  {item?.CommentStatus
-                                    ? item?.CommentStatus
-                                    : item?.comment}
-                                </p>
+                                  {`${item?.submittedUser?.employee?.firstName} ${item?.submittedUser?.employee?.lastName}/ ${item?.submittedUser?.employee?.designations?.designationName}`}
+                                </span>
                               </div>
-                            </>
+                              <div>
+                                <small>
+                                  {moment(item?.createdAt).format("DD/MM/YYYY")}
+                                </small>
+                                <small className="ms-2">
+                                  {moment(item?.createdAt).format("hh:mm a")}
+                                </small>
+                              </div>
+                            </div>
+                            <p
+                              className="text-justify comment-text mb-0"
+                              style={{
+                                fontSize: "18px",
+                                color:
+                                  item?.submittedUser?.employee?.userType ===
+                                  "Officer"
+                                    ? "green"
+                                    : item?.submittedUser?.employee
+                                          ?.userType === "Section"
+                                      ? "blue"
+                                      : "black",
+                              }}
+                            >
+                              {item?.CommentStatus || item?.comment}
+                            </p>
                           </div>
-                        )}
-                      </>
-                    ))
-                  ) : (
-                    <div
-                      class="alert alert-danger mt-5"
-                      role="alert"
-                      style={{
-                        width: "350px",
-                        margin: "0 auto",
-                        textAlign: "center",
-                      }}
-                    >
-                      No data found
-                    </div>
+                        </div>
+                      )
                   )}
                 </div>
               </div>
