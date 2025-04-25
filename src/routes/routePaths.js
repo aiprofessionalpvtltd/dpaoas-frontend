@@ -374,6 +374,8 @@ import LGMSAddEditReportOfParliamentaryAffairs from "../pages/Dashboard/Modules/
 import LGMSReportParliamentaryAffairsList from "../pages/Dashboard/Modules/LGMS/ReportsOfParliamentaryAffairs/ReportParliamentryList/index.js";
 import QMSQuestionRephase from "../pages/Dashboard/Modules/QMS/Question/QuestionRephase/index.js";
 import SupplementaryOrderOfDayList from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/SupplementaryOrderOfDay/index.js";
+import TotalFileCasesByBranch from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/TotalFileCasesByBranch/index.js";
+import TotalFrsOfTheBranch from "../pages/Dashboard/Modules/EFiling/FreshReceipt/TotalFrsByBranch/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -966,6 +968,10 @@ export const ProtectedRoutes = [
     element: <FileCases />,
   },
   {
+    path: "/efiling/dashboard/files-list/total-cases-by-branch",
+    element: <TotalFileCasesByBranch />,
+  },
+  {
     path: "/efiling/dashboard/file-register-list/files-list/cases-history",
     element: <PreviousCasesHistory />,
   },
@@ -976,6 +982,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/fresh-receipt",
     element: <FreshReceipt />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt/total-fr-of-branch",
+    element: <TotalFrsOfTheBranch />,
   },
   // {
   //   path: "/efiling/dashboard/external/fresh-receipt",
