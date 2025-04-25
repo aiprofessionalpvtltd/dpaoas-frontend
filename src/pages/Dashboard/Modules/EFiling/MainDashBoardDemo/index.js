@@ -1,6 +1,5 @@
 import { Layout } from "../../../../../components/Layout";
 import {
-  getSelectedFileID,
   getUserData,
   setCaseIdForDetailPage,
   setFRAttachmentsData,
@@ -11,32 +10,26 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../../utils/sideBarItems";
-import { Padding } from "@mui/icons-material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEnvelope,
-  faEye,
-  faFileAlt,
-  faFileSignature,
-  faMailBulk,
-  faReceipt,
+  faClipboardQuestion,
+  faFileImport,
 } from "@fortawesome/free-solid-svg-icons";
-import CalenderImage from "../../../../../assets/calander.png";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   DeleteFreshReceipt,
+  getAllCasesOfTheBranch,
   getAllCasesThroughSearchParams,
   getAllFreshReceipt,
   getApprovelStats,
   getPendingCasesThroughSearchParams,
   getPendingFreshReceipts,
+  getTotalFreshReceiptOfTheBranch,
   getsentAndRecievedFRStats,
   getsentAndRecievedFilesStats,
 } from "../../../../../api/APIs/Services/efiling.service";
 import moment from "moment";
 import { keyframes } from "@emotion/react";
 import { Box } from "@mui/system";
-import { Calendar } from "../../../../../components/Calendar";
 import CustomTable from "../../../../../components/CustomComponents/CustomTable";
 import { useNavigate } from "react-router-dom";
 import {
@@ -44,6 +37,7 @@ import {
   showSuccessMessage,
 } from "../../../../../utils/ToastAlert";
 import { AuthContext } from "../../../../../api/AuthContext";
+import NoticeStatsCard from "../../../../../components/CustomComponents/NoticeStatsCard";
 
 function MainDashBoardDemo() {
   const { notificationCaseData, notificationFRsData } = useContext(AuthContext);
@@ -61,7 +55,10 @@ function MainDashBoardDemo() {
   const [frrecivedData, setFrRecivedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [count, setCount] = useState(null);
+  const [branchCasesData, setBranchCasesData] = useState([]);
+  const [branchFrsData, setBranchFRsData] = useState([]);
   const [casesData, setCasesData] = useState([]);
+  const UserData = getUserData();
   const pageSize = 10;
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -177,19 +174,19 @@ function MainDashBoardDemo() {
       branchId: userData?.fkBranchId || "",
       branches: userData?.branches?.map((branch) => branch.id).join(",") || "", // Pass branch IDs as a comma-separated string
     });
-  
+
     try {
       const response = await getPendingCasesThroughSearchParams(queryParams);
       if (response.success) {
         setCount(response?.data?.count);
-  
+
         const transferData = transformFilesCases(response?.data?.cases);
         setCasesData(transferData);
       }
     } catch (error) {
       console.error(error);
     }
-  }; 
+  };
 
   const [fRCurrentPage, setFrCurrentPage] = useState(0);
   const [frCount, setFRCount] = useState(null);
@@ -232,14 +229,13 @@ function MainDashBoardDemo() {
       const queryParams = new URLSearchParams({
         userId: userData?.fkUserId,
         branchId: userData?.fkBranchId || "",
-        branches: userData?.branches?.map((branch) => branch.id).join(",") || "",
+        branches:
+          userData?.branches?.map((branch) => branch.id).join(",") || "",
         currentPage: fRCurrentPage,
-        pageSize: frPageSize
+        pageSize: frPageSize,
       });
-      
-      const response = await getPendingFreshReceipts(
-        queryParams
-      );
+
+      const response = await getPendingFreshReceipts(queryParams);
       if (response.success) {
         //   showSuccessMessage(response?.message)
         setFRCount(response?.data?.count);
@@ -251,7 +247,7 @@ function MainDashBoardDemo() {
     } catch (error) {
       // showErrorMessage(error?.response?.data?.message);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -265,9 +261,54 @@ function MainDashBoardDemo() {
     }
   };
 
+  // Get All Cases Data
+  const getBrachAllCasesApi = async () => {
+    const searchParams = {
+      branchId: userData?.fkBranchId,
+      currentPage: 0,
+      pageSize: 50000,
+      // fileId: fkfileId?.value ? fkfileId?.value : location.state?.internalId,
+      // fkBranchId:userData && userData?.fkBranchId
+    };
+
+    try {
+      const response = await getAllCasesOfTheBranch(searchParams);
+      if (response.success) {
+        // setCount(response?.data?.count);
+
+        setBranchCasesData(response?.data?.cases);
+        // showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Get All Cases Data
+  const getBrachAllFRsApi = async () => {
+    try {
+      const response = await getTotalFreshReceiptOfTheBranch(
+        UserData?.fkBranchId,
+        0,
+        50000
+      );
+      if (response.success) {
+        // setCount(response?.data?.count);
+
+        setBranchFRsData(response?.data?.freshReceipts);
+
+        // showSuccessMessage(response?.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAllStatsDataApi();
     getAllFilesDataApi();
+    getBrachAllCasesApi();
+    getBrachAllFRsApi();
   }, []);
 
   useEffect(() => {
@@ -344,6 +385,55 @@ function MainDashBoardDemo() {
           Today's Stats
         </h2> */}
       </div>
+
+      {userData && userData?.userType === "Officer" && (
+        <div class="row">
+          <h2
+            style={{
+              fontSize: "22px",
+              fontWeight: "bold",
+              marginBottom: "10px",
+              color: "#fb6340",
+            }}
+          >
+            {userData && userData?.branch?.branchName} Stats
+          </h2>
+          <div class="col-md-12">
+            <div class="mt-2 mb-4">
+              <div class="row">
+                <NoticeStatsCard
+                  title={"Total Cases"}
+                  icon={faClipboardQuestion}
+                  overall={true}
+                  iconBgColor={"#FFA500"}
+                  total={
+                    branchCasesData?.length > 0 ? branchCasesData?.length : 0
+                  }
+                  ColValue={`col-6`}
+                  onClick={() => {
+                    navigate(
+                      "/efiling/dashboard/files-list/total-cases-by-branch"
+                    );
+                  }}
+                />
+                <NoticeStatsCard
+                  title={"Total FR's"}
+                  icon={faFileImport}
+                  overall={true}
+                  iconBgColor={"#007bff"}
+                  total={branchFrsData?.length > 0 ? branchFrsData?.length : 0}
+                  ColValue={`col-6`}
+                  onClick={() => {
+                    navigate(
+                      "/efiling/dashboard/fresh-receipt/total-fr-of-branch"
+                    );
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* File cases table */}
       <div

@@ -7,7 +7,7 @@ import {
   EfilingSideBarBranchItem,
   EfilingSideBarItem,
 } from "../../../../utils/sideBarItems";
-import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
+
 import {
   faClipboardQuestion,
   faFile,
@@ -19,9 +19,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { showErrorMessage } from "../../../../utils/ToastAlert";
 import { getFileStates } from "../../../../api/APIs/Services/efiling.service";
 import { getUserData } from "../../../../api/Auth";
+import NoticeStatsCard from "../../../../components/CustomComponents/NoticeStatsCard";
 
 function EFilingDashboard() {
   const [countData, setCountData] = useState(0);
+
   const userData = getUserData();
 
   const getFilesStateApi = async () => {
@@ -56,6 +58,7 @@ function EFilingDashboard() {
         title1={"E-Filing"}
         width={"500px"}
       />
+
       <div className="row">
         <div className="col-8">
           <div className="dash-detail-container">

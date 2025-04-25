@@ -86,7 +86,7 @@ function CustomTable({
   setIsColumnCheckBox,
   isColumncheck,
   caseEditable,
-  showcompletTex
+  showcompletTex,
 }) {
   const keys = data?.length > 0 ? Object.keys(data[0]) : [];
   const filteredKeys = keys?.filter((key) => {
@@ -476,7 +476,8 @@ function CustomTable({
                               {item[key]}
                             </span>
                           ) : typeof item[key] === "string" &&
-                           (!showcompletTex && item[key].split(" ").length > 5) ? (
+                            !showcompletTex &&
+                            item[key].split(" ").length > 5 ? (
                             <OverlayTrigger
                               placement="top"
                               overlay={
@@ -489,7 +490,9 @@ function CustomTable({
                                 {item[key]}
                               </span>
                             </OverlayTrigger>
-                          ) : <p style={{ textAlign: "center" }}>{item[key]}</p> }
+                          ) : (
+                            <p style={{ textAlign: "center" }}>{item[key]}</p>
+                          )}
                         </td>
                       ))}
                       {isRemarksAttachhments && (
@@ -804,19 +807,19 @@ function CustomTable({
                             </>
                           )}
                           {showduplicate && (
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={duplicateTooltip}
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={duplicateTooltip}
+                            >
+                              <button
+                                onClick={() => handleDuplicate(item)}
+                                className="btn-xs black circle-btn"
+                                data-id={item.id}
                               >
-                                <button
-                                  onClick={() => handleDuplicate(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faClone} />
-                                </button>
-                              </OverlayTrigger>
-                              )}
+                                <FontAwesomeIcon icon={faClone} />
+                              </button>
+                            </OverlayTrigger>
+                          )}
                           {showResolve && (
                             <OverlayTrigger
                               placement="top"
@@ -937,7 +940,8 @@ function CustomTable({
                               {item[key]}
                             </span>
                           ) : typeof item[key] === "string" &&
-                            (!showcompletTex && item[key].split(" ").length > 5) ? (
+                            !showcompletTex &&
+                            item[key].split(" ").length > 5 ? (
                             <OverlayTrigger
                               placement="top"
                               overlay={
@@ -950,7 +954,7 @@ function CustomTable({
                                 {item[key]}
                               </span>
                             </OverlayTrigger>
-                          ) :(
+                          ) : (
                             <p style={{ textAlign: "center" }}>{item[key]}</p>
                           )}
                         </td>
@@ -1108,19 +1112,19 @@ function CustomTable({
                             </>
                           )}
                           {showduplicate && (
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={duplicateTooltip}
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={duplicateTooltip}
+                            >
+                              <button
+                                onClick={() => handleDuplicate(item)}
+                                className="btn-xs black circle-btn"
+                                data-id={item.id}
                               >
-                                <button
-                                  onClick={() => handleDuplicate(item)}
-                                  className="btn-xs black circle-btn"
-                                  data-id={item.id}
-                                >
-                                  <FontAwesomeIcon icon={faClone} />
-                                </button>
-                              </OverlayTrigger>
-                              )}
+                                <FontAwesomeIcon icon={faClone} />
+                              </button>
+                            </OverlayTrigger>
+                          )}
                           {showAttendance && (
                             <OverlayTrigger
                               placement="top"

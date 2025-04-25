@@ -653,6 +653,50 @@ export const getAllCasesThroughSearchParams = async (searchParams) => {
   }
 };
 
+// Get All Cases of Branch
+
+export const getAllCasesOfTheBranch = async (searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(`/cases/getCasesByBranchId`, {
+      params: filteredSearchParams,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+// Get All Cases of Specific File
+
+export const getAllCasesOfTheSpecificFile = async (searchParams) => {
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(([_, value]) => value !== "")
+  );
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/cases/getCasesByFileIdOfBranches`,
+      {
+        params: filteredSearchParams,
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const deleteCaseById = async (id) => {
   try {
     //   const token = getAuthToken();
@@ -875,6 +919,31 @@ export const getAllFreshReceipt = async (
     //   const token = getAuthToken();
     const response = await axiosClient.get(
       `/freshReceipt/${userId}/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+// Get Total Frs of the Branch
+
+export const getTotalFreshReceiptOfTheBranch = async (
+  branchId,
+  currentPage,
+  pageSize
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/freshReceipt/ByBranch/${branchId}?currentPage=${currentPage}&pageSize=${pageSize}`
     );
     // {
     //   headers: {
