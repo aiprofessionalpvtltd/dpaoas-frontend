@@ -34,7 +34,7 @@ import { imagesUrl } from "../../../../../../api/APIs";
 import { Editor } from "../../../../../../components/CustomComponents/Editor";
 import WebviewEditor from "../../../../../../components/CustomComponents/Editor/WebviewEditor";
 import { AuthContext } from "../../../../../../api/AuthContext";
-import { getBranchById } from "../../../../../../api/APIs/Services/Branches.services";
+import { getAllBranches, getBranchById } from "../../../../../../api/APIs/Services/Branches.services";
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
     <Modal size="lg" show={isOpen} onHide={toggleModal} centered>
@@ -50,6 +50,7 @@ function FRDetail() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [employeeData, setEmployeeData] = useState([]);
+  const [allBranches, setAllBranches] = useState([]);
   const UserData = getUserData();
   const [filesData, setFilesData] = useState(null);
   const [viewPage, setViewPage] = useState(location?.state?.view);
@@ -67,6 +68,7 @@ function FRDetail() {
     CommentStatus: "",
     comment: "",
   });
+  const [selectedBranch, setSelectedBranch] = useState(null);
   const { handleNotificationAssignFRs } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -111,8 +113,8 @@ function FRDetail() {
           "response?.data?.freshReceipt",
           response?.data?.fkUserBranchId
         );
-
-        getEmployeeData(response?.data?.fkUserBranchId);
+        getAllBranchesData();
+        // getEmployeeData(response?.data?.fkUserBranchId);
         setDescriptionData(response?.data?.shortDescription);
         setAttachments(response?.data?.freshReceiptsAttachments);
         // showSuccessMessage(response.message);
@@ -142,15 +144,27 @@ function FRDetail() {
     }
   };
 
+  const getAllBranchesData = async () => {
+    try {
+      const response = await getAllBranches();
+      if (response?.success) {
+        setAllBranches(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getEmployeeData = async (fkBranchId) => {
     const branchData = await getBranchById(fkBranchId);
 
     try {
       const response = await getHLEmployee(
         UserData?.fkUserId,
-        UserData?.branch?.id,
+        branchData?.data?.id,// UserData?.branch?.id,
         branchData?.data?.branchName
       );
+
       if (response?.success) {
         const filteredData = response?.data?.filter(
           (item) =>
@@ -163,6 +177,12 @@ function FRDetail() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if(selectedBranch){
+      getEmployeeData(selectedBranch?.id);
+    }
+  }, [selectedBranch]);
 
   const deleteFRsNotification = async (item) => {
     try {
@@ -370,7 +390,36 @@ function FRDetail() {
           </div>
           <div class="col">
             <div class="mb-3">
-              <label class="form-label">Mark To</label>
+              <label class="form-label">Mark To (Branch)</label>
+              <select
+                className="form-select"
+                id="branchSelect"
+                name="branchSelect"
+                onChange={(e) => {
+                  const selectedBranchId = parseInt(e.target.value); // Convert to number if IDs are numbers
+                  const selectedBranchObj = allBranches?.find(branch => branch.id === selectedBranchId);
+
+                  setSelectedBranch(selectedBranchObj || null); // Set full branch object
+                }}
+                value={selectedBranch?.id || ""}
+              >
+                <option value="" disabled>
+                  Select Branch
+                </option>
+                {allBranches?.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.branchName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+                  <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Mark To (Branch User)</label>
               <select
                 className="form-select"
                 id="assignedTo"
@@ -408,6 +457,7 @@ function FRDetail() {
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="col">
             <div class="mb-3">

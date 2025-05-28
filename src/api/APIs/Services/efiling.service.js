@@ -764,6 +764,59 @@ export const getUserCaseHistory = async (
   }
 };
 
+// external-demo
+export const getCasesByUserAndStatus = async (
+  // fileId,
+  userId,
+  branchId, 
+  status,
+  currentPage,
+  pageSize
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/cases/getCasesByUserAndStatus/${userId}?branchId=${branchId}&caseStatus=${status}&currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
+export const getFRsByUserAndStatus = async (
+  // fileId,
+  userId,
+  branchId, 
+  status,
+  currentPage,
+  pageSize
+) => {
+  try {
+    //   const token = getAuthToken();
+    const response = await axiosClient.get(
+      `/freshReceipt/getFRsByUserAndStatus/${userId}?branchId=${branchId}&caseStatus=${status}&currentPage=${currentPage}&pageSize=${pageSize}`
+    );
+    // {
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching API endpoint:", error);
+    throw error;
+  }
+};
+
 export const getUserAllCaseHistory = async (
   // fileId,
   branchId,

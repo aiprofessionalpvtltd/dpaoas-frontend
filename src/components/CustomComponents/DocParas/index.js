@@ -26,6 +26,7 @@ import {
   showErrorMessage,
   showSuccessMessage,
 } from "../../../utils/ToastAlert";
+import moment from "moment";
 
 const DocParas = ({
   tabsData,
@@ -453,7 +454,9 @@ const DocParas = ({
                       </div>
                     </div>
                   )}
+                 {tab?.paraCreatedAt ? tab?.paraCreatedAt : moment(tab?.createdAt).format('DD MMM YYYY, hh:mm A')}
                 </label>
+
                 {/* {tab.createdBy === UserData?.fkUserId && (
                 {editableIndex !== index ? (
                 

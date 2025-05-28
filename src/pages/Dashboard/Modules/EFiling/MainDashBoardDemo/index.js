@@ -21,6 +21,8 @@ import {
   getAllCasesThroughSearchParams,
   getAllFreshReceipt,
   getApprovelStats,
+  getCasesByUserAndStatus,
+  getFRsByUserAndStatus,
   getPendingCasesThroughSearchParams,
   getPendingFreshReceipts,
   getTotalFreshReceiptOfTheBranch,
@@ -193,6 +195,17 @@ function MainDashBoardDemo() {
   const frPageSize = 10; // Set your desired page size
   const [fileData, setFileData] = useState([]);
 
+  // external-demo
+  const [receivedFilesPriority, setReceivedFilesPriority] = useState();
+  const [sentFilesPriority, setSentFilesPriority] = useState();
+  const [receivedFilesData, setReceivedFilesData] = useState([]);
+  const [sentFilesData, setSentFilesData] = useState([]);
+
+  const [receivedFRsPriority, setReceivedFRsPriority] = useState();
+  const [sentFRsPriority, setSentFRsPriority] = useState();
+  const [receivedFRsData, setReceivedFRsData] = useState([]);
+  const [sentFRsData, setSentFRsData] = useState([]);
+
   const handleFrPageChange = (page) => {
     // Update currentPage when a page link is clicked
     setFrCurrentPage(page);
@@ -304,11 +317,71 @@ function MainDashBoardDemo() {
     }
   };
 
+  const getReceivedCasesByUserAndStatusData = async () => {
+    const response = await getCasesByUserAndStatus(
+      userData?.fkUserId,
+      userData?.fkBranchId,
+      "pending",
+      0,
+      1000
+    );
+    if(response?.success) {
+      setReceivedFilesData(response?.data?.cases || []);
+      setReceivedFilesPriority(response?.data?.priorityCounts || {});
+    }
+  }
+
+    const getSentCasesByUserAndStatusData = async () => {
+    const response = await getCasesByUserAndStatus(
+      userData?.fkUserId,
+      userData?.fkBranchId,
+      "sent",
+      0,
+      1000
+    );
+    if(response?.success) {
+      setSentFilesData(response?.data?.cases || []);
+      setSentFilesPriority(response?.data?.priorityCounts || {});
+    }
+  }
+
+    const getReceivedFRsByUserAndStatusData = async () => {
+    const response = await getFRsByUserAndStatus(
+      userData?.fkUserId,
+      userData?.fkBranchId,
+      "pending",
+      0,
+      1000
+    );
+    if(response?.success) {
+      setReceivedFRsData(response?.data?.freshReceipts || []);
+      setReceivedFRsPriority(response?.data?.priorityCounts || {});
+    }
+  }
+
+      const getSentFRsByUserAndStatusData = async () => {
+    const response = await getFRsByUserAndStatus(
+      userData?.fkUserId,
+      userData?.fkBranchId,
+      "sent",
+      0,
+      1000
+    );
+    if(response?.success) {
+      setSentFRsData(response?.data?.freshReceipts || []);
+      setSentFRsPriority(response?.data?.priorityCounts || {});
+    }
+  }
+
   useEffect(() => {
     getAllStatsDataApi();
     getAllFilesDataApi();
     getBrachAllCasesApi();
     getBrachAllFRsApi();
+    getSentCasesByUserAndStatusData();
+    getReceivedCasesByUserAndStatusData();
+    getReceivedFRsByUserAndStatusData();
+    getSentFRsByUserAndStatusData();
   }, []);
 
   useEffect(() => {
@@ -434,6 +507,373 @@ function MainDashBoardDemo() {
           </div>
         </div>
       )}
+
+
+      <div
+        className="dash-detail-container mt-3"
+        style={{ background: "none" }}
+      >
+        <div className="row">
+          <div className="col-6">
+            <div className="dash-card">
+              <div
+                className="dash-card-header"
+                style={{
+                  textAlign: "center",
+                  background: "#4f5966",
+                  borderRadius: "0px",
+                }}
+              >
+                <h2 style={{ marginBottom: "0" }}>IN </h2>
+              </div>
+
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{ width: "100%", height: 135, background: "#FFF", cursor: "pointer" }}
+                  onClick={() => {
+                    navigate("/efiling/dashboard/fresh-receipt/frs-by-user-stats", { state: {freshReceipts: receivedFRsData} })
+                  }}
+                >
+                  <span style={{ display: "inline-flex", marginTop: 40 }}>
+                    <h4>
+                      F.Rs
+                      <span style={{ marginLeft: 5 }}>
+                        (
+                        {receivedFRsData?.length > 0 ? receivedFRsData.length : 0}
+                        )
+                      </span>
+                    </h4>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{
+                    width: "100%",
+                    borderLeft: "#ddd solid 1px",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {BlinkingIndicator()}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Immediate (
+                      {receivedFRsPriority && receivedFRsPriority?.Immediate}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("blue")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Routine (
+                      {receivedFRsPriority && receivedFRsPriority?.Routine}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("green")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Confidential (
+                      {receivedFRsPriority && receivedFRsPriority?.Confidential}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{ width: "100%", height: 135, background: "#FFF", cursor: "pointer" }}
+                  onClick={() => navigate("/efiling/dashboard/files-list/cases-by-user-stats", {
+      state: { filesData: receivedFilesData },
+    })}
+                >
+                  <span style={{ display: "inline-flex", marginTop: 40 }}>
+                    <h4>
+                      Files{" "}
+                      <span style={{ marginLeft: 5 }}>
+                        (
+                        {receivedFilesData?.length > 0 ? receivedFilesData.length : 0}
+                        )
+                      </span>
+                    </h4>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{
+                    width: "100%",
+                    borderLeft: "#ddd solid 1px",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {BlinkingIndicator()}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Immediate (
+                      {receivedFilesPriority && receivedFilesPriority?.Immediate}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("blue")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Routine (
+                       {receivedFilesPriority && receivedFilesPriority?.Routine}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("green")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Confidential (
+                        {receivedFilesPriority && receivedFilesPriority?.Confidential}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+          </div>
+
+          {/* Files Card */}
+          <div className="col-6">
+            <div className="dash-card">
+              <div
+                className="dash-card-header"
+                style={{
+                  textAlign: "center",
+                  background: "#4f5966",
+                  borderRadius: "0px",
+                }}
+              >
+                <h2 style={{ marginBottom: "0" }}>OUT </h2>
+              </div>
+
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{ width: "100%", height: 135, background: "#FFF", cursor: "pointer" }}
+                                    onClick={() => {
+                    navigate("/efiling/dashboard/fresh-receipt/frs-by-user-stats", { state: {freshReceipts: sentFRsData} })
+                  }}
+                >
+                  <span style={{ display: "inline-flex", marginTop: 40 }}>
+                    <h4>
+                      F.Rs{" "}
+                      <span style={{ marginLeft: 5 }}>
+                        (
+                        {sentFRsData?.length > 0 ? sentFRsData.length : 0}
+                        )
+                      </span>
+                    </h4>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{
+                    width: "100%",
+                    borderLeft: "#ddd solid 1px",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {BlinkingIndicator()}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Immediate (
+                      {sentFRsPriority && sentFRsPriority?.Immediate}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("blue")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Routine (
+                      {sentFRsPriority && sentFRsPriority?.Routine}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("green")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Confidential (
+                      {sentFRsPriority && sentFRsPriority?.Confidential}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{ width: "100%", height: 135, background: "#FFF", cursor: "pointer" }}
+                                    onClick={() => navigate("/efiling/dashboard/files-list/cases-by-user-stats", {
+      state: { filesData: sentFilesData },
+    })}
+                >
+                  <span style={{ display: "inline-flex", marginTop: 40 }}>
+                    <h4>
+                      Files{" "}
+                      <span style={{ marginLeft: 5 }}>
+                        (
+                        {sentFilesData?.length > 0 ? sentFilesData.length : 0}
+                        )
+                      </span>
+                    </h4>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+              <div className="float-start" style={{ width: "50%" }}>
+                <div
+                  className="count"
+                  style={{
+                    width: "100%",
+                    borderLeft: "#ddd solid 1px",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {BlinkingIndicator()}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Immediate (
+                      {sentFilesPriority && sentFilesPriority?.Immediate}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator()}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Routine (
+                      {sentFilesPriority && sentFilesPriority?.Routine}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+                <div
+                  className="count"
+                  style={{
+                    borderLeft: "#ddd solid 1px",
+                    width: "100%",
+                    background: "#FFF",
+                    height: 45,
+                  }}
+                >
+                  <span style={{ display: "flex" }}>
+                    {NonBlinkingIndicator("green")}{" "}
+                    <span style={{ marginLeft: 5 }}>
+                      Confidential (
+                      {sentFilesPriority && sentFilesPriority?.Confidential}
+                      )
+                    </span>
+                  </span>
+                  <div className="clearfix" />
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* File cases table */}
       <div
@@ -563,407 +1003,6 @@ function MainDashBoardDemo() {
                 })
               }
             />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="dash-detail-container mt-3"
-        style={{ background: "none" }}
-      >
-        <div className="row">
-          <div className="col-6">
-            <div className="dash-card">
-              <div
-                className="dash-card-header"
-                style={{
-                  textAlign: "center",
-                  background: "#4f5966",
-                  borderRadius: "0px",
-                }}
-              >
-                <h2 style={{ marginBottom: "0" }}>IN </h2>
-              </div>
-
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{ width: "100%", height: 135, background: "#FFF" }}
-                >
-                  <span style={{ display: "inline-flex", marginTop: 40 }}>
-                    <h4>
-                      F.Rs
-                      <span style={{ marginLeft: 5 }}>
-                        (
-                        {frStatsData && frStatsData?.receivedFRs?.totalCount
-                          ? frStatsData?.receivedFRs?.totalCount
-                          : 0}
-                        )
-                      </span>
-                    </h4>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{
-                    width: "100%",
-                    borderLeft: "#ddd solid 1px",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {BlinkingIndicator()}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Immediate (
-                      {frStatsData &&
-                      frStatsData?.receivedFRs?.priorityCounts?.Immediate
-                        ? frStatsData?.receivedFRs?.priorityCounts?.Immediate
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("blue")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Routine (
-                      {frStatsData &&
-                      frStatsData?.receivedFRs?.priorityCounts?.Routine
-                        ? frStatsData?.receivedFRs?.priorityCounts?.Routine
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("green")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Confidential (
-                      {frStatsData &&
-                      frStatsData?.receivedFRs?.priorityCounts?.Confidential
-                        ? frStatsData?.receivedFRs?.priorityCounts?.Confidential
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{ width: "100%", height: 135, background: "#FFF" }}
-                >
-                  <span style={{ display: "inline-flex", marginTop: 40 }}>
-                    <h4>
-                      Files{" "}
-                      <span style={{ marginLeft: 5 }}>
-                        (
-                        {fileStatsData &&
-                        fileStatsData?.receivedFiles?.totalCount
-                          ? fileStatsData?.receivedFiles?.totalCount
-                          : 0}
-                        )
-                      </span>
-                    </h4>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{
-                    width: "100%",
-                    borderLeft: "#ddd solid 1px",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {BlinkingIndicator()}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Immediate (
-                      {fileStatsData &&
-                      fileStatsData?.receivedFiles?.priorityCounts?.Immediate
-                        ? fileStatsData?.receivedFiles?.priorityCounts
-                            ?.Immediate
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("blue")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Routine (
-                      {fileStatsData &&
-                      fileStatsData?.receivedFiles?.priorityCounts?.Routine
-                        ? fileStatsData?.receivedFiles?.priorityCounts?.Routine
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("green")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Confidential (
-                      {fileStatsData &&
-                      fileStatsData?.receivedFiles?.priorityCounts?.Confidential
-                        ? fileStatsData?.receivedFiles?.priorityCounts
-                            ?.Confidential
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-
-              <div class="clearfix"></div>
-            </div>
-          </div>
-
-          {/* Files Card */}
-          <div className="col-6">
-            <div className="dash-card">
-              <div
-                className="dash-card-header"
-                style={{
-                  textAlign: "center",
-                  background: "#4f5966",
-                  borderRadius: "0px",
-                }}
-              >
-                <h2 style={{ marginBottom: "0" }}>OUT </h2>
-              </div>
-
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{ width: "100%", height: 135, background: "#FFF" }}
-                >
-                  <span style={{ display: "inline-flex", marginTop: 40 }}>
-                    <h4>
-                      F.Rs{" "}
-                      <span style={{ marginLeft: 5 }}>
-                        (
-                        {frStatsData && frStatsData?.sentFRs?.totalCount
-                          ? frStatsData?.sentFRs?.totalCount
-                          : 0}
-                        )
-                      </span>
-                    </h4>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{
-                    width: "100%",
-                    borderLeft: "#ddd solid 1px",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {BlinkingIndicator()}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Immediate (
-                      {frStatsData &&
-                      frStatsData?.sentFRs?.priorityCounts?.Immediate
-                        ? frStatsData?.sentFRs?.priorityCounts?.Immediate
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("blue")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Routine (
-                      {frStatsData &&
-                      frStatsData?.sentFRs?.priorityCounts?.Routine
-                        ? frStatsData?.sentFRs?.priorityCounts?.Routine
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("green")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Confidential (
-                      {frStatsData &&
-                      frStatsData?.sentFRs?.priorityCounts?.Confidential
-                        ? frStatsData?.sentFRs?.priorityCounts?.Confidential
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{ width: "100%", height: 135, background: "#FFF" }}
-                >
-                  <span style={{ display: "inline-flex", marginTop: 40 }}>
-                    <h4>
-                      Files{" "}
-                      <span style={{ marginLeft: 5 }}>
-                        (
-                        {fileStatsData && fileStatsData?.sentFiles?.totalCount
-                          ? fileStatsData?.sentFiles?.totalCount
-                          : 0}
-                        )
-                      </span>
-                    </h4>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-              <div className="float-start" style={{ width: "50%" }}>
-                <div
-                  className="count"
-                  style={{
-                    width: "100%",
-                    borderLeft: "#ddd solid 1px",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {BlinkingIndicator()}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Immediate (
-                      {fileStatsData &&
-                      fileStatsData?.sentFiles?.priorityCounts?.Immediate
-                        ? fileStatsData?.sentFiles?.priorityCounts?.Immediate
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator()}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Routine (
-                      {fileStatsData &&
-                      fileStatsData?.sentFiles?.priorityCounts?.Routine
-                        ? fileStatsData?.sentFiles?.priorityCounts?.Routine
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-                <div
-                  className="count"
-                  style={{
-                    borderLeft: "#ddd solid 1px",
-                    width: "100%",
-                    background: "#FFF",
-                    height: 45,
-                  }}
-                >
-                  <span style={{ display: "flex" }}>
-                    {NonBlinkingIndicator("green")}{" "}
-                    <span style={{ marginLeft: 5 }}>
-                      Confidential (
-                      {fileStatsData &&
-                      fileStatsData?.sentFiles?.priorityCounts?.Confidential
-                        ? fileStatsData?.sentFiles?.priorityCounts?.Confidential
-                        : 0}
-                      )
-                    </span>
-                  </span>
-                  <div className="clearfix" />
-                </div>
-              </div>
-
-              <div class="clearfix"></div>
-            </div>
           </div>
         </div>
       </div>

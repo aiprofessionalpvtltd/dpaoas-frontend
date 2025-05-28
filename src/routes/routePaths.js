@@ -376,6 +376,8 @@ import QMSQuestionRephase from "../pages/Dashboard/Modules/QMS/Question/Question
 import SupplementaryOrderOfDayList from "../pages/Dashboard/Modules/LGMS/OrderOfTheDay/SupplementaryOrderOfDay/index.js";
 import TotalFileCasesByBranch from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/TotalFileCasesByBranch/index.js";
 import TotalFrsOfTheBranch from "../pages/Dashboard/Modules/EFiling/FreshReceipt/TotalFrsByBranch/index.js";
+import FileCasesByUserStats from "../pages/Dashboard/Modules/EFiling/FIleRegister/Files/FileCases/FileCasesByUserStats/index.js";
+import FRsByUserStats from "../pages/Dashboard/Modules/EFiling/FreshReceipt/FRsByUserStats/index.js";
 // import { Register } from "../pages/Register";
 
 export const NonProtectedRoutes = [
@@ -972,6 +974,10 @@ export const ProtectedRoutes = [
     element: <TotalFileCasesByBranch />,
   },
   {
+    path: "/efiling/dashboard/files-list/cases-by-user-stats",
+    element: <FileCasesByUserStats />,
+  },
+  {
     path: "/efiling/dashboard/file-register-list/files-list/cases-history",
     element: <PreviousCasesHistory />,
   },
@@ -986,6 +992,10 @@ export const ProtectedRoutes = [
   {
     path: "/efiling/dashboard/fresh-receipt/total-fr-of-branch",
     element: <TotalFrsOfTheBranch />,
+  },
+  {
+    path: "/efiling/dashboard/fresh-receipt/frs-by-user-stats",
+    element: <FRsByUserStats />,
   },
   // {
   //   path: "/efiling/dashboard/external/fresh-receipt",

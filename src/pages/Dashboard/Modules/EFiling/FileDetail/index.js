@@ -45,7 +45,7 @@ import { CustomAlert } from "../../../../../components/CustomComponents/CustomAl
 import html2pdf from "html2pdf.js";
 import { HalfMalf } from "react-spinner-animated";
 import "react-spinner-animated/dist/index.css";
-import { getBranchById } from "../../../../../api/APIs/Services/Branches.services";
+import { getAllBranches, getBranchById } from "../../../../../api/APIs/Services/Branches.services";
 
 const EFilingModal = ({ isOpen, toggleModal, title, children }) => {
   return (
@@ -100,6 +100,8 @@ function FileDetail() {
   const [previousUserParaCount, setPreviousUserParaCount] = useState(0);
   const [caseCreatedBy, setCaseCreatedBy] = useState("");
   const [saved, setSaved] = useState(false);
+  const [allBranches, setAllBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
 
   const handleShow = () => setShowApproveModal(true);
   const handleClose = () => setShowApproveModal(false);
@@ -269,13 +271,30 @@ function FileDetail() {
     }
   };
 
+  const getAllBranchesData = async () => {
+    try {
+      const response = await getAllBranches();
+      if (response?.success) {
+        setAllBranches(response?.data?.rows);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    };
+
+  useEffect(() => {
+    if(selectedBranch){
+      getEmployeeData(selectedBranch?.id);
+    }
+  }, [selectedBranch]);
+
   const getEmployeeData = async (fkBranchId) => {
     try {
       const branchData = await getBranchById(fkBranchId);
 
       const response = await getHLEmployee(
         UserData?.fkUserId,
-        UserData?.branch?.id,
+        branchData?.data?.id,// UserData?.branch?.id,
         branchData?.data?.branchName
       );
       if (response?.success) {
@@ -527,7 +546,8 @@ function FileDetail() {
       if (response?.success) {
         setRemarksData(response?.data?.cases?.casesRemarks);
         setFilesData(response?.data);
-        getEmployeeData(response?.data?.fkBranchId);
+        getAllBranchesData();
+        // getEmployeeData(response?.data?.fkBranchId);
 
         setCaseCreatedBy(response?.data?.caseCreatedBy);
         const FRSelection = {
@@ -1160,46 +1180,75 @@ function FileDetail() {
                 </select>
               </div>
             </div>
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label">Mark To</label>
-                <select
-                  className="form-select"
-                  id="assignedTo"
-                  name="assignedTo"
-                  onChange={(e) => {
-                    const selectedValue = e.target.value;
-                    const selectedItem = employeeData.find(
-                      (item) => item.fkUserId.toString() === selectedValue
-                    );
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Mark To (Branch)</label>
+              <select
+                className="form-select"
+                id="branchSelect"
+                name="branchSelect"
+                onChange={(e) => {
+                  const selectedBranchId = parseInt(e.target.value); // Convert to number if IDs are numbers
+                  const selectedBranchObj = allBranches?.find(branch => branch.id === selectedBranchId);
 
-                    // Update modal input state
-                    setModalInputValue((prevState) => ({
-                      ...prevState,
-                      assignedTo: selectedValue,
-                    }));
-
-                    // Update customAssignedTo with firstName of selected item
-                    setCustomAssignedTo(selectedItem?.firstName || "");
-                  }}
-                  value={modalInputValue.assignedTo}
-                >
-                  <option value="" disabled>
-                    Select
+                  setSelectedBranch(selectedBranchObj || null); // Set full branch object
+                }}
+                value={selectedBranch?.id || ""}
+              >
+                <option value="" disabled>
+                  Select Branch
+                </option>
+                {allBranches?.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.branchName}
                   </option>
-                  {employeeData &&
-                    employeeData.map((item) => (
-                      <option
-                        key={item.fkUserId}
-                        value={item.fkUserId.toString()}
-                      >
-                        {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
-                      </option>
-                    ))}
-                </select>
-              </div>
+                ))}
+              </select>
             </div>
           </div>
+        </div>
+
+        <div class="row">
+                  <div class="col">
+            <div class="mb-3">
+              <label class="form-label">Mark To (Branch User)</label>
+              <select
+                className="form-select"
+                id="assignedTo"
+                name="assignedTo"
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  const selectedItem = employeeData.find(
+                    (item) => item.fkUserId.toString() === selectedValue
+                  );
+
+                  // Update modal input state
+                  setModalInputValue((prevState) => ({
+                    ...prevState,
+                    assignedTo: selectedValue,
+                  }));
+
+                  // Update customAssignedTo with firstName of selected item
+                  setCustomAssignedTo(selectedItem?.firstName || "");
+                }}
+                value={modalInputValue.assignedTo}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                {employeeData &&
+                  employeeData.map((item) => (
+                    <option
+                      key={item.fkUserId}
+                      value={item.fkUserId.toString()}
+                    >
+                      {`${item?.firstName} ${item?.lastName} (${item.designations?.designationName})`}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+        </div>
           <div class="row">
             <div class="col">
               <div class="mb-3">
@@ -1445,7 +1494,7 @@ function FileDetail() {
                             </button>
                           </div>
 
-                          {/* {UserData && UserData?.userType === "Officer" && (
+                          {UserData && UserData?.userType === "Officer" && (
                             <div class="col-auto">
                               <button
                                 class="btn btn-primary"
@@ -1468,7 +1517,7 @@ function FileDetail() {
                                 Approve Case
                               </button>
                             </div>
-                          )} */}
+                          )}
                         </div>
 
                         <div

@@ -924,11 +924,11 @@ export const EfilingSideBarItem = [
         link: "/efiling/dashboard/file-register-list/files-list/cases",
         icon: faClipboardList,
       },
-      // {
-      //   itemName: "Approved Cases",
-      //   link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
-      //   icon: faClipboardList,
-      // },
+      {
+        itemName: "Approved Cases",
+        link: "/efiling/dashboard/file-register-list/files-list/cases/approved",
+        icon: faClipboardList,
+      },
     ],
   },
   {
